@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>도트 캐릭터 캔버스 애니메이션 - 클래스화</title>
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 24px;
+                background: #ffebd8;
+            }
+            canvas {
+                image-rendering: pixelated; 
+            }
+        </style>
+    </head>
+
+    <body>
+        <canvas id="canvas1"></canvas>
+        <canvas id="canvas2"></canvas>
+        <canvas id="canvas3"></canvas>
+
+        <script src="spriteAnimator.js"></script>
+        <script>
+            new SpriteAnimator('canvas1', 'character_v4_man_idle_concept0.png', { frameWidth: 40, frameHeight: 65, totalFrames: 6, scale: 2, interval: 150 });
+            new SpriteAnimator('canvas2', 'character_v4_man_idle_concept1.png', { frameWidth: 40, frameHeight: 65, totalFrames: 6, scale: 2, interval: 160 });
+            new SpriteAnimator('canvas3', 'character_v4_woman_idle_concept0.png', { frameWidth: 40, frameHeight: 65, totalFrames: 6, scale: 2, interval: 140 });
+        </script>
+    </body>
+</html>
