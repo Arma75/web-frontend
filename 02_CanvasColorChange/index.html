@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>캔버스 색상 변경</title>
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 24px;
+                background: #ffebd8;
+            }
+            canvas {
+                image-rendering: pixelated; 
+            }
+            article > article {
+                display: flex;
+                justify-content: space-between;
+            }
+        </style>
+    </head>
+
+    <body>
+        <canvas id="canvas1"></canvas>
+        <article>
+            <article>
+                <label for="rRange">RED</label>
+                <input type="range" id="rRange" min="0" max="255" value="247"/>
+            </article>
+            <article>
+                <label for="gRange">GREEN</label>
+                <input type="range" id="gRange" min="0" max="255" value="193">
+            </article>
+            <article>
+                <label for="bRange">BLUE</label>
+                <input type="range" id="bRange" min="0" max="255" value="150">
+            </article>
+        </article>
+
+        <button onclick="downloadCanvas()">
+            이미지로 저장하기
+        </button>
+
+        <script src="./canvasUtils.js"></script>
+        <script>
+            const scale = 4;
+
+            const canvas1 = document.getElementById('canvas1');
+            canvas1.width = 40 * scale;
+            canvas1.height = 64 * scale;
+
+            const ctx1 = canvas1.getContext('2d');
+            let originalImageData = null;
+
+            const baseImage = new Image();
+            baseImage.src = './assets/base.png';
+            baseImage.onload = function() {
+                ctx1.imageSmoothingEnabled = false;
+
+                ctx1.drawImage(baseImage, 0, 0, 40, 64, 0, 0, 40 * scale, 64 * scale);
+                originalImageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+            };
+
+            function applyColorChange() {
+                if (!originalImageData) {
+                    return;
+                }
+
+                // 슬라이더 값 가져오기
+                const targetR = parseInt(document.getElementById('rRange').value);
+                const targetG = parseInt(document.getElementById('gRange').value);
+                const targetB = parseInt(document.getElementById('bRange').value);
+
+                // 피부색
+                const skinColor = {r: 247, g: 193, b: 150};
+                const skinShadowColor = {r: 206, g: 134, b: 112};
+
+                const newImageData = changeCanvasColor(ctx1, originalImageData, skinColor, {r: targetR, g: targetG, b: targetB});
+                changeCanvasColor(ctx1, newImageData, skinShadowColor, {r: Math.floor(targetR * 0.8), g: Math.floor(targetG * 0.8), b: Math.floor(targetB * 0.8)});
+            }
+
+            document.querySelectorAll('input[type="range"]').forEach(input => {
+                input.addEventListener('input', applyColorChange);
+            });
+
+            function downloadCanvas() {
+                const canvas = document.getElementById('canvas1');
+                const dataURL = canvas.toDataURL('image/png');
+                
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'profile.png';
+                link.click();
+            }
+        </script>
+    </body>
+</html>
