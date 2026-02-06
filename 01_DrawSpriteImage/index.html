@@ -10,25 +10,56 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                gap: 24px;
                 background: #ffebd8;
             }
             canvas {
                 image-rendering: pixelated; 
             }
+
+            #canvas0 {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: -1;
+            }
         </style>
     </head>
 
     <body>
+        <canvas id="canvas0"></canvas>
         <canvas id="canvas1"></canvas>
         <canvas id="canvas2"></canvas>
         <canvas id="canvas3"></canvas>
+        <canvas id="canvas4"></canvas>
 
         <script src="spriteAnimator.js"></script>
         <script>
-            new SpriteAnimator('canvas1', 'character_v4_man_idle_concept0.png', { frameWidth: 40, frameHeight: 65, totalFrames: 6, scale: 2, interval: 150 });
-            new SpriteAnimator('canvas2', 'character_v4_man_idle_concept1.png', { frameWidth: 40, frameHeight: 65, totalFrames: 6, scale: 2, interval: 160 });
-            new SpriteAnimator('canvas3', 'character_v4_woman_idle_concept0.png', { frameWidth: 40, frameHeight: 65, totalFrames: 6, scale: 2, interval: 140 });
+            const scale = 1;
+
+            const canvas0 = document.getElementById('canvas0');
+            canvas0.width = document.body.clientWidth;
+            canvas0.height = document.body.clientHeight;
+            const ctx0 = canvas0.getContext('2d');
+            const tileImage = new Image();
+            tileImage.src = 'tile0.png';
+            tileImage.onload = function() {
+                ctx0.imageSmoothingEnabled = false;
+
+                const matrix = new DOMMatrix();
+                matrix.scaleSelf(scale, scale);
+                const pattern = ctx0.createPattern(tileImage, 'repeat');
+                pattern.setTransform(matrix);
+
+                ctx0.fillStyle = pattern;
+                ctx0.fillRect(0, 0, canvas0.width, canvas0.height);
+            };
+            
+            new SpriteAnimator('canvas1', 'character_v4_man_idle_concept0.png', { frameWidth: 40, frameHeight: 64, totalFrames: 6, scale: scale, interval: 150 });
+            new SpriteAnimator('canvas2', 'character_v4_man_idle_concept1.png', { frameWidth: 40, frameHeight: 64, totalFrames: 6, scale: scale, interval: 160 });
+            new SpriteAnimator('canvas3', 'character_v4_woman_idle_concept0.png', { frameWidth: 40, frameHeight: 64, totalFrames: 6, scale: scale, interval: 140 });
+            new SpriteAnimator('canvas4', 'character_v4_man_work_concept0.png', { frameWidth: 40, frameHeight: 64, totalFrames: 6, scale: scale, interval: 140 });
         </script>
     </body>
 </html>
