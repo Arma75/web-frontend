@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>DTO 생성기</title>
+
+        <!-- Meta Tags -->
+        <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
+        <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
+        <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
+        <meta name="title" content="DTO 생성기"/> <!-- 제목 설정 -->
+        <meta name="description" content="DB 테이블 구조만 입력하면 Spring Boot DTO 코드를 즉시 생성하세요. Lombok, Swagger, 유효성 검사 로직 및 PostgreSQL 특화 타입 완벽 지원."/> <!-- 설명 설정 -->
+        <meta name="keywords" content="DTO 생성기, Java DTO Generator, Spring Boot DTO, PostgreSQL to Java, Lombok Generator, 온라인 코드 제네레이터, 자동화 도구"/> <!-- 키워드 설정 -->
+        <meta name="author" content="arma75"/> <!-- 작성자 설정 -->
+
+        <!-- Open Graph Meta Tags(SNS 공유) -->
+        <meta property="og:type" content="website" /> <!-- 타입 설정 -->
+        <meta property="og:title" content="DTO 생성기" /> <!-- 제목 설정 -->
+        <meta property="og:description" content="DB 테이블 구조만 입력하면 Spring Boot DTO 코드를 즉시 생성하세요. Lombok, Swagger, 유효성 검사 로직 및 PostgreSQL 특화 타입 완벽 지원." /> <!-- 설명 설정 -->
+        <meta property="og:image" content="./assets/images/thumbnail.png" /> <!-- 이미지 설정 -->
+        <meta property="og:url" content="" /> <!-- URL 설정 -->
+
+        <!-- Progressive Web App -->
+        <link rel="manifest" href="/manifest.json">
+
+        <!-- Favicon Links -->
+        <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicons/favicon-16x16.png"> <!-- 16x16 파비콘 -->
+        <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32x32.png"> <!-- 32x32 파비콘 -->
+        <link rel="icon" type="image/png" sizes="64x64" href="./assets/favicons/favicon-64x64.png"> <!-- 64x64 파비콘 -->
+        <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/favicon-180x180.png"> <!-- 애플 터치 아이콘 -->
+
+        <!-- CSS Stylesheet -->
+        <style>
+        </style>
+    </head>
+
+    <body>
+        <template id="columnTemplate">
+            <tr>
+                <td>
+                    <input type="checkbox" name="check"/>
+                </td>
+                <td>
+                    <input type="text" name="name" data-field="name"/>
+                </td>
+                <td>
+                    <input type="text" name="comment" data-field="comment"/>
+                </td>
+                <td>
+                    <select name="type" data-field="type">
+                        <option>SMALLINT</option>
+                        <option>INTEGER</option>
+                        <option>BIGINT</option>
+                        <option>DECIMAL</option>
+                        <option>NUMERIC</option>
+                        <option>REAL</option>
+                        <option>DOUBLE PRECISION</option>
+                        <option>CHARACTER VARYING</option>
+                        <option>VARCHAR</option>
+                        <option>CHARACTER</option>
+                        <option>CHAR</option>
+                        <option>TEXT</option>
+                        <option>TIME</option>
+                        <option>DATE</option>
+                        <option>TIMESTAMP</option>
+                        <option>TIMESTAMP WITH TIME ZONE</option>
+                        <option>TIMESTAMPTZ</option>
+                        <option>BOOLEAN</option>
+                        <option>UUID</option>
+                        <option>JSON</option>
+                        <option>JSONB</option>
+                        <option>CREATE DATETIME</option>
+                        <option>UPDATE DATETIME</option>
+                        <option>LOGICAL USE</option>
+                        <option>LOGICAL DELETE</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="length" data-field="length"/>
+                </td>
+                <td>
+                    <input type="checkbox" name="pk" data-field="pk"/>
+                </td>
+                <td>
+                    <input type="checkbox" name="notNull" data-field="notNull"/>
+                </td>
+                <td>
+                    <input type="checkbox" name="autoIncrease" data-field="autoIncrease"/>
+                </td>
+                <td>
+                    <input type="text" name="defaultValue" data-field="defaultValue"/>
+                </td>
+            </tr>
+        </template>
+        <main>
+            <label for="teamName">teamName</label><input type="text" id="teamName" value="team"/>
+            <label for="projectName">projectName</label><input type="text" id="projectName" value="demoProject"/>
+            <label for="dtoPostfix">dtoPostfix</label><input type="text" id="dtoPostfix" value="DTO"/>
+            <br/>
+            <article>
+                <label for="writeComment">writeComment</label><input type="checkbox" id="writeComment" data-field="writeComment"/>
+                <label for="useSwagger">useSwagger</label><input type="checkbox" id="useSwagger" data-field="useSwagger"/>
+                <label for="useLombok">useLombok</label><input type="checkbox" id="useLombok" data-field="useLombok"/>
+                <label for="useDateRange">useDateRange</label><input type="checkbox" id="useDateRange" data-field="useDateRange"/>
+            </article>
+            <br/>
+            <label for="tableName1">name</label><input type="text" id="tableName1"/>
+            <label for="tableComment1">comment</label><input type="text" id="tableComment1"/>
+            <br/>
+            <button id="rowAddButton">add</button>
+            <button id="rowRemoveButton">remove</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="totalCheck"/>
+                        </th>
+                        <th>아이디</th>
+                        <th>코멘트</th>
+                        <th>타입</th>
+                        <th>길이</th>
+                        <th>PK</th>
+                        <th>NOT NULL</th>
+                        <th>AUTO INCREASE</th>
+                        <th>DEFAULT</th>
+                    </tr>
+                </thead>
+                <tbody id="tableContent">
+                </tbody>
+            </table>
+
+            <button id="generate">generate</button>
+            <textarea id="textarea"></textarea>
+        </main>
+
+        <!-- JavaScript -->
+        <script src="./scripts/case-converter.js"></script>
+        <script src="./scripts/json-to-java.js"></script>
+        <script>
+            function extractObjectFromElement(parentElement, keyAttr = 'name') {
+                const data = {};
+                const targetElements = parentElement.querySelectorAll(`[${keyAttr}]`);
+                
+                targetElements.forEach(element => {
+                    const key = element.getAttribute(keyAttr);
+                    const tagName = element.tagName.toLowerCase();
+                    const type = element.type ? element.type.toLowerCase() : null;
+
+                    let value = null;
+
+                    if (tagName === 'input') {
+                        if (type === 'checkbox') {
+                            value = element.checked;
+                        } else {
+                            value = element.value;
+                        }
+                    } else if (tagName === 'select') {
+                        value = element.value;
+                    }
+
+                    data[key] = value;
+                });
+
+                return data;
+            }
+
+            function bindMasterCheckbox(masterCheckbox, container, selector = 'input[type="checkbox"]') {
+                masterCheckbox.addEventListener('change', (e) => {
+                    const subCheckboxes = container.querySelectorAll(selector);
+                    subCheckboxes.forEach(subCheckbox => {
+                        subCheckbox.checked = e.target.checked;
+                    });
+                });
+
+                container.addEventListener('change', e => {
+                    if (e.target.matches(selector)) {
+                        const subCheckboxes = container.querySelectorAll(selector);
+                        const checkedSubCheckboxes = container.querySelectorAll(`${selector}:checked`);
+                        
+                        masterCheckbox.checked = (subCheckboxes.length > 0 && subCheckboxes.length === checkedSubCheckboxes.length);
+                    }
+                });
+            }
+
+            function addTemplate(template, target) {
+                const clone = template.content.cloneNode(true);
+                target.appendChild(clone);
+            }
+
+            bindMasterCheckbox(totalCheck, tableContent, `[name="check"]`);
+
+            document.getElementById("rowAddButton").addEventListener('click', e => {
+                addTemplate(document.getElementById("columnTemplate"), document.getElementById("tableContent"));
+
+                totalCheck.checked = false;
+            });
+
+            document.getElementById("rowRemoveButton").addEventListener('click', e => {
+                tableContent.querySelectorAll('[name="check"]:checked').forEach(elem => elem.closest('tr').remove());
+
+                totalCheck.checked = false;
+            });
+
+            generate.onclick = _ => {
+                let obj = {};
+                obj.name = tableName1.value;
+                obj.comment = tableComment1.value;
+                obj.columns = [];
+                [...document.querySelectorAll("tbody tr")].forEach(tr => {
+                    let col = extractObjectFromElement(tr, "data-field");;
+                    console.log(col);
+                    obj.columns.push(col);
+                });
+
+                let table = new Table(obj);
+
+                let project = new SpringBootProject({table : table});
+                project.teamName = teamName.value;
+                project.projectName = projectName.value;
+                project.writeComment = writeComment.checked;
+                project.useSwagger = useSwagger.checked;
+                project.useLombok = useLombok.checked;
+                project.dtoPostfix = dtoPostfix.value;
+                project.useDateRange = useDateRange.checked;
+
+                textarea.value = JavaConverter.toDTO(project) + "\n\n";
+            }
+        </script>
+    </body>
+</html>
+
