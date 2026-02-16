@@ -190,10 +190,11 @@
 
                 isAnimating = true;
                 initBook();
+                await new Promise(resolve => setTimeout(resolve, 500));
 
                 const pages = Array.from(document.querySelectorAll('.page')).reverse();
                 const targetCount = Math.floor(Math.random() * (adviceList.length - 2)) + 1;
-                const interval = 3000 / targetCount;
+                const interval = 2000 / targetCount;
 
                 for (let i = 0; i <= targetCount; i++) {
                     pages[i].style.transition = `transform ${interval}ms ease-in-out`;
