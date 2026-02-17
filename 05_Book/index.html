@@ -46,6 +46,7 @@
                 width: 100vw;
                 height: 100vh;
                 background-color: #212121;
+                overflow: hidden;
             }
             main {
                 position: absolute;
@@ -81,7 +82,7 @@
             }
             .page.flipped {
                 transform-origin: left;
-                transform: rotateY(-180deg);
+                transform: rotateY(-170deg);
             }
             .page.cover {
                 background-color: black;
@@ -237,6 +238,7 @@
                     if (page.classList.contains("cover")) {
                         page.style.zIndex = 999;
                     }
+                    page.style.visibility = 'visible';
                 });
 
                 const targetCount = Math.floor(Math.random() * (adviceList.length - 2)) + 1;
@@ -246,6 +248,9 @@
                 for (let i = 0; i <= targetCount; i++) {
                     pages[i].style.transition = `transform ${interval}ms ease-in-out`;
                     pages[i].classList.add('flipped');
+                    if (i > 4) {
+                        pages[i - 4].style.visibility = 'hidden';
+                    }
                     await new Promise(resolve => setTimeout(resolve, interval / 2));
                     pages[i].style.zIndex = i;
                 }
