@@ -1,0 +1,88 @@
+$neutral-0: #ffffff;
+$neutral-50: #f8f9fa;
+$neutral-100: #f1f3f5;
+$neutral-200: #e9ecef;
+$neutral-300: #dee2e6;
+$neutral-400: #ced4da;
+$neutral-500: #b8c0cc;
+$neutral-600: #868e96;
+$neutral-700: #495057;
+$neutral-800: #343a40;
+$neutral-900: #212529;
+$neutral-950: #121416;
+$neutral-1000: #000000;
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    line-height: 1.2;
+}
+html {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "Noto Sans", sans-serif;
+}
+button, input[type='button'], input[type='submit'] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 12px;
+
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: 500;
+
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+    text-decoration: none;
+
+    background-color: $neutral-50;
+    border: 1px solid $neutral-200;
+    color: $neutral-900;
+
+    @media (hover: hover) {
+        &:hover,
+        &.is-hovered {
+            background-color: $neutral-100;
+            border-color: $neutral-300;
+        }
+    }
+
+    &:active,
+    &.is-actived {
+        background-color: $neutral-200;
+        border-color: $neutral-400;
+        transform: scale(0.98);
+    }
+    
+    &:focus-visible,
+    &.is-focused { 
+        outline: 2px solid $neutral-900;
+    }
+    
+    &:disabled {
+        cursor: not-allowed;
+        background-color: $neutral-50;
+        border-color: $neutral-100;
+        color: $neutral-400;
+        transform: none;
+    }
+    &[readonly] {
+        cursor: default;
+        background-color: $neutral-50;
+        border-color: $neutral-100;
+        color: $neutral-600;
+        transform: none;
+        
+        @media (hover: hover) {
+            &:hover,
+            &.is-hovered {
+                background-color: $neutral-50;
+                border-color: $neutral-100;
+            }
+        }
+    }
+}

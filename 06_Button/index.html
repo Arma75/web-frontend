@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>빈 페이지</title>
+
+        <!-- Meta Tags -->
+        <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
+        <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
+        <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
+        <meta name="title" content="빈 페이지"/> <!-- 제목 설정 -->
+        <meta name="description" content="빈 페이지 템플릿" /> <!-- 설명 설정 -->
+        <meta name="keywords" content="template, empty"/> <!-- 키워드 설정 -->
+        <meta name="author" content="arma75"/> <!-- 작성자 설정 -->
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheet -->
+        <link rel="stylesheet" href="./button.css">
+        <style>
+            main {
+                padding: 20px;
+                
+                display: flex;
+                flex-direction: column;
+                gap: 56px;
+            }
+            div {
+                display: flex;
+                flex-direction: column;
+                gap: 32px;
+            }
+            section {
+                display: flex;
+                align-items: center;
+                gap: 24px;
+                flex-wrap: wrap;
+            }
+            article {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-direction: column;
+            }
+        </style>
+    </head>
+
+    <body>
+        <main>
+            <div>
+                <h1>BUTTON TAG</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <button>button</button>
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <button class="is-hovered">button</button>
+                    </article>
+                    <article>
+                        <h4>ACTIVE</h4>
+                        <button class="is-actived">button</button>
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <button class="is-focused">button</button>
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <button readonly>button</button>
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <button disabled>button</button>
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>INPUT BUTTON TAG</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="button" value="button" />
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="button" value="button" class="is-hovered" />
+                    </article>
+                    <article>
+                        <h4>ACTIVE</h4>
+                        <input type="button" value="button" class="is-actived" />
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="button" value="button" class="is-focused" />
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="button" value="button" readonly />
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="button" value="button" disabled />
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>INPUT SUBMIT TAG</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="submit" value="button" />
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="submit" value="button" class="is-hovered" />
+                    </article>
+                    <article>
+                        <h4>ACTIVE</h4>
+                        <input type="submit" value="button" class="is-actived" />
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="submit" value="button" class="is-focused" />
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="submit" value="button" readonly />
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="submit" value="button" disabled />
+                    </article>
+                </section>
+            </div>
+        </main>
+
+        <!-- JavaScript -->
+        <script>
+        </script>
+    </body>
+</html>
