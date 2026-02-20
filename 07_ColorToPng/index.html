@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>🎨 Veloxim</title>
+
+        <!-- Meta Tags -->
+        <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
+        <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
+        <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
+        <meta name="title" content="🎨 Veloxim"/> <!-- 제목 설정 -->
+        <meta name="description" content="클릭 한 번으로 파비콘 세트와 OG 태그용 썸네일을 즉시 생성하세요. 개발 초기 단계를 위한 가장 빠른 이미지 에셋 도구, Veloxim입니다." /> <!-- 설명 설정 -->
+        <meta name="keywords" content="Veloxim, 파비콘 생성기, 썸네일 생성기, favicon generator, thumbnail generator, 웹개발 도구, 컬러칩, PNG 다운로드"/> <!-- 키워드 설정 -->
+        <meta name="author" content="attickok"/> <!-- 작성자 설정 -->
+
+        <!-- Open Graph Meta Tags(SNS 공유) -->
+        <meta property="og:type" content="website" /> <!-- 타입 설정 -->
+        <meta property="og:title" content="🎨 Veloxim" /> <!-- 제목 설정 -->
+        <meta property="og:description" content="클릭 한 번으로 파비콘 세트와 OG 태그용 썸네일을 즉시 생성하세요. 개발 초기 단계를 위한 가장 빠른 이미지 에셋 도구, Veloxim입니다." /> <!-- 설명 설정 -->
+        <meta property="og:image" content="./assets/images/thumbnail.png" /> <!-- 이미지 설정 -->
+        <meta property="og:url" content="https://veloxim.netlify.app/" /> <!-- URL 설정 -->
+
+        <!-- Progressive Web App -->
+        <link rel="manifest" href="/manifest.json">
+
+        <!-- Favicon Links -->
+        <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicons/favicon-16x16.png"> <!-- 16x16 파비콘 -->
+        <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32x32.png"> <!-- 32x32 파비콘 -->
+        <link rel="icon" type="image/png" sizes="64x64" href="./assets/favicons/favicon-64x64.png"> <!-- 64x64 파비콘 -->
+        <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/favicon-180x180.png"> <!-- 애플 터치 아이콘 -->
+
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheet -->
+        <link rel="stylesheet" href="./styles/button.css">
+        <style>
+            body {
+                background-color: #f8f9fa;
+                color: #212529;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                padding: 40px;
+                gap: 36px;
+            }
+
+            header {
+                display: inline-flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            main {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 36px;
+            }
+
+            .controls {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 28px;
+            }
+            .control-group {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;
+            }
+            .size-inputs {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .range-wrapper {
+                display: flex;
+                gap: 8px;
+                justify-content: center;
+                align-items: center;
+            }
+            .input-field {
+                display: flex;
+                gap: 8px;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            #color {
+                width: 32px;
+                height: 32px;
+                background-color: black;
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header>
+            <h2>🎨 Veloxim</h2>
+            <p>프로젝트의 시작을 위한 가장 빠른 이미지 에셋 도구</p>
+            <p>크기와 색상을 지정해 PNG를 만드세요.</p>
+        </header>
+
+        <main>
+            <section class="preview-area">
+                <div id="color" class="color-box"></div>
+            </section>
+
+            <section class="controls">
+                <div class="control-group">
+                    <label class="group-label">COLOR (RGB)</label>
+                    <div class="range-wrapper">
+                        <span>R</span>
+                        <input type="range" id="redRange" min="0" max="255" value="0" />
+                    </div>
+                    <div class="range-wrapper">
+                        <span>G</span>
+                        <input type="range" id="greenRange" min="0" max="255" value="0" />
+                    </div>
+                    <div class="range-wrapper">
+                        <span>B</span>
+                        <input type="range" id="blueRange" min="0" max="255" value="0" />
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="group-label">SIZE (PX)</label>
+                    <div class="size-inputs">
+                        <div class="input-field">
+                            <span>W</span>
+                            <input type="number" id="widthInput" min="0" value="16" />
+                        </div>
+                        <div class="input-field">
+                            <span>H</span>
+                            <input type="number" id="heightInput" min="0" value="16" />
+                        </div>
+                    </div>
+                </div>
+
+                <button id="createButton">생성하기</button>
+
+                <button id="createSetButton">세트 생성하기</button>
+            </section>
+        </main>
+
+        <!-- JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script>
+            document.addEventListener('input', e => {
+                if (e.target.matches('[type=range]')) {
+                    color.style.backgroundColor = `rgb(${redRange.value}, ${greenRange.value}, ${blueRange.value})`;
+                }
+            });
+
+            createButton.onclick = _ => {
+                let width = Math.max(0, parseInt(widthInput.value));
+                let height = Math.max(0, parseInt(heightInput.value));
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = `rgb(${redRange.value}, ${greenRange.value}, ${blueRange.value})`;
+                ctx.fillRect(0, 0, width, height);
+
+                const link = document.createElement('a');
+                link.download = `favicon-${width}x${height}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            };
+
+            createSetButton.onclick = async _ => {
+                const zip = new JSZip();
+                const sizes = [
+                    [16, 16],
+                    [32, 32],
+                    [64, 64],
+                    [72, 72],
+                    [180, 180],
+                    [192, 192],
+                    [512, 512],
+                ];
+
+                for (let size of sizes) {
+                    const width = size[0];
+                    const height = size[1];
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = `rgb(${redRange.value}, ${greenRange.value}, ${blueRange.value})`;
+                    ctx.fillRect(0, 0, width, height);
+
+                    const dataUrl = canvas.toDataURL('image/png').split(',')[1];
+                    zip.file(`favicon-${width}x${height}.png`, dataUrl, {base64: true});
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = 1200;
+                canvas.height = 630;
+
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = `rgb(${redRange.value}, ${greenRange.value}, ${blueRange.value})`;
+                ctx.fillRect(0, 0, 1200, 630);
+
+                const dataUrl = canvas.toDataURL('image/png').split(',')[1];
+                zip.file(`thumbnail.png`, dataUrl, {base64: true});
+
+                const content = await zip.generateAsync({type: "blob"});
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = "favicons_set.zip";
+                link.click();
+            };
+        </script>
+    </body>
+</html>
