@@ -61,4 +61,277 @@ button[readonly], input[type=button][readonly], input[type=submit][readonly] {
     background-color: #f8f9fa;
     border-color: #f1f3f5;
   }
+}
+button.primary, input[type=button].primary, input[type=submit].primary {
+  background-color: #3ff0ca;
+  border: 1px solid #1cecbf;
+  color: #0d8c72;
+}
+@media (hover: hover) {
+  button.primary:hover, button.primary.is-hovered, input[type=button].primary:hover, input[type=button].primary.is-hovered, input[type=submit].primary:hover, input[type=submit].primary.is-hovered {
+    background-color: #1cecbf;
+    border-color: #18d4ac;
+  }
+}
+button.primary:active, button.primary.is-actived, input[type=button].primary:active, input[type=button].primary.is-actived, input[type=submit].primary:active, input[type=submit].primary.is-actived {
+  background-color: #18d4ac;
+  border-color: #14bc99;
+  transform: scale(0.98);
+}
+button.primary:focus-visible, button.primary.is-focused, input[type=button].primary:focus-visible, input[type=button].primary.is-focused, input[type=submit].primary:focus-visible, input[type=submit].primary.is-focused {
+  outline: 2px solid #1cecbf;
+}
+button.primary:disabled, input[type=button].primary:disabled, input[type=submit].primary:disabled {
+  cursor: not-allowed;
+  background-color: #c2f9ee;
+  border-color: #93f5e1;
+  color: #3ff0ca;
+  transform: none;
+}
+button.primary[readonly], input[type=button].primary[readonly], input[type=submit].primary[readonly] {
+  cursor: primary;
+  background-color: #c2f9ee;
+  border-color: #93f5e1;
+  color: #14bc99;
+  transform: none;
+}
+@media (hover: hover) {
+  button.primary[readonly]:hover, button.primary[readonly].is-hovered, input[type=button].primary[readonly]:hover, input[type=button].primary[readonly].is-hovered, input[type=submit].primary[readonly]:hover, input[type=submit].primary[readonly].is-hovered {
+    background-color: #c2f9ee;
+    border-color: #93f5e1;
+  }
+}
+button.secondary, input[type=button].secondary, input[type=submit].secondary {
+  background-color: #a78bfa;
+  border: 1px solid #8b5cf6;
+  color: #4c1d95;
+}
+@media (hover: hover) {
+  button.secondary:hover, button.secondary.is-hovered, input[type=button].secondary:hover, input[type=button].secondary.is-hovered, input[type=submit].secondary:hover, input[type=submit].secondary.is-hovered {
+    background-color: #8b5cf6;
+    border-color: #7c3aed;
+  }
+}
+button.secondary:active, button.secondary.is-actived, input[type=button].secondary:active, input[type=button].secondary.is-actived, input[type=submit].secondary:active, input[type=submit].secondary.is-actived {
+  background-color: #7c3aed;
+  border-color: #6d28d9;
+  transform: scale(0.98);
+}
+button.secondary:focus-visible, button.secondary.is-focused, input[type=button].secondary:focus-visible, input[type=button].secondary.is-focused, input[type=submit].secondary:focus-visible, input[type=submit].secondary.is-focused {
+  outline: 2px solid #8b5cf6;
+}
+button.secondary:disabled, input[type=button].secondary:disabled, input[type=submit].secondary:disabled {
+  cursor: not-allowed;
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #a78bfa;
+  transform: none;
+}
+button.secondary[readonly], input[type=button].secondary[readonly], input[type=submit].secondary[readonly] {
+  cursor: secondary;
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #6d28d9;
+  transform: none;
+}
+@media (hover: hover) {
+  button.secondary[readonly]:hover, button.secondary[readonly].is-hovered, input[type=button].secondary[readonly]:hover, input[type=button].secondary[readonly].is-hovered, input[type=submit].secondary[readonly]:hover, input[type=submit].secondary[readonly].is-hovered {
+    background-color: #ede9fe;
+    border-color: #ddd6fe;
+  }
+}
+button.success, input[type=button].success, input[type=submit].success {
+  background-color: #4ade80;
+  border: 1px solid #22c55e;
+  color: #14532d;
+}
+@media (hover: hover) {
+  button.success:hover, button.success.is-hovered, input[type=button].success:hover, input[type=button].success.is-hovered, input[type=submit].success:hover, input[type=submit].success.is-hovered {
+    background-color: #22c55e;
+    border-color: #16a34a;
+  }
+}
+button.success:active, button.success.is-actived, input[type=button].success:active, input[type=button].success.is-actived, input[type=submit].success:active, input[type=submit].success.is-actived {
+  background-color: #16a34a;
+  border-color: #15803d;
+  transform: scale(0.98);
+}
+button.success:focus-visible, button.success.is-focused, input[type=button].success:focus-visible, input[type=button].success.is-focused, input[type=submit].success:focus-visible, input[type=submit].success.is-focused {
+  outline: 2px solid #22c55e;
+}
+button.success:disabled, input[type=button].success:disabled, input[type=submit].success:disabled {
+  cursor: not-allowed;
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  color: #4ade80;
+  transform: none;
+}
+button.success[readonly], input[type=button].success[readonly], input[type=submit].success[readonly] {
+  cursor: success;
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  color: #15803d;
+  transform: none;
+}
+@media (hover: hover) {
+  button.success[readonly]:hover, button.success[readonly].is-hovered, input[type=button].success[readonly]:hover, input[type=button].success[readonly].is-hovered, input[type=submit].success[readonly]:hover, input[type=submit].success[readonly].is-hovered {
+    background-color: #dcfce7;
+    border-color: #bbf7d0;
+  }
+}
+button.warning, input[type=button].warning, input[type=submit].warning {
+  background-color: #fbbf24;
+  border: 1px solid #f59e0b;
+  color: #78350f;
+}
+@media (hover: hover) {
+  button.warning:hover, button.warning.is-hovered, input[type=button].warning:hover, input[type=button].warning.is-hovered, input[type=submit].warning:hover, input[type=submit].warning.is-hovered {
+    background-color: #f59e0b;
+    border-color: #d97706;
+  }
+}
+button.warning:active, button.warning.is-actived, input[type=button].warning:active, input[type=button].warning.is-actived, input[type=submit].warning:active, input[type=submit].warning.is-actived {
+  background-color: #d97706;
+  border-color: #b45309;
+  transform: scale(0.98);
+}
+button.warning:focus-visible, button.warning.is-focused, input[type=button].warning:focus-visible, input[type=button].warning.is-focused, input[type=submit].warning:focus-visible, input[type=submit].warning.is-focused {
+  outline: 2px solid #f59e0b;
+}
+button.warning:disabled, input[type=button].warning:disabled, input[type=submit].warning:disabled {
+  cursor: not-allowed;
+  background-color: #fef3c7;
+  border-color: #fde68a;
+  color: #fbbf24;
+  transform: none;
+}
+button.warning[readonly], input[type=button].warning[readonly], input[type=submit].warning[readonly] {
+  cursor: warning;
+  background-color: #fef3c7;
+  border-color: #fde68a;
+  color: #b45309;
+  transform: none;
+}
+@media (hover: hover) {
+  button.warning[readonly]:hover, button.warning[readonly].is-hovered, input[type=button].warning[readonly]:hover, input[type=button].warning[readonly].is-hovered, input[type=submit].warning[readonly]:hover, input[type=submit].warning[readonly].is-hovered {
+    background-color: #fef3c7;
+    border-color: #fde68a;
+  }
+}
+button.danger, input[type=button].danger, input[type=submit].danger {
+  background-color: #f87171;
+  border: 1px solid #ef4444;
+  color: #7f1d1d;
+}
+@media (hover: hover) {
+  button.danger:hover, button.danger.is-hovered, input[type=button].danger:hover, input[type=button].danger.is-hovered, input[type=submit].danger:hover, input[type=submit].danger.is-hovered {
+    background-color: #ef4444;
+    border-color: #dc2626;
+  }
+}
+button.danger:active, button.danger.is-actived, input[type=button].danger:active, input[type=button].danger.is-actived, input[type=submit].danger:active, input[type=submit].danger.is-actived {
+  background-color: #dc2626;
+  border-color: #b91c1c;
+  transform: scale(0.98);
+}
+button.danger:focus-visible, button.danger.is-focused, input[type=button].danger:focus-visible, input[type=button].danger.is-focused, input[type=submit].danger:focus-visible, input[type=submit].danger.is-focused {
+  outline: 2px solid #ef4444;
+}
+button.danger:disabled, input[type=button].danger:disabled, input[type=submit].danger:disabled {
+  cursor: not-allowed;
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #f87171;
+  transform: none;
+}
+button.danger[readonly], input[type=button].danger[readonly], input[type=submit].danger[readonly] {
+  cursor: danger;
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #b91c1c;
+  transform: none;
+}
+@media (hover: hover) {
+  button.danger[readonly]:hover, button.danger[readonly].is-hovered, input[type=button].danger[readonly]:hover, input[type=button].danger[readonly].is-hovered, input[type=submit].danger[readonly]:hover, input[type=submit].danger[readonly].is-hovered {
+    background-color: #fee2e2;
+    border-color: #fecaca;
+  }
+}
+button.info, input[type=button].info, input[type=submit].info {
+  background-color: #38bdf8;
+  border: 1px solid #0ea5e9;
+  color: #0c4a6e;
+}
+@media (hover: hover) {
+  button.info:hover, button.info.is-hovered, input[type=button].info:hover, input[type=button].info.is-hovered, input[type=submit].info:hover, input[type=submit].info.is-hovered {
+    background-color: #0ea5e9;
+    border-color: #0284c7;
+  }
+}
+button.info:active, button.info.is-actived, input[type=button].info:active, input[type=button].info.is-actived, input[type=submit].info:active, input[type=submit].info.is-actived {
+  background-color: #0284c7;
+  border-color: #0369a1;
+  transform: scale(0.98);
+}
+button.info:focus-visible, button.info.is-focused, input[type=button].info:focus-visible, input[type=button].info.is-focused, input[type=submit].info:focus-visible, input[type=submit].info.is-focused {
+  outline: 2px solid #0ea5e9;
+}
+button.info:disabled, input[type=button].info:disabled, input[type=submit].info:disabled {
+  cursor: not-allowed;
+  background-color: #e0f2fe;
+  border-color: #bae6fd;
+  color: #38bdf8;
+  transform: none;
+}
+button.info[readonly], input[type=button].info[readonly], input[type=submit].info[readonly] {
+  cursor: info;
+  background-color: #e0f2fe;
+  border-color: #bae6fd;
+  color: #0369a1;
+  transform: none;
+}
+@media (hover: hover) {
+  button.info[readonly]:hover, button.info[readonly].is-hovered, input[type=button].info[readonly]:hover, input[type=button].info[readonly].is-hovered, input[type=submit].info[readonly]:hover, input[type=submit].info[readonly].is-hovered {
+    background-color: #e0f2fe;
+    border-color: #bae6fd;
+  }
+}
+button.help, input[type=button].help, input[type=submit].help {
+  background-color: #a78bfa;
+  border: 1px solid #818cf8;
+  color: #3730a3;
+}
+@media (hover: hover) {
+  button.help:hover, button.help.is-hovered, input[type=button].help:hover, input[type=button].help.is-hovered, input[type=submit].help:hover, input[type=submit].help.is-hovered {
+    background-color: #818cf8;
+    border-color: #6366f1;
+  }
+}
+button.help:active, button.help.is-actived, input[type=button].help:active, input[type=button].help.is-actived, input[type=submit].help:active, input[type=submit].help.is-actived {
+  background-color: #6366f1;
+  border-color: #4f46e5;
+  transform: scale(0.98);
+}
+button.help:focus-visible, button.help.is-focused, input[type=button].help:focus-visible, input[type=button].help.is-focused, input[type=submit].help:focus-visible, input[type=submit].help.is-focused {
+  outline: 2px solid #818cf8;
+}
+button.help:disabled, input[type=button].help:disabled, input[type=submit].help:disabled {
+  cursor: not-allowed;
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #a78bfa;
+  transform: none;
+}
+button.help[readonly], input[type=button].help[readonly], input[type=submit].help[readonly] {
+  cursor: help;
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #4f46e5;
+  transform: none;
+}
+@media (hover: hover) {
+  button.help[readonly]:hover, button.help[readonly].is-hovered, input[type=button].help[readonly]:hover, input[type=button].help[readonly].is-hovered, input[type=submit].help[readonly]:hover, input[type=submit].help[readonly].is-hovered {
+    background-color: #ede9fe;
+    border-color: #ddd6fe;
+  }
 }/*# sourceMappingURL=button.css.map */
