@@ -207,7 +207,7 @@
                     ctx.fillRect(0, 0, width, height);
 
                     const dataUrl = canvas.toDataURL('image/png').split(',')[1];
-                    zip.file(`favicon-${width}x${height}.png`, dataUrl, {base64: true});
+                    zip.file(`/assets/favicons/favicon-${width}x${height}.png`, dataUrl, {base64: true});
                 }
 
                 const canvas = document.createElement('canvas');
@@ -219,7 +219,7 @@
                 ctx.fillRect(0, 0, 1200, 630);
 
                 const dataUrl = canvas.toDataURL('image/png').split(',')[1];
-                zip.file(`thumbnail.png`, dataUrl, {base64: true});
+                zip.file(`/assets/images/thumbnail.png`, dataUrl, {base64: true});
 
                 const content = await zip.generateAsync({type: "blob"});
                 const link = document.createElement('a');
