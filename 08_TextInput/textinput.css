@@ -1,0 +1,712 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  line-height: 1.2;
+}
+
+html {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "Noto Sans", sans-serif;
+}
+
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=tel],
+input[type=url] {
+  width: 100%;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: inherit;
+  font-family: inherit;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  color: #212529;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+}
+input[type=text]::-moz-placeholder, input[type=password]::-moz-placeholder, input[type=email]::-moz-placeholder, input[type=tel]::-moz-placeholder, input[type=url]::-moz-placeholder {
+  color: #ced4da;
+}
+input[type=text]::placeholder,
+input[type=password]::placeholder,
+input[type=email]::placeholder,
+input[type=tel]::placeholder,
+input[type=url]::placeholder {
+  color: #ced4da;
+}
+@media (hover: hover) {
+  input[type=text]:hover:not(:disabled):not([readonly]), input[type=text].is-hovered:not(:disabled):not([readonly]),
+  input[type=password]:hover:not(:disabled):not([readonly]),
+  input[type=password].is-hovered:not(:disabled):not([readonly]),
+  input[type=email]:hover:not(:disabled):not([readonly]),
+  input[type=email].is-hovered:not(:disabled):not([readonly]),
+  input[type=tel]:hover:not(:disabled):not([readonly]),
+  input[type=tel].is-hovered:not(:disabled):not([readonly]),
+  input[type=url]:hover:not(:disabled):not([readonly]),
+  input[type=url].is-hovered:not(:disabled):not([readonly]) {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #212529;
+  }
+}
+input[type=text]:active:not(:disabled):not([readonly]), input[type=text].is-actived:not(:disabled):not([readonly]),
+input[type=password]:active:not(:disabled):not([readonly]),
+input[type=password].is-actived:not(:disabled):not([readonly]),
+input[type=email]:active:not(:disabled):not([readonly]),
+input[type=email].is-actived:not(:disabled):not([readonly]),
+input[type=tel]:active:not(:disabled):not([readonly]),
+input[type=tel].is-actived:not(:disabled):not([readonly]),
+input[type=url]:active:not(:disabled):not([readonly]),
+input[type=url].is-actived:not(:disabled):not([readonly]) {
+  background-color: #f1f3f5;
+  border-color: #ced4da;
+  color: #212529;
+  transform: scale(0.98);
+}
+input[type=text]:focus:not(:disabled):not([readonly]), input[type=text].is-focused:not(:disabled):not([readonly]),
+input[type=password]:focus:not(:disabled):not([readonly]),
+input[type=password].is-focused:not(:disabled):not([readonly]),
+input[type=email]:focus:not(:disabled):not([readonly]),
+input[type=email].is-focused:not(:disabled):not([readonly]),
+input[type=tel]:focus:not(:disabled):not([readonly]),
+input[type=tel].is-focused:not(:disabled):not([readonly]),
+input[type=url]:focus:not(:disabled):not([readonly]),
+input[type=url].is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #1cecbf;
+}
+input[type=text]:disabled,
+input[type=password]:disabled,
+input[type=email]:disabled,
+input[type=tel]:disabled,
+input[type=url]:disabled {
+  cursor: not-allowed;
+  background-color: #f8f9fa;
+  border-color: #f1f3f5;
+  color: #ced4da;
+  transform: none;
+}
+input[type=text]:disabled::-moz-placeholder, input[type=password]:disabled::-moz-placeholder, input[type=email]:disabled::-moz-placeholder, input[type=tel]:disabled::-moz-placeholder, input[type=url]:disabled::-moz-placeholder {
+  color: #ced4da;
+}
+input[type=text]:disabled::placeholder,
+input[type=password]:disabled::placeholder,
+input[type=email]:disabled::placeholder,
+input[type=tel]:disabled::placeholder,
+input[type=url]:disabled::placeholder {
+  color: #ced4da;
+}
+input[type=text][readonly],
+input[type=password][readonly],
+input[type=email][readonly],
+input[type=tel][readonly],
+input[type=url][readonly] {
+  cursor: default;
+  background-color: #f8f9fa;
+  border-color: #f1f3f5;
+  color: #868e96;
+}
+input[type=text].primary,
+input[type=password].primary,
+input[type=email].primary,
+input[type=tel].primary,
+input[type=url].primary {
+  background-color: #3ff0ca;
+  border: 1px solid #1cecbf;
+  color: #0d8c72;
+}
+input[type=text].primary::-moz-placeholder, input[type=password].primary::-moz-placeholder, input[type=email].primary::-moz-placeholder, input[type=tel].primary::-moz-placeholder, input[type=url].primary::-moz-placeholder {
+  color: #11a485;
+}
+input[type=text].primary::placeholder,
+input[type=password].primary::placeholder,
+input[type=email].primary::placeholder,
+input[type=tel].primary::placeholder,
+input[type=url].primary::placeholder {
+  color: #11a485;
+}
+@media (hover: hover) {
+  input[type=text].primary:hover:not(:disabled):not([readonly]), input[type=text].primary.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].primary:hover:not(:disabled):not([readonly]),
+  input[type=password].primary.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].primary:hover:not(:disabled):not([readonly]),
+  input[type=email].primary.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].primary:hover:not(:disabled):not([readonly]),
+  input[type=tel].primary.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].primary:hover:not(:disabled):not([readonly]),
+  input[type=url].primary.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #1cecbf;
+    border: 1px solid #18d4ac;
+    color: #0d8c72;
+  }
+}
+input[type=text].primary:active:not(:disabled):not([readonly]), input[type=text].primary.is-actived:not(:disabled):not([readonly]),
+input[type=password].primary:active:not(:disabled):not([readonly]),
+input[type=password].primary.is-actived:not(:disabled):not([readonly]),
+input[type=email].primary:active:not(:disabled):not([readonly]),
+input[type=email].primary.is-actived:not(:disabled):not([readonly]),
+input[type=tel].primary:active:not(:disabled):not([readonly]),
+input[type=tel].primary.is-actived:not(:disabled):not([readonly]),
+input[type=url].primary:active:not(:disabled):not([readonly]),
+input[type=url].primary.is-actived:not(:disabled):not([readonly]) {
+  background-color: #18d4ac;
+  border-color: #14bc99;
+  color: #0d8c72;
+}
+input[type=text].primary:focus:not(:disabled):not([readonly]), input[type=text].primary.is-focused:not(:disabled):not([readonly]),
+input[type=password].primary:focus:not(:disabled):not([readonly]),
+input[type=password].primary.is-focused:not(:disabled):not([readonly]),
+input[type=email].primary:focus:not(:disabled):not([readonly]),
+input[type=email].primary.is-focused:not(:disabled):not([readonly]),
+input[type=tel].primary:focus:not(:disabled):not([readonly]),
+input[type=tel].primary.is-focused:not(:disabled):not([readonly]),
+input[type=url].primary:focus:not(:disabled):not([readonly]),
+input[type=url].primary.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #1cecbf;
+}
+input[type=text].primary:disabled,
+input[type=password].primary:disabled,
+input[type=email].primary:disabled,
+input[type=tel].primary:disabled,
+input[type=url].primary:disabled {
+  background-color: #c2f9ee;
+  border-color: #93f5e1;
+  color: #3ff0ca;
+}
+input[type=text].primary:disabled::-moz-placeholder, input[type=password].primary:disabled::-moz-placeholder, input[type=email].primary:disabled::-moz-placeholder, input[type=tel].primary:disabled::-moz-placeholder, input[type=url].primary:disabled::-moz-placeholder {
+  color: #3ff0ca;
+}
+input[type=text].primary:disabled::placeholder,
+input[type=password].primary:disabled::placeholder,
+input[type=email].primary:disabled::placeholder,
+input[type=tel].primary:disabled::placeholder,
+input[type=url].primary:disabled::placeholder {
+  color: #3ff0ca;
+}
+input[type=text].primary[readonly],
+input[type=password].primary[readonly],
+input[type=email].primary[readonly],
+input[type=tel].primary[readonly],
+input[type=url].primary[readonly] {
+  background-color: #c2f9ee;
+  border-color: #93f5e1;
+  color: #14bc99;
+}
+input[type=text].secondary,
+input[type=password].secondary,
+input[type=email].secondary,
+input[type=tel].secondary,
+input[type=url].secondary {
+  background-color: #a78bfa;
+  border: 1px solid #8b5cf6;
+  color: #4c1d95;
+}
+input[type=text].secondary::-moz-placeholder, input[type=password].secondary::-moz-placeholder, input[type=email].secondary::-moz-placeholder, input[type=tel].secondary::-moz-placeholder, input[type=url].secondary::-moz-placeholder {
+  color: #5b21b6;
+}
+input[type=text].secondary::placeholder,
+input[type=password].secondary::placeholder,
+input[type=email].secondary::placeholder,
+input[type=tel].secondary::placeholder,
+input[type=url].secondary::placeholder {
+  color: #5b21b6;
+}
+@media (hover: hover) {
+  input[type=text].secondary:hover:not(:disabled):not([readonly]), input[type=text].secondary.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].secondary:hover:not(:disabled):not([readonly]),
+  input[type=password].secondary.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].secondary:hover:not(:disabled):not([readonly]),
+  input[type=email].secondary.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].secondary:hover:not(:disabled):not([readonly]),
+  input[type=tel].secondary.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].secondary:hover:not(:disabled):not([readonly]),
+  input[type=url].secondary.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #8b5cf6;
+    border: 1px solid #7c3aed;
+    color: #4c1d95;
+  }
+}
+input[type=text].secondary:active:not(:disabled):not([readonly]), input[type=text].secondary.is-actived:not(:disabled):not([readonly]),
+input[type=password].secondary:active:not(:disabled):not([readonly]),
+input[type=password].secondary.is-actived:not(:disabled):not([readonly]),
+input[type=email].secondary:active:not(:disabled):not([readonly]),
+input[type=email].secondary.is-actived:not(:disabled):not([readonly]),
+input[type=tel].secondary:active:not(:disabled):not([readonly]),
+input[type=tel].secondary.is-actived:not(:disabled):not([readonly]),
+input[type=url].secondary:active:not(:disabled):not([readonly]),
+input[type=url].secondary.is-actived:not(:disabled):not([readonly]) {
+  background-color: #7c3aed;
+  border-color: #6d28d9;
+  color: #4c1d95;
+}
+input[type=text].secondary:focus:not(:disabled):not([readonly]), input[type=text].secondary.is-focused:not(:disabled):not([readonly]),
+input[type=password].secondary:focus:not(:disabled):not([readonly]),
+input[type=password].secondary.is-focused:not(:disabled):not([readonly]),
+input[type=email].secondary:focus:not(:disabled):not([readonly]),
+input[type=email].secondary.is-focused:not(:disabled):not([readonly]),
+input[type=tel].secondary:focus:not(:disabled):not([readonly]),
+input[type=tel].secondary.is-focused:not(:disabled):not([readonly]),
+input[type=url].secondary:focus:not(:disabled):not([readonly]),
+input[type=url].secondary.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #8b5cf6;
+}
+input[type=text].secondary:disabled,
+input[type=password].secondary:disabled,
+input[type=email].secondary:disabled,
+input[type=tel].secondary:disabled,
+input[type=url].secondary:disabled {
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #a78bfa;
+}
+input[type=text].secondary:disabled::-moz-placeholder, input[type=password].secondary:disabled::-moz-placeholder, input[type=email].secondary:disabled::-moz-placeholder, input[type=tel].secondary:disabled::-moz-placeholder, input[type=url].secondary:disabled::-moz-placeholder {
+  color: #a78bfa;
+}
+input[type=text].secondary:disabled::placeholder,
+input[type=password].secondary:disabled::placeholder,
+input[type=email].secondary:disabled::placeholder,
+input[type=tel].secondary:disabled::placeholder,
+input[type=url].secondary:disabled::placeholder {
+  color: #a78bfa;
+}
+input[type=text].secondary[readonly],
+input[type=password].secondary[readonly],
+input[type=email].secondary[readonly],
+input[type=tel].secondary[readonly],
+input[type=url].secondary[readonly] {
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #6d28d9;
+}
+input[type=text].success,
+input[type=password].success,
+input[type=email].success,
+input[type=tel].success,
+input[type=url].success {
+  background-color: #4ade80;
+  border: 1px solid #22c55e;
+  color: #14532d;
+}
+input[type=text].success::-moz-placeholder, input[type=password].success::-moz-placeholder, input[type=email].success::-moz-placeholder, input[type=tel].success::-moz-placeholder, input[type=url].success::-moz-placeholder {
+  color: #166534;
+}
+input[type=text].success::placeholder,
+input[type=password].success::placeholder,
+input[type=email].success::placeholder,
+input[type=tel].success::placeholder,
+input[type=url].success::placeholder {
+  color: #166534;
+}
+@media (hover: hover) {
+  input[type=text].success:hover:not(:disabled):not([readonly]), input[type=text].success.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].success:hover:not(:disabled):not([readonly]),
+  input[type=password].success.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].success:hover:not(:disabled):not([readonly]),
+  input[type=email].success.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].success:hover:not(:disabled):not([readonly]),
+  input[type=tel].success.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].success:hover:not(:disabled):not([readonly]),
+  input[type=url].success.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #22c55e;
+    border: 1px solid #16a34a;
+    color: #14532d;
+  }
+}
+input[type=text].success:active:not(:disabled):not([readonly]), input[type=text].success.is-actived:not(:disabled):not([readonly]),
+input[type=password].success:active:not(:disabled):not([readonly]),
+input[type=password].success.is-actived:not(:disabled):not([readonly]),
+input[type=email].success:active:not(:disabled):not([readonly]),
+input[type=email].success.is-actived:not(:disabled):not([readonly]),
+input[type=tel].success:active:not(:disabled):not([readonly]),
+input[type=tel].success.is-actived:not(:disabled):not([readonly]),
+input[type=url].success:active:not(:disabled):not([readonly]),
+input[type=url].success.is-actived:not(:disabled):not([readonly]) {
+  background-color: #16a34a;
+  border-color: #15803d;
+  color: #14532d;
+}
+input[type=text].success:focus:not(:disabled):not([readonly]), input[type=text].success.is-focused:not(:disabled):not([readonly]),
+input[type=password].success:focus:not(:disabled):not([readonly]),
+input[type=password].success.is-focused:not(:disabled):not([readonly]),
+input[type=email].success:focus:not(:disabled):not([readonly]),
+input[type=email].success.is-focused:not(:disabled):not([readonly]),
+input[type=tel].success:focus:not(:disabled):not([readonly]),
+input[type=tel].success.is-focused:not(:disabled):not([readonly]),
+input[type=url].success:focus:not(:disabled):not([readonly]),
+input[type=url].success.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #22c55e;
+}
+input[type=text].success:disabled,
+input[type=password].success:disabled,
+input[type=email].success:disabled,
+input[type=tel].success:disabled,
+input[type=url].success:disabled {
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  color: #4ade80;
+}
+input[type=text].success:disabled::-moz-placeholder, input[type=password].success:disabled::-moz-placeholder, input[type=email].success:disabled::-moz-placeholder, input[type=tel].success:disabled::-moz-placeholder, input[type=url].success:disabled::-moz-placeholder {
+  color: #4ade80;
+}
+input[type=text].success:disabled::placeholder,
+input[type=password].success:disabled::placeholder,
+input[type=email].success:disabled::placeholder,
+input[type=tel].success:disabled::placeholder,
+input[type=url].success:disabled::placeholder {
+  color: #4ade80;
+}
+input[type=text].success[readonly],
+input[type=password].success[readonly],
+input[type=email].success[readonly],
+input[type=tel].success[readonly],
+input[type=url].success[readonly] {
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+input[type=text].warning,
+input[type=password].warning,
+input[type=email].warning,
+input[type=tel].warning,
+input[type=url].warning {
+  background-color: #fbbf24;
+  border: 1px solid #f59e0b;
+  color: #78350f;
+}
+input[type=text].warning::-moz-placeholder, input[type=password].warning::-moz-placeholder, input[type=email].warning::-moz-placeholder, input[type=tel].warning::-moz-placeholder, input[type=url].warning::-moz-placeholder {
+  color: #92400e;
+}
+input[type=text].warning::placeholder,
+input[type=password].warning::placeholder,
+input[type=email].warning::placeholder,
+input[type=tel].warning::placeholder,
+input[type=url].warning::placeholder {
+  color: #92400e;
+}
+@media (hover: hover) {
+  input[type=text].warning:hover:not(:disabled):not([readonly]), input[type=text].warning.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].warning:hover:not(:disabled):not([readonly]),
+  input[type=password].warning.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].warning:hover:not(:disabled):not([readonly]),
+  input[type=email].warning.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].warning:hover:not(:disabled):not([readonly]),
+  input[type=tel].warning.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].warning:hover:not(:disabled):not([readonly]),
+  input[type=url].warning.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #f59e0b;
+    border: 1px solid #d97706;
+    color: #78350f;
+  }
+}
+input[type=text].warning:active:not(:disabled):not([readonly]), input[type=text].warning.is-actived:not(:disabled):not([readonly]),
+input[type=password].warning:active:not(:disabled):not([readonly]),
+input[type=password].warning.is-actived:not(:disabled):not([readonly]),
+input[type=email].warning:active:not(:disabled):not([readonly]),
+input[type=email].warning.is-actived:not(:disabled):not([readonly]),
+input[type=tel].warning:active:not(:disabled):not([readonly]),
+input[type=tel].warning.is-actived:not(:disabled):not([readonly]),
+input[type=url].warning:active:not(:disabled):not([readonly]),
+input[type=url].warning.is-actived:not(:disabled):not([readonly]) {
+  background-color: #d97706;
+  border-color: #b45309;
+  color: #78350f;
+}
+input[type=text].warning:focus:not(:disabled):not([readonly]), input[type=text].warning.is-focused:not(:disabled):not([readonly]),
+input[type=password].warning:focus:not(:disabled):not([readonly]),
+input[type=password].warning.is-focused:not(:disabled):not([readonly]),
+input[type=email].warning:focus:not(:disabled):not([readonly]),
+input[type=email].warning.is-focused:not(:disabled):not([readonly]),
+input[type=tel].warning:focus:not(:disabled):not([readonly]),
+input[type=tel].warning.is-focused:not(:disabled):not([readonly]),
+input[type=url].warning:focus:not(:disabled):not([readonly]),
+input[type=url].warning.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #f59e0b;
+}
+input[type=text].warning:disabled,
+input[type=password].warning:disabled,
+input[type=email].warning:disabled,
+input[type=tel].warning:disabled,
+input[type=url].warning:disabled {
+  background-color: #fef3c7;
+  border-color: #fde68a;
+  color: #fbbf24;
+}
+input[type=text].warning:disabled::-moz-placeholder, input[type=password].warning:disabled::-moz-placeholder, input[type=email].warning:disabled::-moz-placeholder, input[type=tel].warning:disabled::-moz-placeholder, input[type=url].warning:disabled::-moz-placeholder {
+  color: #fbbf24;
+}
+input[type=text].warning:disabled::placeholder,
+input[type=password].warning:disabled::placeholder,
+input[type=email].warning:disabled::placeholder,
+input[type=tel].warning:disabled::placeholder,
+input[type=url].warning:disabled::placeholder {
+  color: #fbbf24;
+}
+input[type=text].warning[readonly],
+input[type=password].warning[readonly],
+input[type=email].warning[readonly],
+input[type=tel].warning[readonly],
+input[type=url].warning[readonly] {
+  background-color: #fef3c7;
+  border-color: #fde68a;
+  color: #b45309;
+}
+input[type=text].danger,
+input[type=password].danger,
+input[type=email].danger,
+input[type=tel].danger,
+input[type=url].danger {
+  background-color: #f87171;
+  border: 1px solid #ef4444;
+  color: #7f1d1d;
+}
+input[type=text].danger::-moz-placeholder, input[type=password].danger::-moz-placeholder, input[type=email].danger::-moz-placeholder, input[type=tel].danger::-moz-placeholder, input[type=url].danger::-moz-placeholder {
+  color: #991b1b;
+}
+input[type=text].danger::placeholder,
+input[type=password].danger::placeholder,
+input[type=email].danger::placeholder,
+input[type=tel].danger::placeholder,
+input[type=url].danger::placeholder {
+  color: #991b1b;
+}
+@media (hover: hover) {
+  input[type=text].danger:hover:not(:disabled):not([readonly]), input[type=text].danger.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].danger:hover:not(:disabled):not([readonly]),
+  input[type=password].danger.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].danger:hover:not(:disabled):not([readonly]),
+  input[type=email].danger.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].danger:hover:not(:disabled):not([readonly]),
+  input[type=tel].danger.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].danger:hover:not(:disabled):not([readonly]),
+  input[type=url].danger.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #ef4444;
+    border: 1px solid #dc2626;
+    color: #7f1d1d;
+  }
+}
+input[type=text].danger:active:not(:disabled):not([readonly]), input[type=text].danger.is-actived:not(:disabled):not([readonly]),
+input[type=password].danger:active:not(:disabled):not([readonly]),
+input[type=password].danger.is-actived:not(:disabled):not([readonly]),
+input[type=email].danger:active:not(:disabled):not([readonly]),
+input[type=email].danger.is-actived:not(:disabled):not([readonly]),
+input[type=tel].danger:active:not(:disabled):not([readonly]),
+input[type=tel].danger.is-actived:not(:disabled):not([readonly]),
+input[type=url].danger:active:not(:disabled):not([readonly]),
+input[type=url].danger.is-actived:not(:disabled):not([readonly]) {
+  background-color: #dc2626;
+  border-color: #b91c1c;
+  color: #7f1d1d;
+}
+input[type=text].danger:focus:not(:disabled):not([readonly]), input[type=text].danger.is-focused:not(:disabled):not([readonly]),
+input[type=password].danger:focus:not(:disabled):not([readonly]),
+input[type=password].danger.is-focused:not(:disabled):not([readonly]),
+input[type=email].danger:focus:not(:disabled):not([readonly]),
+input[type=email].danger.is-focused:not(:disabled):not([readonly]),
+input[type=tel].danger:focus:not(:disabled):not([readonly]),
+input[type=tel].danger.is-focused:not(:disabled):not([readonly]),
+input[type=url].danger:focus:not(:disabled):not([readonly]),
+input[type=url].danger.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #ef4444;
+}
+input[type=text].danger:disabled,
+input[type=password].danger:disabled,
+input[type=email].danger:disabled,
+input[type=tel].danger:disabled,
+input[type=url].danger:disabled {
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #f87171;
+}
+input[type=text].danger:disabled::-moz-placeholder, input[type=password].danger:disabled::-moz-placeholder, input[type=email].danger:disabled::-moz-placeholder, input[type=tel].danger:disabled::-moz-placeholder, input[type=url].danger:disabled::-moz-placeholder {
+  color: #f87171;
+}
+input[type=text].danger:disabled::placeholder,
+input[type=password].danger:disabled::placeholder,
+input[type=email].danger:disabled::placeholder,
+input[type=tel].danger:disabled::placeholder,
+input[type=url].danger:disabled::placeholder {
+  color: #f87171;
+}
+input[type=text].danger[readonly],
+input[type=password].danger[readonly],
+input[type=email].danger[readonly],
+input[type=tel].danger[readonly],
+input[type=url].danger[readonly] {
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+input[type=text].info,
+input[type=password].info,
+input[type=email].info,
+input[type=tel].info,
+input[type=url].info {
+  background-color: #38bdf8;
+  border: 1px solid #0ea5e9;
+  color: #0c4a6e;
+}
+input[type=text].info::-moz-placeholder, input[type=password].info::-moz-placeholder, input[type=email].info::-moz-placeholder, input[type=tel].info::-moz-placeholder, input[type=url].info::-moz-placeholder {
+  color: #075985;
+}
+input[type=text].info::placeholder,
+input[type=password].info::placeholder,
+input[type=email].info::placeholder,
+input[type=tel].info::placeholder,
+input[type=url].info::placeholder {
+  color: #075985;
+}
+@media (hover: hover) {
+  input[type=text].info:hover:not(:disabled):not([readonly]), input[type=text].info.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].info:hover:not(:disabled):not([readonly]),
+  input[type=password].info.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].info:hover:not(:disabled):not([readonly]),
+  input[type=email].info.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].info:hover:not(:disabled):not([readonly]),
+  input[type=tel].info.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].info:hover:not(:disabled):not([readonly]),
+  input[type=url].info.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #0ea5e9;
+    border: 1px solid #0284c7;
+    color: #0c4a6e;
+  }
+}
+input[type=text].info:active:not(:disabled):not([readonly]), input[type=text].info.is-actived:not(:disabled):not([readonly]),
+input[type=password].info:active:not(:disabled):not([readonly]),
+input[type=password].info.is-actived:not(:disabled):not([readonly]),
+input[type=email].info:active:not(:disabled):not([readonly]),
+input[type=email].info.is-actived:not(:disabled):not([readonly]),
+input[type=tel].info:active:not(:disabled):not([readonly]),
+input[type=tel].info.is-actived:not(:disabled):not([readonly]),
+input[type=url].info:active:not(:disabled):not([readonly]),
+input[type=url].info.is-actived:not(:disabled):not([readonly]) {
+  background-color: #0284c7;
+  border-color: #0369a1;
+  color: #0c4a6e;
+}
+input[type=text].info:focus:not(:disabled):not([readonly]), input[type=text].info.is-focused:not(:disabled):not([readonly]),
+input[type=password].info:focus:not(:disabled):not([readonly]),
+input[type=password].info.is-focused:not(:disabled):not([readonly]),
+input[type=email].info:focus:not(:disabled):not([readonly]),
+input[type=email].info.is-focused:not(:disabled):not([readonly]),
+input[type=tel].info:focus:not(:disabled):not([readonly]),
+input[type=tel].info.is-focused:not(:disabled):not([readonly]),
+input[type=url].info:focus:not(:disabled):not([readonly]),
+input[type=url].info.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #0ea5e9;
+}
+input[type=text].info:disabled,
+input[type=password].info:disabled,
+input[type=email].info:disabled,
+input[type=tel].info:disabled,
+input[type=url].info:disabled {
+  background-color: #e0f2fe;
+  border-color: #bae6fd;
+  color: #38bdf8;
+}
+input[type=text].info:disabled::-moz-placeholder, input[type=password].info:disabled::-moz-placeholder, input[type=email].info:disabled::-moz-placeholder, input[type=tel].info:disabled::-moz-placeholder, input[type=url].info:disabled::-moz-placeholder {
+  color: #38bdf8;
+}
+input[type=text].info:disabled::placeholder,
+input[type=password].info:disabled::placeholder,
+input[type=email].info:disabled::placeholder,
+input[type=tel].info:disabled::placeholder,
+input[type=url].info:disabled::placeholder {
+  color: #38bdf8;
+}
+input[type=text].info[readonly],
+input[type=password].info[readonly],
+input[type=email].info[readonly],
+input[type=tel].info[readonly],
+input[type=url].info[readonly] {
+  background-color: #e0f2fe;
+  border-color: #bae6fd;
+  color: #0369a1;
+}
+input[type=text].help,
+input[type=password].help,
+input[type=email].help,
+input[type=tel].help,
+input[type=url].help {
+  background-color: #a78bfa;
+  border: 1px solid #818cf8;
+  color: #3730a3;
+}
+input[type=text].help::-moz-placeholder, input[type=password].help::-moz-placeholder, input[type=email].help::-moz-placeholder, input[type=tel].help::-moz-placeholder, input[type=url].help::-moz-placeholder {
+  color: #4338ca;
+}
+input[type=text].help::placeholder,
+input[type=password].help::placeholder,
+input[type=email].help::placeholder,
+input[type=tel].help::placeholder,
+input[type=url].help::placeholder {
+  color: #4338ca;
+}
+@media (hover: hover) {
+  input[type=text].help:hover:not(:disabled):not([readonly]), input[type=text].help.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].help:hover:not(:disabled):not([readonly]),
+  input[type=password].help.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].help:hover:not(:disabled):not([readonly]),
+  input[type=email].help.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].help:hover:not(:disabled):not([readonly]),
+  input[type=tel].help.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].help:hover:not(:disabled):not([readonly]),
+  input[type=url].help.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #818cf8;
+    border: 1px solid #6366f1;
+    color: #3730a3;
+  }
+}
+input[type=text].help:active:not(:disabled):not([readonly]), input[type=text].help.is-actived:not(:disabled):not([readonly]),
+input[type=password].help:active:not(:disabled):not([readonly]),
+input[type=password].help.is-actived:not(:disabled):not([readonly]),
+input[type=email].help:active:not(:disabled):not([readonly]),
+input[type=email].help.is-actived:not(:disabled):not([readonly]),
+input[type=tel].help:active:not(:disabled):not([readonly]),
+input[type=tel].help.is-actived:not(:disabled):not([readonly]),
+input[type=url].help:active:not(:disabled):not([readonly]),
+input[type=url].help.is-actived:not(:disabled):not([readonly]) {
+  background-color: #6366f1;
+  border-color: #4f46e5;
+  color: #3730a3;
+}
+input[type=text].help:focus:not(:disabled):not([readonly]), input[type=text].help.is-focused:not(:disabled):not([readonly]),
+input[type=password].help:focus:not(:disabled):not([readonly]),
+input[type=password].help.is-focused:not(:disabled):not([readonly]),
+input[type=email].help:focus:not(:disabled):not([readonly]),
+input[type=email].help.is-focused:not(:disabled):not([readonly]),
+input[type=tel].help:focus:not(:disabled):not([readonly]),
+input[type=tel].help.is-focused:not(:disabled):not([readonly]),
+input[type=url].help:focus:not(:disabled):not([readonly]),
+input[type=url].help.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #818cf8;
+}
+input[type=text].help:disabled,
+input[type=password].help:disabled,
+input[type=email].help:disabled,
+input[type=tel].help:disabled,
+input[type=url].help:disabled {
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #a78bfa;
+}
+input[type=text].help:disabled::-moz-placeholder, input[type=password].help:disabled::-moz-placeholder, input[type=email].help:disabled::-moz-placeholder, input[type=tel].help:disabled::-moz-placeholder, input[type=url].help:disabled::-moz-placeholder {
+  color: #a78bfa;
+}
+input[type=text].help:disabled::placeholder,
+input[type=password].help:disabled::placeholder,
+input[type=email].help:disabled::placeholder,
+input[type=tel].help:disabled::placeholder,
+input[type=url].help:disabled::placeholder {
+  color: #a78bfa;
+}
+input[type=text].help[readonly],
+input[type=password].help[readonly],
+input[type=email].help[readonly],
+input[type=tel].help[readonly],
+input[type=url].help[readonly] {
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #4f46e5;
+}/*# sourceMappingURL=textinput.css.map */

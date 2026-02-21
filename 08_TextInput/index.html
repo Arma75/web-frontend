@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>빈 페이지</title>
+
+        <!-- Meta Tags -->
+        <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
+        <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
+        <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
+        <meta name="title" content="빈 페이지"/> <!-- 제목 설정 -->
+        <meta name="description" content="빈 페이지 템플릿" /> <!-- 설명 설정 -->
+        <meta name="keywords" content="template, empty"/> <!-- 키워드 설정 -->
+        <meta name="author" content="arma75"/> <!-- 작성자 설정 -->
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheet -->
+        <link rel="stylesheet" href="./textinput.css">
+        <style>
+            main {
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 56px;
+                background-color: #f8f9fa;
+            }
+            div {
+                display: flex;
+                flex-direction: column;
+                gap: 32px;
+            }
+            section {
+                display: flex;
+                align-items: center;
+                gap: 24px;
+                flex-wrap: wrap;
+                padding: 24px;
+                border-radius: 24px;
+                background: #fff;
+                border: 1px solid #f1f3f5;
+            }
+            article {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-direction: column;
+            }
+        </style>
+    </head>
+
+    <body>
+        <main>
+            <div>
+                <h1>TEXT FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="text" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="text" class="is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="text" class="is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="text" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="text" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>PASSWORD FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="password" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="password" class="is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="password" class="is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="password" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="password" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>EMAIL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="email" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="email" class="is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="email" class="is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="email" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="email" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="tel" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="tel" class="is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="tel" class="is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="tel" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="tel" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>URL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="url" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="url" class="is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="url" class="is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="url" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="url" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEXT FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="text" class="primary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="text" class="primary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="text" class="primary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="text" class="primary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="text" class="primary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>PASSWORD FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="password" class="primary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="password" class="primary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="password" class="primary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="password" class="primary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="password" class="primary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>EMAIL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="email" class="primary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="email" class="primary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="email" class="primary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="email" class="primary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="email" class="primary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="tel" class="primary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="tel" class="primary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="tel" class="primary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="tel" class="primary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="tel" class="primary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>URL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="url" class="primary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="url" class="primary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="url" class="primary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="url" class="primary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="url" class="primary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEXT FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="text" class="secondary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="text" class="secondary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="text" class="secondary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="text" class="secondary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="text" class="secondary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>PASSWORD FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="password" class="secondary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="password" class="secondary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="password" class="secondary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="password" class="secondary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="password" class="secondary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>EMAIL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="email" class="secondary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="email" class="secondary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="email" class="secondary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="email" class="secondary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="email" class="secondary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="tel" class="secondary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="tel" class="secondary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="tel" class="secondary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="tel" class="secondary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="tel" class="secondary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>URL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="url" class="secondary" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="url" class="secondary is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="url" class="secondary is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="url" class="secondary" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="url" class="secondary" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEXT FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="text" class="success" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="text" class="success is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="text" class="success is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="text" class="success" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="text" class="success" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>PASSWORD FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="password" class="success" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="password" class="success is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="password" class="success is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="password" class="success" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="password" class="success" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>EMAIL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="email" class="success" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="email" class="success is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="email" class="success is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="email" class="success" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="email" class="success" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="tel" class="success" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="tel" class="success is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="tel" class="success is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="tel" class="success" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="tel" class="success" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>URL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="url" class="success" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="url" class="success is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="url" class="success is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="url" class="success" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="url" class="success" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEXT FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="text" class="warning" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="text" class="warning is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="text" class="warning is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="text" class="warning" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="text" class="warning" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>PASSWORD FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="password" class="warning" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="password" class="warning is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="password" class="warning is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="password" class="warning" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="password" class="warning" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>EMAIL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="email" class="warning" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="email" class="warning is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="email" class="warning is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="email" class="warning" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="email" class="warning" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="tel" class="warning" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="tel" class="warning is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="tel" class="warning is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="tel" class="warning" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="tel" class="warning" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>URL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="url" class="warning" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="url" class="warning is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="url" class="warning is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="url" class="warning" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="url" class="warning" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEXT FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="text" class="danger" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="text" class="danger is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="text" class="danger is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="text" class="danger" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="text" class="danger" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>PASSWORD FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="password" class="danger" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="password" class="danger is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="password" class="danger is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="password" class="danger" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="password" class="danger" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>EMAIL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="email" class="danger" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="email" class="danger is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="email" class="danger is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="email" class="danger" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="email" class="danger" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="tel" class="danger" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="tel" class="danger is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="tel" class="danger is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="tel" class="danger" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="tel" class="danger" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>URL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="url" class="danger" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="url" class="danger is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="url" class="danger is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="url" class="danger" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="url" class="danger" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEXT FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="text" class="info" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="text" class="info is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="text" class="info is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="text" class="info" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="text" class="info" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>PASSWORD FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="password" class="info" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="password" class="info is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="password" class="info is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="password" class="info" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="password" class="info" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>EMAIL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="email" class="info" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="email" class="info is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="email" class="info is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="email" class="info" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="email" class="info" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="tel" class="info" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="tel" class="info is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="tel" class="info is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="tel" class="info" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="tel" class="info" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>URL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="url" class="info" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="url" class="info is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="url" class="info is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="url" class="info" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="url" class="info" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEXT FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="text" class="help" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="text" class="help is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="text" class="help is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="text" class="help" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="text" class="help" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>PASSWORD FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="password" class="help" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="password" class="help is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="password" class="help is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="password" class="help" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="password" class="help" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>EMAIL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="email" class="help" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="email" class="help is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="email" class="help is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="email" class="help" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="email" class="help" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>TEL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="tel" class="help" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="tel" class="help is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="tel" class="help is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="tel" class="help" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="tel" class="help" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+
+            <div>
+                <h1>URL FIELD</h1>
+                <section>
+                    <article>
+                        <h4>DEFAULT</h4>
+                        <input type="url" class="help" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>HOVER</h4>
+                        <input type="url" class="help is-hovered" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>FOCUS</h4>
+                        <input type="url" class="help is-focused" placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>READONLY</h4>
+                        <input type="url" class="help" readonly placeholder="텍스트를 입력하세요.">
+                    </article>
+                    <article>
+                        <h4>DISABLED</h4>
+                        <input type="url" class="help" disabled placeholder="텍스트를 입력하세요.">
+                    </article>
+                </section>
+            </div>
+        </main>
+
+        <!-- JavaScript -->
+        <script>
+        </script>
+    </body>
+</html>
