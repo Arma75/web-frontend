@@ -1,0 +1,1193 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+html {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "Noto Sans", sans-serif;
+}
+
+body {
+  padding: 40px;
+  background-color: #f8f9fa;
+}
+
+button, input[type=button], input[type=submit] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  text-decoration: none;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  color: #212529;
+}
+@media (hover: hover) {
+  button:hover, button.is-hovered, input[type=button]:hover, input[type=button].is-hovered, input[type=submit]:hover, input[type=submit].is-hovered {
+    background-color: #f1f3f5;
+    border-color: #dee2e6;
+  }
+}
+button:active, button.is-actived, input[type=button]:active, input[type=button].is-actived, input[type=submit]:active, input[type=submit].is-actived {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+  transform: scale(0.98);
+}
+button:focus-visible, button.is-focused, input[type=button]:focus-visible, input[type=button].is-focused, input[type=submit]:focus-visible, input[type=submit].is-focused {
+  outline: 2px solid #1cecbf;
+  outline-offset: 2px;
+}
+button:disabled, input[type=button]:disabled, input[type=submit]:disabled {
+  cursor: not-allowed;
+  background-color: #dee2e6;
+  border-color: #ced4da;
+  color: #b8c0cc;
+  transform: none;
+}
+button[readonly], input[type=button][readonly], input[type=submit][readonly] {
+  cursor: default;
+  background-color: #dee2e6;
+  border-color: #ced4da;
+  color: #868e96;
+  transform: none;
+}
+@media (hover: hover) {
+  button[readonly]:hover, button[readonly].is-hovered, input[type=button][readonly]:hover, input[type=button][readonly].is-hovered, input[type=submit][readonly]:hover, input[type=submit][readonly].is-hovered {
+    background-color: #dee2e6;
+    border-color: #ced4da;
+  }
+}
+button.primary, input[type=button].primary, input[type=submit].primary {
+  background-color: #3ff0ca;
+  border: 1px solid #1cecbf;
+  color: #0d8c72;
+}
+@media (hover: hover) {
+  button.primary:hover, button.primary.is-hovered, input[type=button].primary:hover, input[type=button].primary.is-hovered, input[type=submit].primary:hover, input[type=submit].primary.is-hovered {
+    background-color: #1cecbf;
+    border-color: #18d4ac;
+  }
+}
+button.primary:active, button.primary.is-actived, input[type=button].primary:active, input[type=button].primary.is-actived, input[type=submit].primary:active, input[type=submit].primary.is-actived {
+  background-color: #18d4ac;
+  border-color: #14bc99;
+  transform: scale(0.98);
+}
+button.primary:focus-visible, button.primary.is-focused, input[type=button].primary:focus-visible, input[type=button].primary.is-focused, input[type=submit].primary:focus-visible, input[type=submit].primary.is-focused {
+  outline: 2px solid #1cecbf;
+  outline-offset: 2px;
+}
+button.primary:disabled, input[type=button].primary:disabled, input[type=submit].primary:disabled {
+  cursor: not-allowed;
+  background-color: #c2f9ee;
+  border-color: #93f5e1;
+  color: #3ff0ca;
+  transform: none;
+}
+button.primary[readonly], input[type=button].primary[readonly], input[type=submit].primary[readonly] {
+  cursor: primary;
+  background-color: #c2f9ee;
+  border-color: #93f5e1;
+  color: #14bc99;
+  transform: none;
+}
+@media (hover: hover) {
+  button.primary[readonly]:hover, button.primary[readonly].is-hovered, input[type=button].primary[readonly]:hover, input[type=button].primary[readonly].is-hovered, input[type=submit].primary[readonly]:hover, input[type=submit].primary[readonly].is-hovered {
+    background-color: #c2f9ee;
+    border-color: #93f5e1;
+  }
+}
+button.secondary, input[type=button].secondary, input[type=submit].secondary {
+  background-color: #a78bfa;
+  border: 1px solid #8b5cf6;
+  color: #4c1d95;
+}
+@media (hover: hover) {
+  button.secondary:hover, button.secondary.is-hovered, input[type=button].secondary:hover, input[type=button].secondary.is-hovered, input[type=submit].secondary:hover, input[type=submit].secondary.is-hovered {
+    background-color: #8b5cf6;
+    border-color: #7c3aed;
+  }
+}
+button.secondary:active, button.secondary.is-actived, input[type=button].secondary:active, input[type=button].secondary.is-actived, input[type=submit].secondary:active, input[type=submit].secondary.is-actived {
+  background-color: #7c3aed;
+  border-color: #6d28d9;
+  transform: scale(0.98);
+}
+button.secondary:focus-visible, button.secondary.is-focused, input[type=button].secondary:focus-visible, input[type=button].secondary.is-focused, input[type=submit].secondary:focus-visible, input[type=submit].secondary.is-focused {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}
+button.secondary:disabled, input[type=button].secondary:disabled, input[type=submit].secondary:disabled {
+  cursor: not-allowed;
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #a78bfa;
+  transform: none;
+}
+button.secondary[readonly], input[type=button].secondary[readonly], input[type=submit].secondary[readonly] {
+  cursor: secondary;
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #6d28d9;
+  transform: none;
+}
+@media (hover: hover) {
+  button.secondary[readonly]:hover, button.secondary[readonly].is-hovered, input[type=button].secondary[readonly]:hover, input[type=button].secondary[readonly].is-hovered, input[type=submit].secondary[readonly]:hover, input[type=submit].secondary[readonly].is-hovered {
+    background-color: #ede9fe;
+    border-color: #ddd6fe;
+  }
+}
+button.success, input[type=button].success, input[type=submit].success {
+  background-color: #4ade80;
+  border: 1px solid #22c55e;
+  color: #14532d;
+}
+@media (hover: hover) {
+  button.success:hover, button.success.is-hovered, input[type=button].success:hover, input[type=button].success.is-hovered, input[type=submit].success:hover, input[type=submit].success.is-hovered {
+    background-color: #22c55e;
+    border-color: #16a34a;
+  }
+}
+button.success:active, button.success.is-actived, input[type=button].success:active, input[type=button].success.is-actived, input[type=submit].success:active, input[type=submit].success.is-actived {
+  background-color: #16a34a;
+  border-color: #15803d;
+  transform: scale(0.98);
+}
+button.success:focus-visible, button.success.is-focused, input[type=button].success:focus-visible, input[type=button].success.is-focused, input[type=submit].success:focus-visible, input[type=submit].success.is-focused {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
+button.success:disabled, input[type=button].success:disabled, input[type=submit].success:disabled {
+  cursor: not-allowed;
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  color: #4ade80;
+  transform: none;
+}
+button.success[readonly], input[type=button].success[readonly], input[type=submit].success[readonly] {
+  cursor: success;
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  color: #15803d;
+  transform: none;
+}
+@media (hover: hover) {
+  button.success[readonly]:hover, button.success[readonly].is-hovered, input[type=button].success[readonly]:hover, input[type=button].success[readonly].is-hovered, input[type=submit].success[readonly]:hover, input[type=submit].success[readonly].is-hovered {
+    background-color: #dcfce7;
+    border-color: #bbf7d0;
+  }
+}
+button.warning, input[type=button].warning, input[type=submit].warning {
+  background-color: #fbbf24;
+  border: 1px solid #f59e0b;
+  color: #78350f;
+}
+@media (hover: hover) {
+  button.warning:hover, button.warning.is-hovered, input[type=button].warning:hover, input[type=button].warning.is-hovered, input[type=submit].warning:hover, input[type=submit].warning.is-hovered {
+    background-color: #f59e0b;
+    border-color: #d97706;
+  }
+}
+button.warning:active, button.warning.is-actived, input[type=button].warning:active, input[type=button].warning.is-actived, input[type=submit].warning:active, input[type=submit].warning.is-actived {
+  background-color: #d97706;
+  border-color: #b45309;
+  transform: scale(0.98);
+}
+button.warning:focus-visible, button.warning.is-focused, input[type=button].warning:focus-visible, input[type=button].warning.is-focused, input[type=submit].warning:focus-visible, input[type=submit].warning.is-focused {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+button.warning:disabled, input[type=button].warning:disabled, input[type=submit].warning:disabled {
+  cursor: not-allowed;
+  background-color: #fef3c7;
+  border-color: #fde68a;
+  color: #fbbf24;
+  transform: none;
+}
+button.warning[readonly], input[type=button].warning[readonly], input[type=submit].warning[readonly] {
+  cursor: warning;
+  background-color: #fef3c7;
+  border-color: #fde68a;
+  color: #b45309;
+  transform: none;
+}
+@media (hover: hover) {
+  button.warning[readonly]:hover, button.warning[readonly].is-hovered, input[type=button].warning[readonly]:hover, input[type=button].warning[readonly].is-hovered, input[type=submit].warning[readonly]:hover, input[type=submit].warning[readonly].is-hovered {
+    background-color: #fef3c7;
+    border-color: #fde68a;
+  }
+}
+button.danger, input[type=button].danger, input[type=submit].danger {
+  background-color: #f87171;
+  border: 1px solid #ef4444;
+  color: #7f1d1d;
+}
+@media (hover: hover) {
+  button.danger:hover, button.danger.is-hovered, input[type=button].danger:hover, input[type=button].danger.is-hovered, input[type=submit].danger:hover, input[type=submit].danger.is-hovered {
+    background-color: #ef4444;
+    border-color: #dc2626;
+  }
+}
+button.danger:active, button.danger.is-actived, input[type=button].danger:active, input[type=button].danger.is-actived, input[type=submit].danger:active, input[type=submit].danger.is-actived {
+  background-color: #dc2626;
+  border-color: #b91c1c;
+  transform: scale(0.98);
+}
+button.danger:focus-visible, button.danger.is-focused, input[type=button].danger:focus-visible, input[type=button].danger.is-focused, input[type=submit].danger:focus-visible, input[type=submit].danger.is-focused {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+button.danger:disabled, input[type=button].danger:disabled, input[type=submit].danger:disabled {
+  cursor: not-allowed;
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #f87171;
+  transform: none;
+}
+button.danger[readonly], input[type=button].danger[readonly], input[type=submit].danger[readonly] {
+  cursor: danger;
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #b91c1c;
+  transform: none;
+}
+@media (hover: hover) {
+  button.danger[readonly]:hover, button.danger[readonly].is-hovered, input[type=button].danger[readonly]:hover, input[type=button].danger[readonly].is-hovered, input[type=submit].danger[readonly]:hover, input[type=submit].danger[readonly].is-hovered {
+    background-color: #fee2e2;
+    border-color: #fecaca;
+  }
+}
+button.info, input[type=button].info, input[type=submit].info {
+  background-color: #38bdf8;
+  border: 1px solid #0ea5e9;
+  color: #0c4a6e;
+}
+@media (hover: hover) {
+  button.info:hover, button.info.is-hovered, input[type=button].info:hover, input[type=button].info.is-hovered, input[type=submit].info:hover, input[type=submit].info.is-hovered {
+    background-color: #0ea5e9;
+    border-color: #0284c7;
+  }
+}
+button.info:active, button.info.is-actived, input[type=button].info:active, input[type=button].info.is-actived, input[type=submit].info:active, input[type=submit].info.is-actived {
+  background-color: #0284c7;
+  border-color: #0369a1;
+  transform: scale(0.98);
+}
+button.info:focus-visible, button.info.is-focused, input[type=button].info:focus-visible, input[type=button].info.is-focused, input[type=submit].info:focus-visible, input[type=submit].info.is-focused {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+button.info:disabled, input[type=button].info:disabled, input[type=submit].info:disabled {
+  cursor: not-allowed;
+  background-color: #e0f2fe;
+  border-color: #bae6fd;
+  color: #38bdf8;
+  transform: none;
+}
+button.info[readonly], input[type=button].info[readonly], input[type=submit].info[readonly] {
+  cursor: info;
+  background-color: #e0f2fe;
+  border-color: #bae6fd;
+  color: #0369a1;
+  transform: none;
+}
+@media (hover: hover) {
+  button.info[readonly]:hover, button.info[readonly].is-hovered, input[type=button].info[readonly]:hover, input[type=button].info[readonly].is-hovered, input[type=submit].info[readonly]:hover, input[type=submit].info[readonly].is-hovered {
+    background-color: #e0f2fe;
+    border-color: #bae6fd;
+  }
+}
+button.help, input[type=button].help, input[type=submit].help {
+  background-color: #a78bfa;
+  border: 1px solid #818cf8;
+  color: #3730a3;
+}
+@media (hover: hover) {
+  button.help:hover, button.help.is-hovered, input[type=button].help:hover, input[type=button].help.is-hovered, input[type=submit].help:hover, input[type=submit].help.is-hovered {
+    background-color: #818cf8;
+    border-color: #6366f1;
+  }
+}
+button.help:active, button.help.is-actived, input[type=button].help:active, input[type=button].help.is-actived, input[type=submit].help:active, input[type=submit].help.is-actived {
+  background-color: #6366f1;
+  border-color: #4f46e5;
+  transform: scale(0.98);
+}
+button.help:focus-visible, button.help.is-focused, input[type=button].help:focus-visible, input[type=button].help.is-focused, input[type=submit].help:focus-visible, input[type=submit].help.is-focused {
+  outline: 2px solid #818cf8;
+  outline-offset: 2px;
+}
+button.help:disabled, input[type=button].help:disabled, input[type=submit].help:disabled {
+  cursor: not-allowed;
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #a78bfa;
+  transform: none;
+}
+button.help[readonly], input[type=button].help[readonly], input[type=submit].help[readonly] {
+  cursor: help;
+  background-color: #ede9fe;
+  border-color: #ddd6fe;
+  color: #4f46e5;
+  transform: none;
+}
+@media (hover: hover) {
+  button.help[readonly]:hover, button.help[readonly].is-hovered, input[type=button].help[readonly]:hover, input[type=button].help[readonly].is-hovered, input[type=submit].help[readonly]:hover, input[type=submit].help[readonly].is-hovered {
+    background-color: #ede9fe;
+    border-color: #ddd6fe;
+  }
+}
+
+textarea {
+  min-height: 146px;
+  resize: none;
+}
+
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=tel],
+input[type=url],
+textarea {
+  width: 100%;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: inherit;
+  font-family: inherit;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  color: #212529;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+}
+input[type=text]::-moz-placeholder, input[type=password]::-moz-placeholder, input[type=email]::-moz-placeholder, input[type=tel]::-moz-placeholder, input[type=url]::-moz-placeholder, textarea::-moz-placeholder {
+  color: #ced4da;
+}
+input[type=text]::placeholder,
+input[type=password]::placeholder,
+input[type=email]::placeholder,
+input[type=tel]::placeholder,
+input[type=url]::placeholder,
+textarea::placeholder {
+  color: #ced4da;
+}
+@media (hover: hover) {
+  input[type=text]:hover:not(:disabled):not([readonly]), input[type=text].is-hovered:not(:disabled):not([readonly]),
+  input[type=password]:hover:not(:disabled):not([readonly]),
+  input[type=password].is-hovered:not(:disabled):not([readonly]),
+  input[type=email]:hover:not(:disabled):not([readonly]),
+  input[type=email].is-hovered:not(:disabled):not([readonly]),
+  input[type=tel]:hover:not(:disabled):not([readonly]),
+  input[type=tel].is-hovered:not(:disabled):not([readonly]),
+  input[type=url]:hover:not(:disabled):not([readonly]),
+  input[type=url].is-hovered:not(:disabled):not([readonly]),
+  textarea:hover:not(:disabled):not([readonly]),
+  textarea.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #212529;
+  }
+}
+input[type=text]:active:not(:disabled):not([readonly]), input[type=text].is-actived:not(:disabled):not([readonly]),
+input[type=password]:active:not(:disabled):not([readonly]),
+input[type=password].is-actived:not(:disabled):not([readonly]),
+input[type=email]:active:not(:disabled):not([readonly]),
+input[type=email].is-actived:not(:disabled):not([readonly]),
+input[type=tel]:active:not(:disabled):not([readonly]),
+input[type=tel].is-actived:not(:disabled):not([readonly]),
+input[type=url]:active:not(:disabled):not([readonly]),
+input[type=url].is-actived:not(:disabled):not([readonly]),
+textarea:active:not(:disabled):not([readonly]),
+textarea.is-actived:not(:disabled):not([readonly]) {
+  background-color: #f1f3f5;
+  border-color: #ced4da;
+  color: #212529;
+  transform: scale(0.98);
+}
+input[type=text]:focus:not(:disabled):not([readonly]), input[type=text].is-focused:not(:disabled):not([readonly]),
+input[type=password]:focus:not(:disabled):not([readonly]),
+input[type=password].is-focused:not(:disabled):not([readonly]),
+input[type=email]:focus:not(:disabled):not([readonly]),
+input[type=email].is-focused:not(:disabled):not([readonly]),
+input[type=tel]:focus:not(:disabled):not([readonly]),
+input[type=tel].is-focused:not(:disabled):not([readonly]),
+input[type=url]:focus:not(:disabled):not([readonly]),
+input[type=url].is-focused:not(:disabled):not([readonly]),
+textarea:focus:not(:disabled):not([readonly]),
+textarea.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #1cecbf;
+  outline-offset: 2px;
+}
+input[type=text]:disabled,
+input[type=password]:disabled,
+input[type=email]:disabled,
+input[type=tel]:disabled,
+input[type=url]:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+  color: #ced4da;
+  transform: none;
+}
+input[type=text]:disabled::-moz-placeholder, input[type=password]:disabled::-moz-placeholder, input[type=email]:disabled::-moz-placeholder, input[type=tel]:disabled::-moz-placeholder, input[type=url]:disabled::-moz-placeholder, textarea:disabled::-moz-placeholder {
+  color: #ced4da;
+}
+input[type=text]:disabled::placeholder,
+input[type=password]:disabled::placeholder,
+input[type=email]:disabled::placeholder,
+input[type=tel]:disabled::placeholder,
+input[type=url]:disabled::placeholder,
+textarea:disabled::placeholder {
+  color: #ced4da;
+}
+input[type=text][readonly],
+input[type=password][readonly],
+input[type=email][readonly],
+input[type=tel][readonly],
+input[type=url][readonly],
+textarea[readonly] {
+  cursor: default;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+  color: #b8c0cc;
+}
+input[type=text].primary,
+input[type=password].primary,
+input[type=email].primary,
+input[type=tel].primary,
+input[type=url].primary,
+textarea.primary {
+  background-color: #c2f9ee;
+  border: 1px solid #93f5e1;
+  color: #0d8c72;
+}
+input[type=text].primary::-moz-placeholder, input[type=password].primary::-moz-placeholder, input[type=email].primary::-moz-placeholder, input[type=tel].primary::-moz-placeholder, input[type=url].primary::-moz-placeholder, textarea.primary::-moz-placeholder {
+  color: #11a485;
+}
+input[type=text].primary::placeholder,
+input[type=password].primary::placeholder,
+input[type=email].primary::placeholder,
+input[type=tel].primary::placeholder,
+input[type=url].primary::placeholder,
+textarea.primary::placeholder {
+  color: #11a485;
+}
+@media (hover: hover) {
+  input[type=text].primary:hover:not(:disabled):not([readonly]), input[type=text].primary.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].primary:hover:not(:disabled):not([readonly]),
+  input[type=password].primary.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].primary:hover:not(:disabled):not([readonly]),
+  input[type=email].primary.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].primary:hover:not(:disabled):not([readonly]),
+  input[type=tel].primary.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].primary:hover:not(:disabled):not([readonly]),
+  input[type=url].primary.is-hovered:not(:disabled):not([readonly]),
+  textarea.primary:hover:not(:disabled):not([readonly]),
+  textarea.primary.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #93f5e1;
+    border: 1px solid #62f1d4;
+    color: #0d8c72;
+  }
+}
+input[type=text].primary:active:not(:disabled):not([readonly]), input[type=text].primary.is-actived:not(:disabled):not([readonly]),
+input[type=password].primary:active:not(:disabled):not([readonly]),
+input[type=password].primary.is-actived:not(:disabled):not([readonly]),
+input[type=email].primary:active:not(:disabled):not([readonly]),
+input[type=email].primary.is-actived:not(:disabled):not([readonly]),
+input[type=tel].primary:active:not(:disabled):not([readonly]),
+input[type=tel].primary.is-actived:not(:disabled):not([readonly]),
+input[type=url].primary:active:not(:disabled):not([readonly]),
+input[type=url].primary.is-actived:not(:disabled):not([readonly]),
+textarea.primary:active:not(:disabled):not([readonly]),
+textarea.primary.is-actived:not(:disabled):not([readonly]) {
+  background-color: #62f1d4;
+  border-color: #3ff0ca;
+  color: #0d8c72;
+}
+input[type=text].primary:focus:not(:disabled):not([readonly]), input[type=text].primary.is-focused:not(:disabled):not([readonly]),
+input[type=password].primary:focus:not(:disabled):not([readonly]),
+input[type=password].primary.is-focused:not(:disabled):not([readonly]),
+input[type=email].primary:focus:not(:disabled):not([readonly]),
+input[type=email].primary.is-focused:not(:disabled):not([readonly]),
+input[type=tel].primary:focus:not(:disabled):not([readonly]),
+input[type=tel].primary.is-focused:not(:disabled):not([readonly]),
+input[type=url].primary:focus:not(:disabled):not([readonly]),
+input[type=url].primary.is-focused:not(:disabled):not([readonly]),
+textarea.primary:focus:not(:disabled):not([readonly]),
+textarea.primary.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #1cecbf;
+  outline-offset: 2px;
+}
+input[type=text].primary:disabled,
+input[type=password].primary:disabled,
+input[type=email].primary:disabled,
+input[type=tel].primary:disabled,
+input[type=url].primary:disabled,
+textarea.primary:disabled {
+  background-color: #e8fdf8;
+  border-color: #c2f9ee;
+  color: #93f5e1;
+}
+input[type=text].primary:disabled::-moz-placeholder, input[type=password].primary:disabled::-moz-placeholder, input[type=email].primary:disabled::-moz-placeholder, input[type=tel].primary:disabled::-moz-placeholder, input[type=url].primary:disabled::-moz-placeholder, textarea.primary:disabled::-moz-placeholder {
+  color: #93f5e1;
+}
+input[type=text].primary:disabled::placeholder,
+input[type=password].primary:disabled::placeholder,
+input[type=email].primary:disabled::placeholder,
+input[type=tel].primary:disabled::placeholder,
+input[type=url].primary:disabled::placeholder,
+textarea.primary:disabled::placeholder {
+  color: #93f5e1;
+}
+input[type=text].primary[readonly],
+input[type=password].primary[readonly],
+input[type=email].primary[readonly],
+input[type=tel].primary[readonly],
+input[type=url].primary[readonly],
+textarea.primary[readonly] {
+  background-color: #e8fdf8;
+  border-color: #c2f9ee;
+  color: #62f1d4;
+}
+input[type=text].secondary,
+input[type=password].secondary,
+input[type=email].secondary,
+input[type=tel].secondary,
+input[type=url].secondary,
+textarea.secondary {
+  background-color: #ede9fe;
+  border: 1px solid #ddd6fe;
+  color: #4c1d95;
+}
+input[type=text].secondary::-moz-placeholder, input[type=password].secondary::-moz-placeholder, input[type=email].secondary::-moz-placeholder, input[type=tel].secondary::-moz-placeholder, input[type=url].secondary::-moz-placeholder, textarea.secondary::-moz-placeholder {
+  color: #5b21b6;
+}
+input[type=text].secondary::placeholder,
+input[type=password].secondary::placeholder,
+input[type=email].secondary::placeholder,
+input[type=tel].secondary::placeholder,
+input[type=url].secondary::placeholder,
+textarea.secondary::placeholder {
+  color: #5b21b6;
+}
+@media (hover: hover) {
+  input[type=text].secondary:hover:not(:disabled):not([readonly]), input[type=text].secondary.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].secondary:hover:not(:disabled):not([readonly]),
+  input[type=password].secondary.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].secondary:hover:not(:disabled):not([readonly]),
+  input[type=email].secondary.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].secondary:hover:not(:disabled):not([readonly]),
+  input[type=tel].secondary.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].secondary:hover:not(:disabled):not([readonly]),
+  input[type=url].secondary.is-hovered:not(:disabled):not([readonly]),
+  textarea.secondary:hover:not(:disabled):not([readonly]),
+  textarea.secondary.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #ddd6fe;
+    border: 1px solid #c4b5fd;
+    color: #4c1d95;
+  }
+}
+input[type=text].secondary:active:not(:disabled):not([readonly]), input[type=text].secondary.is-actived:not(:disabled):not([readonly]),
+input[type=password].secondary:active:not(:disabled):not([readonly]),
+input[type=password].secondary.is-actived:not(:disabled):not([readonly]),
+input[type=email].secondary:active:not(:disabled):not([readonly]),
+input[type=email].secondary.is-actived:not(:disabled):not([readonly]),
+input[type=tel].secondary:active:not(:disabled):not([readonly]),
+input[type=tel].secondary.is-actived:not(:disabled):not([readonly]),
+input[type=url].secondary:active:not(:disabled):not([readonly]),
+input[type=url].secondary.is-actived:not(:disabled):not([readonly]),
+textarea.secondary:active:not(:disabled):not([readonly]),
+textarea.secondary.is-actived:not(:disabled):not([readonly]) {
+  background-color: #c4b5fd;
+  border-color: #a78bfa;
+  color: #4c1d95;
+}
+input[type=text].secondary:focus:not(:disabled):not([readonly]), input[type=text].secondary.is-focused:not(:disabled):not([readonly]),
+input[type=password].secondary:focus:not(:disabled):not([readonly]),
+input[type=password].secondary.is-focused:not(:disabled):not([readonly]),
+input[type=email].secondary:focus:not(:disabled):not([readonly]),
+input[type=email].secondary.is-focused:not(:disabled):not([readonly]),
+input[type=tel].secondary:focus:not(:disabled):not([readonly]),
+input[type=tel].secondary.is-focused:not(:disabled):not([readonly]),
+input[type=url].secondary:focus:not(:disabled):not([readonly]),
+input[type=url].secondary.is-focused:not(:disabled):not([readonly]),
+textarea.secondary:focus:not(:disabled):not([readonly]),
+textarea.secondary.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}
+input[type=text].secondary:disabled,
+input[type=password].secondary:disabled,
+input[type=email].secondary:disabled,
+input[type=tel].secondary:disabled,
+input[type=url].secondary:disabled,
+textarea.secondary:disabled {
+  background-color: #f5f3ff;
+  border-color: #ede9fe;
+  color: #ddd6fe;
+}
+input[type=text].secondary:disabled::-moz-placeholder, input[type=password].secondary:disabled::-moz-placeholder, input[type=email].secondary:disabled::-moz-placeholder, input[type=tel].secondary:disabled::-moz-placeholder, input[type=url].secondary:disabled::-moz-placeholder, textarea.secondary:disabled::-moz-placeholder {
+  color: #ddd6fe;
+}
+input[type=text].secondary:disabled::placeholder,
+input[type=password].secondary:disabled::placeholder,
+input[type=email].secondary:disabled::placeholder,
+input[type=tel].secondary:disabled::placeholder,
+input[type=url].secondary:disabled::placeholder,
+textarea.secondary:disabled::placeholder {
+  color: #ddd6fe;
+}
+input[type=text].secondary[readonly],
+input[type=password].secondary[readonly],
+input[type=email].secondary[readonly],
+input[type=tel].secondary[readonly],
+input[type=url].secondary[readonly],
+textarea.secondary[readonly] {
+  background-color: #f5f3ff;
+  border-color: #ede9fe;
+  color: #c4b5fd;
+}
+input[type=text].success,
+input[type=password].success,
+input[type=email].success,
+input[type=tel].success,
+input[type=url].success,
+textarea.success {
+  background-color: #dcfce7;
+  border: 1px solid #bbf7d0;
+  color: #14532d;
+}
+input[type=text].success::-moz-placeholder, input[type=password].success::-moz-placeholder, input[type=email].success::-moz-placeholder, input[type=tel].success::-moz-placeholder, input[type=url].success::-moz-placeholder, textarea.success::-moz-placeholder {
+  color: #166534;
+}
+input[type=text].success::placeholder,
+input[type=password].success::placeholder,
+input[type=email].success::placeholder,
+input[type=tel].success::placeholder,
+input[type=url].success::placeholder,
+textarea.success::placeholder {
+  color: #166534;
+}
+@media (hover: hover) {
+  input[type=text].success:hover:not(:disabled):not([readonly]), input[type=text].success.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].success:hover:not(:disabled):not([readonly]),
+  input[type=password].success.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].success:hover:not(:disabled):not([readonly]),
+  input[type=email].success.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].success:hover:not(:disabled):not([readonly]),
+  input[type=tel].success.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].success:hover:not(:disabled):not([readonly]),
+  input[type=url].success.is-hovered:not(:disabled):not([readonly]),
+  textarea.success:hover:not(:disabled):not([readonly]),
+  textarea.success.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #bbf7d0;
+    border: 1px solid #86efac;
+    color: #14532d;
+  }
+}
+input[type=text].success:active:not(:disabled):not([readonly]), input[type=text].success.is-actived:not(:disabled):not([readonly]),
+input[type=password].success:active:not(:disabled):not([readonly]),
+input[type=password].success.is-actived:not(:disabled):not([readonly]),
+input[type=email].success:active:not(:disabled):not([readonly]),
+input[type=email].success.is-actived:not(:disabled):not([readonly]),
+input[type=tel].success:active:not(:disabled):not([readonly]),
+input[type=tel].success.is-actived:not(:disabled):not([readonly]),
+input[type=url].success:active:not(:disabled):not([readonly]),
+input[type=url].success.is-actived:not(:disabled):not([readonly]),
+textarea.success:active:not(:disabled):not([readonly]),
+textarea.success.is-actived:not(:disabled):not([readonly]) {
+  background-color: #86efac;
+  border-color: #4ade80;
+  color: #14532d;
+}
+input[type=text].success:focus:not(:disabled):not([readonly]), input[type=text].success.is-focused:not(:disabled):not([readonly]),
+input[type=password].success:focus:not(:disabled):not([readonly]),
+input[type=password].success.is-focused:not(:disabled):not([readonly]),
+input[type=email].success:focus:not(:disabled):not([readonly]),
+input[type=email].success.is-focused:not(:disabled):not([readonly]),
+input[type=tel].success:focus:not(:disabled):not([readonly]),
+input[type=tel].success.is-focused:not(:disabled):not([readonly]),
+input[type=url].success:focus:not(:disabled):not([readonly]),
+input[type=url].success.is-focused:not(:disabled):not([readonly]),
+textarea.success:focus:not(:disabled):not([readonly]),
+textarea.success.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
+input[type=text].success:disabled,
+input[type=password].success:disabled,
+input[type=email].success:disabled,
+input[type=tel].success:disabled,
+input[type=url].success:disabled,
+textarea.success:disabled {
+  background-color: #f0fdf4;
+  border-color: #dcfce7;
+  color: #bbf7d0;
+}
+input[type=text].success:disabled::-moz-placeholder, input[type=password].success:disabled::-moz-placeholder, input[type=email].success:disabled::-moz-placeholder, input[type=tel].success:disabled::-moz-placeholder, input[type=url].success:disabled::-moz-placeholder, textarea.success:disabled::-moz-placeholder {
+  color: #bbf7d0;
+}
+input[type=text].success:disabled::placeholder,
+input[type=password].success:disabled::placeholder,
+input[type=email].success:disabled::placeholder,
+input[type=tel].success:disabled::placeholder,
+input[type=url].success:disabled::placeholder,
+textarea.success:disabled::placeholder {
+  color: #bbf7d0;
+}
+input[type=text].success[readonly],
+input[type=password].success[readonly],
+input[type=email].success[readonly],
+input[type=tel].success[readonly],
+input[type=url].success[readonly],
+textarea.success[readonly] {
+  background-color: #f0fdf4;
+  border-color: #dcfce7;
+  color: #86efac;
+}
+input[type=text].warning,
+input[type=password].warning,
+input[type=email].warning,
+input[type=tel].warning,
+input[type=url].warning,
+textarea.warning {
+  background-color: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #78350f;
+}
+input[type=text].warning::-moz-placeholder, input[type=password].warning::-moz-placeholder, input[type=email].warning::-moz-placeholder, input[type=tel].warning::-moz-placeholder, input[type=url].warning::-moz-placeholder, textarea.warning::-moz-placeholder {
+  color: #92400e;
+}
+input[type=text].warning::placeholder,
+input[type=password].warning::placeholder,
+input[type=email].warning::placeholder,
+input[type=tel].warning::placeholder,
+input[type=url].warning::placeholder,
+textarea.warning::placeholder {
+  color: #92400e;
+}
+@media (hover: hover) {
+  input[type=text].warning:hover:not(:disabled):not([readonly]), input[type=text].warning.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].warning:hover:not(:disabled):not([readonly]),
+  input[type=password].warning.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].warning:hover:not(:disabled):not([readonly]),
+  input[type=email].warning.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].warning:hover:not(:disabled):not([readonly]),
+  input[type=tel].warning.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].warning:hover:not(:disabled):not([readonly]),
+  input[type=url].warning.is-hovered:not(:disabled):not([readonly]),
+  textarea.warning:hover:not(:disabled):not([readonly]),
+  textarea.warning.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #fde68a;
+    border: 1px solid #fcd34d;
+    color: #78350f;
+  }
+}
+input[type=text].warning:active:not(:disabled):not([readonly]), input[type=text].warning.is-actived:not(:disabled):not([readonly]),
+input[type=password].warning:active:not(:disabled):not([readonly]),
+input[type=password].warning.is-actived:not(:disabled):not([readonly]),
+input[type=email].warning:active:not(:disabled):not([readonly]),
+input[type=email].warning.is-actived:not(:disabled):not([readonly]),
+input[type=tel].warning:active:not(:disabled):not([readonly]),
+input[type=tel].warning.is-actived:not(:disabled):not([readonly]),
+input[type=url].warning:active:not(:disabled):not([readonly]),
+input[type=url].warning.is-actived:not(:disabled):not([readonly]),
+textarea.warning:active:not(:disabled):not([readonly]),
+textarea.warning.is-actived:not(:disabled):not([readonly]) {
+  background-color: #fcd34d;
+  border-color: #fbbf24;
+  color: #78350f;
+}
+input[type=text].warning:focus:not(:disabled):not([readonly]), input[type=text].warning.is-focused:not(:disabled):not([readonly]),
+input[type=password].warning:focus:not(:disabled):not([readonly]),
+input[type=password].warning.is-focused:not(:disabled):not([readonly]),
+input[type=email].warning:focus:not(:disabled):not([readonly]),
+input[type=email].warning.is-focused:not(:disabled):not([readonly]),
+input[type=tel].warning:focus:not(:disabled):not([readonly]),
+input[type=tel].warning.is-focused:not(:disabled):not([readonly]),
+input[type=url].warning:focus:not(:disabled):not([readonly]),
+input[type=url].warning.is-focused:not(:disabled):not([readonly]),
+textarea.warning:focus:not(:disabled):not([readonly]),
+textarea.warning.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+input[type=text].warning:disabled,
+input[type=password].warning:disabled,
+input[type=email].warning:disabled,
+input[type=tel].warning:disabled,
+input[type=url].warning:disabled,
+textarea.warning:disabled {
+  background-color: #fffbeb;
+  border-color: #fef3c7;
+  color: #fde68a;
+}
+input[type=text].warning:disabled::-moz-placeholder, input[type=password].warning:disabled::-moz-placeholder, input[type=email].warning:disabled::-moz-placeholder, input[type=tel].warning:disabled::-moz-placeholder, input[type=url].warning:disabled::-moz-placeholder, textarea.warning:disabled::-moz-placeholder {
+  color: #fde68a;
+}
+input[type=text].warning:disabled::placeholder,
+input[type=password].warning:disabled::placeholder,
+input[type=email].warning:disabled::placeholder,
+input[type=tel].warning:disabled::placeholder,
+input[type=url].warning:disabled::placeholder,
+textarea.warning:disabled::placeholder {
+  color: #fde68a;
+}
+input[type=text].warning[readonly],
+input[type=password].warning[readonly],
+input[type=email].warning[readonly],
+input[type=tel].warning[readonly],
+input[type=url].warning[readonly],
+textarea.warning[readonly] {
+  background-color: #fffbeb;
+  border-color: #fef3c7;
+  color: #fcd34d;
+}
+input[type=text].danger,
+input[type=password].danger,
+input[type=email].danger,
+input[type=tel].danger,
+input[type=url].danger,
+textarea.danger {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #7f1d1d;
+}
+input[type=text].danger::-moz-placeholder, input[type=password].danger::-moz-placeholder, input[type=email].danger::-moz-placeholder, input[type=tel].danger::-moz-placeholder, input[type=url].danger::-moz-placeholder, textarea.danger::-moz-placeholder {
+  color: #991b1b;
+}
+input[type=text].danger::placeholder,
+input[type=password].danger::placeholder,
+input[type=email].danger::placeholder,
+input[type=tel].danger::placeholder,
+input[type=url].danger::placeholder,
+textarea.danger::placeholder {
+  color: #991b1b;
+}
+@media (hover: hover) {
+  input[type=text].danger:hover:not(:disabled):not([readonly]), input[type=text].danger.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].danger:hover:not(:disabled):not([readonly]),
+  input[type=password].danger.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].danger:hover:not(:disabled):not([readonly]),
+  input[type=email].danger.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].danger:hover:not(:disabled):not([readonly]),
+  input[type=tel].danger.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].danger:hover:not(:disabled):not([readonly]),
+  input[type=url].danger.is-hovered:not(:disabled):not([readonly]),
+  textarea.danger:hover:not(:disabled):not([readonly]),
+  textarea.danger.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #fecaca;
+    border: 1px solid #fca5a5;
+    color: #7f1d1d;
+  }
+}
+input[type=text].danger:active:not(:disabled):not([readonly]), input[type=text].danger.is-actived:not(:disabled):not([readonly]),
+input[type=password].danger:active:not(:disabled):not([readonly]),
+input[type=password].danger.is-actived:not(:disabled):not([readonly]),
+input[type=email].danger:active:not(:disabled):not([readonly]),
+input[type=email].danger.is-actived:not(:disabled):not([readonly]),
+input[type=tel].danger:active:not(:disabled):not([readonly]),
+input[type=tel].danger.is-actived:not(:disabled):not([readonly]),
+input[type=url].danger:active:not(:disabled):not([readonly]),
+input[type=url].danger.is-actived:not(:disabled):not([readonly]),
+textarea.danger:active:not(:disabled):not([readonly]),
+textarea.danger.is-actived:not(:disabled):not([readonly]) {
+  background-color: #fca5a5;
+  border-color: #f87171;
+  color: #7f1d1d;
+}
+input[type=text].danger:focus:not(:disabled):not([readonly]), input[type=text].danger.is-focused:not(:disabled):not([readonly]),
+input[type=password].danger:focus:not(:disabled):not([readonly]),
+input[type=password].danger.is-focused:not(:disabled):not([readonly]),
+input[type=email].danger:focus:not(:disabled):not([readonly]),
+input[type=email].danger.is-focused:not(:disabled):not([readonly]),
+input[type=tel].danger:focus:not(:disabled):not([readonly]),
+input[type=tel].danger.is-focused:not(:disabled):not([readonly]),
+input[type=url].danger:focus:not(:disabled):not([readonly]),
+input[type=url].danger.is-focused:not(:disabled):not([readonly]),
+textarea.danger:focus:not(:disabled):not([readonly]),
+textarea.danger.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+input[type=text].danger:disabled,
+input[type=password].danger:disabled,
+input[type=email].danger:disabled,
+input[type=tel].danger:disabled,
+input[type=url].danger:disabled,
+textarea.danger:disabled {
+  background-color: #fef2f2;
+  border-color: #fee2e2;
+  color: #fecaca;
+}
+input[type=text].danger:disabled::-moz-placeholder, input[type=password].danger:disabled::-moz-placeholder, input[type=email].danger:disabled::-moz-placeholder, input[type=tel].danger:disabled::-moz-placeholder, input[type=url].danger:disabled::-moz-placeholder, textarea.danger:disabled::-moz-placeholder {
+  color: #fecaca;
+}
+input[type=text].danger:disabled::placeholder,
+input[type=password].danger:disabled::placeholder,
+input[type=email].danger:disabled::placeholder,
+input[type=tel].danger:disabled::placeholder,
+input[type=url].danger:disabled::placeholder,
+textarea.danger:disabled::placeholder {
+  color: #fecaca;
+}
+input[type=text].danger[readonly],
+input[type=password].danger[readonly],
+input[type=email].danger[readonly],
+input[type=tel].danger[readonly],
+input[type=url].danger[readonly],
+textarea.danger[readonly] {
+  background-color: #fef2f2;
+  border-color: #fee2e2;
+  color: #fca5a5;
+}
+input[type=text].info,
+input[type=password].info,
+input[type=email].info,
+input[type=tel].info,
+input[type=url].info,
+textarea.info {
+  background-color: #e0f2fe;
+  border: 1px solid #bae6fd;
+  color: #0c4a6e;
+}
+input[type=text].info::-moz-placeholder, input[type=password].info::-moz-placeholder, input[type=email].info::-moz-placeholder, input[type=tel].info::-moz-placeholder, input[type=url].info::-moz-placeholder, textarea.info::-moz-placeholder {
+  color: #075985;
+}
+input[type=text].info::placeholder,
+input[type=password].info::placeholder,
+input[type=email].info::placeholder,
+input[type=tel].info::placeholder,
+input[type=url].info::placeholder,
+textarea.info::placeholder {
+  color: #075985;
+}
+@media (hover: hover) {
+  input[type=text].info:hover:not(:disabled):not([readonly]), input[type=text].info.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].info:hover:not(:disabled):not([readonly]),
+  input[type=password].info.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].info:hover:not(:disabled):not([readonly]),
+  input[type=email].info.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].info:hover:not(:disabled):not([readonly]),
+  input[type=tel].info.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].info:hover:not(:disabled):not([readonly]),
+  input[type=url].info.is-hovered:not(:disabled):not([readonly]),
+  textarea.info:hover:not(:disabled):not([readonly]),
+  textarea.info.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #bae6fd;
+    border: 1px solid #7dd3fc;
+    color: #0c4a6e;
+  }
+}
+input[type=text].info:active:not(:disabled):not([readonly]), input[type=text].info.is-actived:not(:disabled):not([readonly]),
+input[type=password].info:active:not(:disabled):not([readonly]),
+input[type=password].info.is-actived:not(:disabled):not([readonly]),
+input[type=email].info:active:not(:disabled):not([readonly]),
+input[type=email].info.is-actived:not(:disabled):not([readonly]),
+input[type=tel].info:active:not(:disabled):not([readonly]),
+input[type=tel].info.is-actived:not(:disabled):not([readonly]),
+input[type=url].info:active:not(:disabled):not([readonly]),
+input[type=url].info.is-actived:not(:disabled):not([readonly]),
+textarea.info:active:not(:disabled):not([readonly]),
+textarea.info.is-actived:not(:disabled):not([readonly]) {
+  background-color: #7dd3fc;
+  border-color: #38bdf8;
+  color: #0c4a6e;
+}
+input[type=text].info:focus:not(:disabled):not([readonly]), input[type=text].info.is-focused:not(:disabled):not([readonly]),
+input[type=password].info:focus:not(:disabled):not([readonly]),
+input[type=password].info.is-focused:not(:disabled):not([readonly]),
+input[type=email].info:focus:not(:disabled):not([readonly]),
+input[type=email].info.is-focused:not(:disabled):not([readonly]),
+input[type=tel].info:focus:not(:disabled):not([readonly]),
+input[type=tel].info.is-focused:not(:disabled):not([readonly]),
+input[type=url].info:focus:not(:disabled):not([readonly]),
+input[type=url].info.is-focused:not(:disabled):not([readonly]),
+textarea.info:focus:not(:disabled):not([readonly]),
+textarea.info.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+input[type=text].info:disabled,
+input[type=password].info:disabled,
+input[type=email].info:disabled,
+input[type=tel].info:disabled,
+input[type=url].info:disabled,
+textarea.info:disabled {
+  background-color: #f0f9ff;
+  border-color: #e0f2fe;
+  color: #bae6fd;
+}
+input[type=text].info:disabled::-moz-placeholder, input[type=password].info:disabled::-moz-placeholder, input[type=email].info:disabled::-moz-placeholder, input[type=tel].info:disabled::-moz-placeholder, input[type=url].info:disabled::-moz-placeholder, textarea.info:disabled::-moz-placeholder {
+  color: #bae6fd;
+}
+input[type=text].info:disabled::placeholder,
+input[type=password].info:disabled::placeholder,
+input[type=email].info:disabled::placeholder,
+input[type=tel].info:disabled::placeholder,
+input[type=url].info:disabled::placeholder,
+textarea.info:disabled::placeholder {
+  color: #bae6fd;
+}
+input[type=text].info[readonly],
+input[type=password].info[readonly],
+input[type=email].info[readonly],
+input[type=tel].info[readonly],
+input[type=url].info[readonly],
+textarea.info[readonly] {
+  background-color: #f0f9ff;
+  border-color: #e0f2fe;
+  color: #7dd3fc;
+}
+input[type=text].help,
+input[type=password].help,
+input[type=email].help,
+input[type=tel].help,
+input[type=url].help,
+textarea.help {
+  background-color: #ede9fe;
+  border: 1px solid #ddd6fe;
+  color: #3730a3;
+}
+input[type=text].help::-moz-placeholder, input[type=password].help::-moz-placeholder, input[type=email].help::-moz-placeholder, input[type=tel].help::-moz-placeholder, input[type=url].help::-moz-placeholder, textarea.help::-moz-placeholder {
+  color: #4338ca;
+}
+input[type=text].help::placeholder,
+input[type=password].help::placeholder,
+input[type=email].help::placeholder,
+input[type=tel].help::placeholder,
+input[type=url].help::placeholder,
+textarea.help::placeholder {
+  color: #4338ca;
+}
+@media (hover: hover) {
+  input[type=text].help:hover:not(:disabled):not([readonly]), input[type=text].help.is-hovered:not(:disabled):not([readonly]),
+  input[type=password].help:hover:not(:disabled):not([readonly]),
+  input[type=password].help.is-hovered:not(:disabled):not([readonly]),
+  input[type=email].help:hover:not(:disabled):not([readonly]),
+  input[type=email].help.is-hovered:not(:disabled):not([readonly]),
+  input[type=tel].help:hover:not(:disabled):not([readonly]),
+  input[type=tel].help.is-hovered:not(:disabled):not([readonly]),
+  input[type=url].help:hover:not(:disabled):not([readonly]),
+  input[type=url].help.is-hovered:not(:disabled):not([readonly]),
+  textarea.help:hover:not(:disabled):not([readonly]),
+  textarea.help.is-hovered:not(:disabled):not([readonly]) {
+    background-color: #ddd6fe;
+    border: 1px solid #c4b5fd;
+    color: #3730a3;
+  }
+}
+input[type=text].help:active:not(:disabled):not([readonly]), input[type=text].help.is-actived:not(:disabled):not([readonly]),
+input[type=password].help:active:not(:disabled):not([readonly]),
+input[type=password].help.is-actived:not(:disabled):not([readonly]),
+input[type=email].help:active:not(:disabled):not([readonly]),
+input[type=email].help.is-actived:not(:disabled):not([readonly]),
+input[type=tel].help:active:not(:disabled):not([readonly]),
+input[type=tel].help.is-actived:not(:disabled):not([readonly]),
+input[type=url].help:active:not(:disabled):not([readonly]),
+input[type=url].help.is-actived:not(:disabled):not([readonly]),
+textarea.help:active:not(:disabled):not([readonly]),
+textarea.help.is-actived:not(:disabled):not([readonly]) {
+  background-color: #c4b5fd;
+  border-color: #a78bfa;
+  color: #3730a3;
+}
+input[type=text].help:focus:not(:disabled):not([readonly]), input[type=text].help.is-focused:not(:disabled):not([readonly]),
+input[type=password].help:focus:not(:disabled):not([readonly]),
+input[type=password].help.is-focused:not(:disabled):not([readonly]),
+input[type=email].help:focus:not(:disabled):not([readonly]),
+input[type=email].help.is-focused:not(:disabled):not([readonly]),
+input[type=tel].help:focus:not(:disabled):not([readonly]),
+input[type=tel].help.is-focused:not(:disabled):not([readonly]),
+input[type=url].help:focus:not(:disabled):not([readonly]),
+input[type=url].help.is-focused:not(:disabled):not([readonly]),
+textarea.help:focus:not(:disabled):not([readonly]),
+textarea.help.is-focused:not(:disabled):not([readonly]) {
+  outline: 2px solid #818cf8;
+  outline-offset: 2px;
+}
+input[type=text].help:disabled,
+input[type=password].help:disabled,
+input[type=email].help:disabled,
+input[type=tel].help:disabled,
+input[type=url].help:disabled,
+textarea.help:disabled {
+  background-color: #f5f3ff;
+  border-color: #ede9fe;
+  color: #ddd6fe;
+}
+input[type=text].help:disabled::-moz-placeholder, input[type=password].help:disabled::-moz-placeholder, input[type=email].help:disabled::-moz-placeholder, input[type=tel].help:disabled::-moz-placeholder, input[type=url].help:disabled::-moz-placeholder, textarea.help:disabled::-moz-placeholder {
+  color: #ddd6fe;
+}
+input[type=text].help:disabled::placeholder,
+input[type=password].help:disabled::placeholder,
+input[type=email].help:disabled::placeholder,
+input[type=tel].help:disabled::placeholder,
+input[type=url].help:disabled::placeholder,
+textarea.help:disabled::placeholder {
+  color: #ddd6fe;
+}
+input[type=text].help[readonly],
+input[type=password].help[readonly],
+input[type=email].help[readonly],
+input[type=tel].help[readonly],
+input[type=url].help[readonly],
+textarea.help[readonly] {
+  background-color: #f5f3ff;
+  border-color: #ede9fe;
+  color: #c4b5fd;
+}
+
+input[type=checkbox] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 18px;
+  height: 18px;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+input[type=checkbox]::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 3px;
+  height: 6px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.2s ease;
+}
+input[type=checkbox]:checked {
+  background-color: #1cecbf;
+  border-color: #18d4ac;
+}
+input[type=checkbox]:checked::after {
+  transform: rotate(45deg) scale(1);
+}
+input[type=checkbox]:focus-visible {
+  outline: 2px solid #1cecbf;
+  outline-offset: 2px;
+}
+input[type=checkbox]:disabled {
+  cursor: not-allowed;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}/*# sourceMappingURL=main.css.map */
