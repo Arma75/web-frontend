@@ -32,6 +32,131 @@
         <!-- CSS Stylesheet -->
         <link rel="stylesheet" href="./styles/main.css">
         <style>
+            main {
+                display: flex;
+                flex-direction: column;
+                gap: 36px;
+            }
+
+            .title-section {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .project-section {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                background-color: #ffffff;
+                border: 1px solid #f1f3f5;
+                border-radius: 16px;
+                padding: 24px;
+            }
+
+            .project-section > article {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .options-section {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                background-color: #ffffff;
+                border: 1px solid #f1f3f5;
+                border-radius: 16px;
+                padding: 24px;
+            }
+
+            .options-section > section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .options-section > section > label {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .table-section {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                background-color: #ffffff;
+                border: 1px solid #f1f3f5;
+                border-radius: 16px;
+                padding: 24px;
+            }
+
+            .table-section > article {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 8px;
+            }
+            .table-section > .table-button-article {
+                display: flex;
+                flex-wrap: wrap;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+            }
+            .table-article {
+                overflow: auto;
+            }
+
+            .generate-button-section {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                display: none;
+            }
+
+            .results-section {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                background-color: #ffffff;
+                border: 1px solid #f1f3f5;
+                border-radius: 16px;
+                padding: 24px;
+            }
+
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;/**/
+            }
+            thead {
+                background-color: #f1f3f5;
+                font-size: 0.875rem;
+            }
+            th, td {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                padding: 12px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            tr {
+                border-bottom: 1px solid #e9ecef;
+            }
+            tr:last-child {
+                border-bottom: none;
+            }
+
+            table {
+                min-width: 1320px;
+            }
         </style>
     </head>
 
@@ -77,7 +202,7 @@
                     </select>
                 </td>
                 <td>
-                    <input type="number" name="length" data-field="length"/>
+                    <input type="text" name="length" data-field="length"/>
                 </td>
                 <td>
                     <input type="checkbox" name="pk" data-field="pk"/>
@@ -95,71 +220,101 @@
         </template>
 
         <main>
-            <h1>🚀 Bootceipt</h1>
+            <section class="title-section">
+                <h1>🚀 Bootceipt</h1>
+                <p>PostgreSQL 스키마를 Spring Boot DTO로 즉시 변환하는 자동화 도구입니다.</p>
+            </section>
 
-            <h2>Project</h2>
-            <label for="teamName">TEAM</label>
-            <input type="text" id="teamName" value="team"/>
-            <br/>
-            <br/>
-            <label for="projectName">PROJECT</label>
-            <input type="text" id="projectName" value="demoProject"/>
-            <br/>
-            <br/>
-            <label for="dtoPostfix">POSTFIX</label>
-            <input type="text" id="dtoPostfix" value="DTO"/>
-            <br/>
-            <br/>
-            <article>
-                <label for="writeComment">comment</label><input type="checkbox" id="writeComment" data-field="writeComment"/>
-                <br/>
-                <br/>
-                <label for="useSwagger">swagger</label><input type="checkbox" id="useSwagger" data-field="useSwagger"/>
-                <br/>
-                <br/>
-                <label for="useLombok">lombok</label><input type="checkbox" id="useLombok" data-field="useLombok"/>
-                <br/>
-                <br/>
-                <label for="useDateRange">date range</label><input type="checkbox" id="useDateRange" data-field="useDateRange"/>
-            </article>
-            <br/>
-            <br/>
-            <h2>TABLE</h2>
-            <label for="tableName1">name</label><input type="text" id="tableName1"/>
-            <br/>
-            <br/>
-            <label for="tableComment1">comment</label><input type="text" id="tableComment1"/>
-            <br/>
-            <br/>
-            <button id="rowAddButton">add</button>
-            <button id="rowRemoveButton">remove</button>
-            <br/>
-            <br/>
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            <input type="checkbox" id="totalCheck"/>
-                        </th>
-                        <th>아이디</th>
-                        <th>코멘트</th>
-                        <th>타입</th>
-                        <th>길이</th>
-                        <th>PK</th>
-                        <th>NOT NULL</th>
-                        <th>AUTO INCREASE</th>
-                        <th>DEFAULT</th>
-                    </tr>
-                </thead>
-                <tbody id="tableContent">
-                </tbody>
-            </table>
-            <br/>
-            <br/>
-            <button id="generate" class="primary">generate</button>
-            <br/>
-            <br/>
-            <textarea id="textarea"></textarea>
+            <section class="project-section">
+                <h2>Project</h2>
+
+                <article>
+                    <label for="teamName">TEAM</label>
+                    <input type="text" id="teamName" value="team"/>
+                </article>
+
+                <article>
+                    <label for="projectName">PROJECT</label>
+                    <input type="text" id="projectName" value="demoProject"/>
+                </article>
+
+                <article>
+                    <label for="dtoPostfix">POSTFIX</label>
+                    <input type="text" id="dtoPostfix" value="DTO"/>
+                </article>
+            </section>
+
+            <section class="options-section">
+                <h2>Options</h2>
+                <section>
+                    <label><input type="checkbox" id="writeComment" data-field="writeComment"/> Comment</label>
+                    <label><input type="checkbox" id="useSwagger" data-field="useSwagger"/> Swagger</label>
+                    <label><input type="checkbox" id="useLombok" data-field="useLombok"/> Lombok</label>
+                    <label><input type="checkbox" id="useDateRange" data-field="useDateRange"/> Date Range</label>
+                </section>
+            </section>
+
+            <section class="table-section">
+                <h2>TABLE</h2>
+
+                <article>
+                    <label for="tableName1">name</label>
+                    <input type="text" id="tableName1"/>
+                </article>
+
+                <article>
+                    <label for="tableComment1">comment</label>
+                    <input type="text" id="tableComment1"/>
+                </article>
+
+                <hr/>
+
+                <article class="table-button-article">
+                    <button id="rowAddButton">add</button>
+                    <button id="rowRemoveButton">remove</button>
+                </article>
+
+                <article class="table-article">
+                    <table>
+                        <colgroup>
+                            <col width="44">
+                            <col width="*">
+                            <col width="*">
+                            <col width="*">
+                            <col width="*">
+                            <col width="44">
+                            <col width="92">
+                            <col width="136">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="totalCheck"/>
+                                </th>
+                                <th>아이디</th>
+                                <th>코멘트</th>
+                                <th>타입</th>
+                                <th>길이</th>
+                                <th>PK</th>
+                                <th>NOT NULL</th>
+                                <th>AUTO INCREASE</th>
+                                <th>DEFAULT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableContent">
+                        </tbody>
+                    </table>
+                </article>
+            </section>
+
+            <section class="generate-button-section">
+                <button id="generate" class="primary">generate</button>
+            </section>
+
+            <section class="results-section">
+                <h2>RESULTS</h2>
+                <textarea id="textarea"></textarea>
+            </section>
         </main>
 
         <!-- JavaScript -->
