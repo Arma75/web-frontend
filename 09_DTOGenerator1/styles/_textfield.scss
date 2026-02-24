@@ -25,6 +25,12 @@ textarea {
     transition: all 0.2s ease-in-out;
     outline: none;
 
+    &.small {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.875rem;
+    }
+
     &::placeholder {
         color: $text-input-default-normal-placeholder-color;
     }

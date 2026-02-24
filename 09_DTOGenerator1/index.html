@@ -59,7 +59,7 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                gap: 8px;
+                gap: 4px;
             }
 
             .options-section {
@@ -82,7 +82,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 align-items: center;
-                gap: 8px;
+                gap: 4px;
             }
 
             .table-section {
@@ -99,7 +99,7 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                gap: 8px;
+                gap: 4px;
             }
             .table-section > .table-button-article {
                 display: flex;
@@ -129,33 +129,8 @@
                 padding: 24px;
             }
 
-
             table {
-                width: 100%;
-                border-collapse: collapse;
-                table-layout: fixed;/**/
-            }
-            thead {
-                background-color: #f1f3f5;
-                font-size: 0.875rem;
-            }
-            th, td {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                padding: 12px;
-                text-align: center;
-                vertical-align: middle;
-            }
-            tr {
-                border-bottom: 1px solid #e9ecef;
-            }
-            tr:last-child {
-                border-bottom: none;
-            }
-
-            table {
-                min-width: 1320px;
+                min-width: 1360px;
             }
         </style>
     </head>
@@ -167,13 +142,13 @@
                     <input type="checkbox" name="check"/>
                 </td>
                 <td>
-                    <input type="text" name="name" data-field="name"/>
+                    <input type="text" class="small" name="name" data-field="name"/>
                 </td>
                 <td>
-                    <input type="text" name="comment" data-field="comment"/>
+                    <input type="text" class="small" name="comment" data-field="comment"/>
                 </td>
                 <td>
-                    <select name="type" data-field="type">
+                    <select class="small" name="type" data-field="type">
                         <option>SMALLINT</option>
                         <option>INTEGER</option>
                         <option>BIGINT</option>
@@ -202,7 +177,7 @@
                     </select>
                 </td>
                 <td>
-                    <input type="text" name="length" data-field="length"/>
+                    <input type="text" class="small" name="length" data-field="length"/>
                 </td>
                 <td>
                     <input type="checkbox" name="pk" data-field="pk"/>
@@ -214,7 +189,7 @@
                     <input type="checkbox" name="autoIncrease" data-field="autoIncrease"/>
                 </td>
                 <td>
-                    <input type="text" name="defaultValue" data-field="defaultValue"/>
+                    <input type="text" class="small" name="defaultValue" data-field="defaultValue"/>
                 </td>
             </tr>
         </template>
@@ -258,20 +233,20 @@
                 <h2>TABLE</h2>
 
                 <article>
-                    <label for="tableName1">name</label>
+                    <label for="tableName1">NAME</label>
                     <input type="text" id="tableName1"/>
                 </article>
 
                 <article>
-                    <label for="tableComment1">comment</label>
+                    <label for="tableComment1">COMMENT</label>
                     <input type="text" id="tableComment1"/>
                 </article>
 
                 <hr/>
 
                 <article class="table-button-article">
-                    <button id="rowAddButton">add</button>
-                    <button id="rowRemoveButton">remove</button>
+                    <button id="rowAddButton" class="small">add</button>
+                    <button id="rowRemoveButton" class="small">remove</button>
                 </article>
 
                 <article class="table-article">
@@ -319,8 +294,16 @@
 
         <!-- JavaScript -->
         <script src="./scripts/case-converter.js"></script>
+        <script src="./scripts/kok-input-filter.js"></script>
         <script src="./scripts/json-to-java.js"></script>
         <script>
+            new KokInputFilter("#teamName", {required: true, type: "variable"});
+            new KokInputFilter("#projectName", {required: true, type: "variable"});
+            new KokInputFilter("#dtoPostfix", {type: "variable"});
+            new KokInputFilter("#tableName1", {required: true, type: "variable"});
+            // new KokInputFilter(".table-article", {selector: '[data-field="name"]', required: true, type: "variable"});
+            // new KokInputFilter(".table-article", {selector: '[data-field="length"]', type: "int"});
+
             function extractObjectFromElement(parentElement, keyAttr = 'name') {
                 const data = {};
                 const targetElements = parentElement.querySelectorAll(`[${keyAttr}]`);
@@ -374,7 +357,8 @@
             bindMasterCheckbox(totalCheck, tableContent, `[name="check"]`);
 
             document.getElementById("rowAddButton").addEventListener('click', e => {
-                addTemplate(document.getElementById("columnTemplate"), document.getElementById("tableContent"));
+                const columnRow = new ColumnRow();
+                document.getElementById("tableContent").append(columnRow.el);
 
                 totalCheck.checked = false;
             });

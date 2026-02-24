@@ -29,14 +29,14 @@ const POSTGRESQL_TYPE_TO_JAVA_MAP = {
 };
 
 const DEFAULT_COLUMN_OPTIONS = {
-    name: "COLUMN_ID",
-    comment: "COLUMN ID(PK)",
-    type: "INT",
+    name: "COLUMN_NAME",
+    comment: "컬럼 설명",
+    type: "VARCHAR",
     length: "100",
-    pk: true,
-    notNull: true,
-    autoIncrease: true,
-    defaultValue: null
+    pk: false,
+    notNull: false,
+    autoIncrease: false,
+    defaultValue: "기본값"
 };
 
 const DEFAULT_TABLE_OPTIONS = {
@@ -369,5 +369,98 @@ const JavaConverter = {
         javaCode += `${space} */`;
         
         return javaCode;
+    }
+}
+
+class ColumnRow {
+    constructor(column = new Column()) {
+        this.data = column;
+        this.el = document.createElement('tr');
+        this.render();
+    }
+
+    render() {
+        this.el.innerHTML = `
+            <td><input type="checkbox" name="check"/></td>
+            <td><input type="text" name="name" data-field="name" value="${this.data.name}"/></td>
+            <td><input type="text" name="comment" data-field="comment" value="${this.data.comment}"/></td>
+            <td>
+                <select name="type" data-field="type">
+                    ${Object.keys(POSTGRESQL_TYPE_TO_JAVA_MAP).map(type => 
+                        `<option value="${type}" ${this.data.type === type ? 'selected' : ''}>${type}</option>`
+                    ).join('')}
+                </select>
+            </td>
+            <td><input type="text" name="length" data-field="length" value="${this.data.length || ''}"/></td>
+            <td><input type="checkbox" name="pk" data-field="pk" ${this.data.pk ? 'checked' : ''}/></td>
+            <td><input type="checkbox" name="notNull" data-field="notNull" ${this.data.notNull ? 'checked' : ''}/></td>
+            <td><input type="checkbox" name="autoIncrease" data-field="autoIncrease" ${this.data.autoIncrease ? 'checked' : ''}/></td>
+            <td><input type="text" name="defaultValue" data-field="defaultValue" value="${this.data.defaultValue || ''}"/></td>
+        `;
+
+        this._initEvents();
+        this._applyInteractions();
+        this._applyFilters();
+    }
+
+    _initEvents() {
+        this.el.querySelectorAll('[data-field]').forEach(input => {
+            const eventType = input.type === 'checkbox' || input.tagName === 'SELECT' ? 'change' : 'input';
+            
+            input.addEventListener(eventType, (e) => {
+                const field = e.target.getAttribute('data-field');
+                const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+                
+                this.data[field] = value;
+                this._applyInteractions();
+                this._updateDynamicFilter();
+            });
+        });
+    }
+
+    _applyInteractions() {
+        const typeEl = this.el.querySelector('[name="type"]');
+        const lengthEl = this.el.querySelector('[name="length"]');
+        const autoIncEl = this.el.querySelector('[name="autoIncrease"]');
+        const pkEl = this.el.querySelector('[name="pk"]');
+
+        // const noLengthTypes = ['DATE', 'TIME', 'TIMESTAMP', 'TIMESTAMPTZ', 'UUID', 'BOOLEAN', 'SMALLINT', 'INTEGER', 'BIGINT'];
+        // lengthEl.disabled = noLengthTypes.includes(typeEl.value);
+
+        const lengthTypes = ['VARCHAR', 'CHARACTER', 'CHAR'];
+        lengthEl.disabled = !lengthTypes.includes(typeEl.value);
+
+        if (autoIncEl.checked) {
+            pkEl.checked = true;
+            pkEl.disabled = true;
+
+            this.data.pk = true;
+        } else {
+            pkEl.disabled = false;
+        }
+    }
+
+    _applyFilters() {
+        new KokInputFilter(this.el.querySelector('[name="name"]'), { required: true, type: 'variable' });
+        new KokInputFilter(this.el.querySelector('[name="length"]'), { type: 'int' });
+        new KokInputFilter(this.el.querySelector('.number-type[name="defaultValue"]'), { type: 'int' });
+    }
+    
+    _updateDynamicFilter() {
+        const typeValue = this.el.querySelector('[name="type"]').value;
+        const defaultInput = this.el.querySelector('[name="defaultValue"]');
+
+        defaultInput.removeAttribute('data-status');
+
+        if (!this.defaultFilter) {
+            this.defaultFilter = new KokInputFilter(defaultInput);
+        }
+
+        const numericTypes = ['SMALLINT', 'INTEGER', 'INT', 'BIGINT', 'DECIMAL', 'NUMERIC', 'REAL', 'DOUBLE PRECISION'];
+        if (numericTypes.includes(typeValue)) {
+            this.defaultFilter.options.type = 'int';
+        } else {
+            this.defaultFilter.options.type = null;
+        }
     }
 }
