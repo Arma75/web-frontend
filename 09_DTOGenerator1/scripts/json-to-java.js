@@ -369,7 +369,136 @@ const JavaConverter = {
         javaCode += `${space} */`;
         
         return javaCode;
-    }
+    },
+
+    prepareData(project) {
+        const table = project.table;
+        const className = toPascalCase(table.name) + project.dtoPostfix;
+        const importSet = new Set();
+        
+        // 1. 컬럼 확장 (Date Range 등)
+        let targetColumns = [];
+        table.columns.forEach(c => {
+            const javaType = this.toJavaType(c);
+            const fieldName = toCamelCase(c.name);
+            
+            // 기본 컬럼 추가
+            targetColumns.push({
+                ...c,
+                javaType,
+                fieldName,
+                formatAnnotation: this.getDateTimeFormat(javaType)
+            });
+
+            // Date Range 옵션 시 시작/종료 컬럼 추가
+            if (project.useDateRange && ['LocalTime', 'LocalDate', 'LocalDateTime', 'OffsetDateTime'].includes(javaType)) {
+                ['Start', 'End'].forEach(suffix => {
+                    targetColumns.push({
+                        ...c,
+                        name: c.name + suffix,
+                        fieldName: fieldName + suffix,
+                        comment: (c.comment || c.name) + (suffix === 'Start' ? ' 시작일' : ' 종료일'),
+                        javaType,
+                        formatAnnotation: this.getDateTimeFormat(javaType)
+                    });
+                });
+            }
+
+            // Import 수집
+            const imp = this.toJavaTypeImport(c);
+            if (imp) [].concat(imp).forEach(s => importSet.add(`import ${s};`));
+        });
+
+        // 2. Lombok & Swagger Import 추가
+        if (project.useLombok) {
+            ['Getter', 'Setter', 'ToString', 'NoArgsConstructor', 'AllArgsConstructor', 'Builder']
+                .forEach(l => importSet.add(`import lombok.${l};`));
+        }
+        if (project.useSwagger) importSet.add('import io.swagger.v3.oas.annotations.media.Schema;');
+
+        return {
+            ...project,
+            className,
+            importList: [...importSet].sort(),
+            targetColumns,
+            currentDate: new Date().toISOString().split('T')[0],
+            author: project.author || 'system',
+            validationMethod: targetColumns.some(c => c.notNull || (c.length && c.javaType === 'String')),
+            validationLogics: targetColumns.map(c => this.toValidationLogic(c, 8)).filter(s => s)
+        };
+    },
+
+    getDateTimeFormat(javaType) {
+        if (javaType === 'LocalTime') return '@DateTimeFormat(pattern = "HH:mm:ss")';
+        if (javaType === 'LocalDate') return '@DateTimeFormat(pattern = "yyyy-MM-dd")';
+        if (javaType === 'LocalDateTime') return '@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")';
+        return null;
+    },
+
+    // 렌더링 실행
+    toDTO(template, project) {
+        const handlebar = Handlebars.compile(template);
+        const table = project.table;
+        const data = {};
+
+        data.teamName = project.teamName;
+        data.projectName = project.projectName;
+        data.tableName = table.name;
+
+        const importSet = new Set();
+        table.columns.map(c => this.toJavaTypeImport(c)).filter(s => s).map(arr => [].concat(arr).forEach(s => importSet.add(`${s}`)));
+        if (project.useLombok) {
+            importSet.add('lombok.Getter');
+            importSet.add('lombok.Setter');
+            importSet.add('lombok.ToString');
+            importSet.add('lombok.NoArgsConstructor');
+            importSet.add('lombok.AllArgsConstructor');
+            importSet.add('lombok.Builder');
+        }
+        if (project.useSwagger) {
+            importSet.add('io.swagger.v3.oas.annotations.media.Schema');
+        }
+        data.importList = [...importSet].sort();
+
+        data.useLombok = project.useLombok;
+        data.useSwagger = project.useSwagger;
+        data.writeComment = project.writeComment;
+        
+        data.className = toPascalCase(table.name) + project.dtoPostfix;
+        data.tableComment = (table.comment || table.name) + " DTO";
+        data.today = new Date().toISOString().split('T')[0];
+
+        let targetColumns = [];
+        table.columns.map(c => {
+            targetColumns.push(c);
+            if (project.useDateRange && ['LocalTime', 'LocalDate', 'LocalDateTime', 'OffsetDateTime'].includes(this.toJavaType(c))) {
+                let startDateColumn = {...c};
+                startDateColumn.name += '_Start';
+                startDateColumn.comment = (c.comment || c.name) + ' 시작일';
+                startDateColumn.autoIncrease = false;
+                targetColumns.push(startDateColumn);
+
+                let endDateColumn = {...c};
+                endDateColumn.name += '_End';
+                endDateColumn.comment = (c.comment || c.name) + ' 종료일';
+                endDateColumn.autoIncrease = false;
+                targetColumns.push(endDateColumn);
+            }
+        });
+        targetColumns.map(col => {
+            col.javaType = this.toJavaType(col);
+            col.fieldName = this.toFieldName(col);
+            col.comment = col.comment || col.name;
+            col.pascalName = toPascalCase(col.fieldName);
+            col.isLocalTime = col.javaType === 'LocalTime';
+            col.isLocalDate = col.javaType === 'LocalDate';
+            col.isLocalDateTime = col.javaType === 'LocalDateTime';
+            col.isString = col.javaType === 'String';
+        });
+        data.targetColumns = targetColumns;
+
+        return handlebar(data);
+    },
 }
 
 class ColumnRow {
@@ -421,22 +550,38 @@ class ColumnRow {
     _applyInteractions() {
         const typeEl = this.el.querySelector('[name="type"]');
         const lengthEl = this.el.querySelector('[name="length"]');
-        const autoIncEl = this.el.querySelector('[name="autoIncrease"]');
         const pkEl = this.el.querySelector('[name="pk"]');
-
-        // const noLengthTypes = ['DATE', 'TIME', 'TIMESTAMP', 'TIMESTAMPTZ', 'UUID', 'BOOLEAN', 'SMALLINT', 'INTEGER', 'BIGINT'];
-        // lengthEl.disabled = noLengthTypes.includes(typeEl.value);
+        const autoIncEl = this.el.querySelector('[name="autoIncrease"]');
+        const notNullEl = this.el.querySelector('[name="notNull"]');
+        const defaultValueEl = this.el.querySelector('[name="defaultValue"]');
+        
 
         const lengthTypes = ['VARCHAR', 'CHARACTER', 'CHAR'];
         lengthEl.disabled = !lengthTypes.includes(typeEl.value);
 
+        // auto increase인 경우
         if (autoIncEl.checked) {
             pkEl.checked = true;
             pkEl.disabled = true;
 
+            typeEl.disabled = true;
+
+            lengthEl.value = "";
+            lengthEl.disabled = true;
+
+            notNullEl.checked = true;
+            notNullEl.disabled = true;
+
+            defaultValueEl.value = "";
+            defaultValueEl.disabled = true;
+
             this.data.pk = true;
         } else {
             pkEl.disabled = false;
+            typeEl.disabled = false;
+            lengthEl.disabled = false;
+            notNullEl.disabled = false;
+            defaultValueEl.disabled = false;
         }
     }
 

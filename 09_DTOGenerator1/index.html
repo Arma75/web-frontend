@@ -293,9 +293,13 @@
         </main>
 
         <!-- JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
+        <script src="./templates/dto-template.js"></script>
         <script src="./scripts/case-converter.js"></script>
         <script src="./scripts/kok-input-filter.js"></script>
         <script src="./scripts/json-to-java.js"></script>
+
+
         <script>
             new KokInputFilter("#teamName", {required: true, type: "variable"});
             new KokInputFilter("#projectName", {required: true, type: "variable"});
@@ -396,7 +400,7 @@
                 project.dtoPostfix = dtoPostfix.value;
                 project.useDateRange = useDateRange.checked;
 
-                textarea.value = JavaConverter.toDTO(project);
+                textarea.value = JavaConverter.toDTO(DTO_TEMPLATE, project);
             }
         </script>
     </body>
