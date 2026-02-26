@@ -20,7 +20,10 @@ import {{this}};
 @NoArgsConstructor
 @AllArgsConstructor
 {{/if}}
-public class {{className}} {
+{{#if useSwagger}}
+@Schema(description = "{{tableComment}} 정보")
+{{/if}}
+public class {{className}}{{#if isSearchRequest}} extends PageRequest{{/if}} {
 
 {{#each targetColumns}}
     {{#if ../writeComment}}
@@ -72,9 +75,10 @@ public class {{className}} {
             {{#each targetColumns}}
             "{{fieldName}}=" + {{fieldName}}{{#unless @last}} + ", " +{{else}} +{{/unless}}
             {{/each}}
-            '}';
+            "}";
     }
 {{/unless}}
+{{#if isSaveRequest}}
 
     /**
      * DTO 유효성 검증
@@ -101,5 +105,6 @@ public class {{className}} {
         {{/unless}}
         {{/each}}
     }
-    
+{{/if}}
+
 }`;

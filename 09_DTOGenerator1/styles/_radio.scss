@@ -47,9 +47,5 @@ input[type="radio"] {
         cursor: not-allowed;
         background-color: $checkbox-default-disabled-bg-color;
         border-color: $checkbox-default-disabled-border-color;
-        
-        // &::after {
-        //     background-color: rgba(0, 0, 0, 0.1); // 비활성화 시 중앙 원 색상 변경
-        // }
     }
 }

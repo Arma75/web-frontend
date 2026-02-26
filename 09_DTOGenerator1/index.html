@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="ko">
     <head>
-        <title>🚀 Bootceipt</title>
+        <title>🚀 DTO Architect</title>
 
         <!-- Meta Tags -->
         <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
         <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
         <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
-        <meta name="title" content="DTO 생성기"/> <!-- 제목 설정 -->
-        <meta name="description" content="DB 테이블 구조만 입력하면 Spring Boot DTO 코드를 즉시 생성하세요. Lombok, Swagger, 유효성 검사 로직 및 PostgreSQL 특화 타입 완벽 지원."/> <!-- 설명 설정 -->
+        <meta name="title" content="🚀 DTO Architect"/> <!-- 제목 설정 -->
+        <meta name="description" content="일일이 타이핑하기 귀찮은 DTO 코드, 이제 클릭 몇 번으로 끝내세요. 화면에서 필드만 슥슥 만들면 스프링 부트 코드가 짠! 하고 나타납니다."/> <!-- 설명 설정 -->
         <meta name="keywords" content="DTO 생성기, Java DTO Generator, Spring Boot DTO, PostgreSQL to Java, Lombok Generator, 온라인 코드 제네레이터, 자동화 도구"/> <!-- 키워드 설정 -->
         <meta name="author" content="attickok"/> <!-- 작성자 설정 -->
 
         <!-- Open Graph Meta Tags(SNS 공유) -->
         <meta property="og:type" content="website" /> <!-- 타입 설정 -->
-        <meta property="og:title" content="DTO 생성기" /> <!-- 제목 설정 -->
-        <meta property="og:description" content="DB 테이블 구조만 입력하면 Spring Boot DTO 코드를 즉시 생성하세요. Lombok, Swagger, 유효성 검사 로직 및 PostgreSQL 특화 타입 완벽 지원." /> <!-- 설명 설정 -->
+        <meta property="og:title" content="🚀 DTO Architect" /> <!-- 제목 설정 -->
+        <meta property="og:description" content="일일이 타이핑하기 귀찮은 DTO 코드, 이제 클릭 몇 번으로 끝내세요. 화면에서 필드만 슥슥 만들면 스프링 부트 코드가 짠! 하고 나타납니다." /> <!-- 설명 설정 -->
         <meta property="og:image" content="./assets/images/thumbnail.png" /> <!-- 이미지 설정 -->
-        <meta property="og:url" content="" /> <!-- URL 설정 -->
+        <meta property="og:url" content="https://dto-architect.netlify.app/" /> <!-- URL 설정 -->
 
         <!-- Progressive Web App -->
         <link rel="manifest" href="/manifest.json">
@@ -148,7 +148,7 @@
                 border: 1px solid #f1f3f5;
                 border-radius: 16px;
                 padding: 24px;
-                /* display: none; */
+                display: none;
             }
 
             table {
@@ -218,7 +218,7 @@
 
         <main>
             <section class="title-section">
-                <h1>🚀 Bootceipt</h1>
+                <h1>🚀 DTO Architect</h1>
                 <p>PostgreSQL 스키마를 Spring Boot DTO로 즉시 변환하는 자동화 도구입니다.</p>
             </section>
 
@@ -244,8 +244,9 @@
             <section class="type-section">
                 <h2>타입</h2>
                 <section>
-                    <label><input type="radio" name="type" data-field="type" value="common" checked/>공용</label>
-                    <label><input type="radio" name="type" data-field="type" value="request"/>요청용</label>
+                    <label><input type="radio" name="type" data-field="type" value="total" checked/>전체</label>
+                    <label><input type="radio" name="type" data-field="type" value="search request"/>조회 요청용</label>
+                    <label><input type="radio" name="type" data-field="type" value="save request"/>저장 요청용</label>
                     <label><input type="radio" name="type" data-field="type" value="response"/>응답용</label>
                 </section>
             </section>
@@ -313,19 +314,22 @@
                 </article>
             </section>
 
-            <section class="generate-button-section">
-                <button id="generate" class="primary">생성하기</button>
+            <section class="results-section">
+                <h2>미리보기</h2>
+                <textarea id="textarea"></textarea>
             </section>
 
-            <section class="results-section">
-                <h2>RESULTS</h2>
-                <textarea id="textarea"></textarea>
+            <section class="generate-button-section">
+                <button id="generate" class="primary">생성하기</button>
             </section>
         </main>
 
         <!-- JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
         <script src="./templates/dto-template.js"></script>
+        <script src="./templates/common-request-template.js"></script>
+        <script src="./templates/common-response-template.js"></script>
         <script src="./scripts/case-converter.js"></script>
         <script src="./scripts/kok-input-filter.js"></script>
         <script src="./scripts/json-to-java.js"></script>
@@ -406,8 +410,9 @@
 
             generate.onclick = generateFileContent;
 
-            // document.addEventListener('input', generateFileContent);
-            // document.addEventListener('change', generateFileContent);
+            document.addEventListener('input', preview);
+            document.addEventListener('change', preview);
+            document.addEventListener('click', preview);
 
             teamName.addEventListener('input', _ => {
                 if (!teamName.value) {
@@ -442,7 +447,7 @@
                 }
             });
 
-            function generateFileContent() {
+            async function generateFileContent() {
                 // 데이터 생성
                 let obj = {};
                 obj.name = tableName1.value;
@@ -460,9 +465,13 @@
                 project.useSwagger = useSwagger.checked; // Swagger
                 project.useLombok = useLombok.checked; // Lombok
                 project.type = document.querySelector('[name="type"]:checked')? document.querySelector('[name="type"]:checked').value : 'common';
-                console.log(project);
                 // return;
                 // project.useDateRange = useDateRange.checked; 
+
+                if (project.type === 'search request') {
+                    project.useDateRange = true;
+                }
+                console.log(project);
                 
                 // 데이터 밸리데이션
                 if (!project.teamName) {
@@ -491,8 +500,63 @@
                 // return;
 
                 // 다운로드
+                const tempalteData = JavaConverter.getTemplateData(project);
 
-                textarea.value = JavaConverter.toDTO(DTO_TEMPLATE, project);
+                const zip = new JSZip();
+                if (['total', 'search request'].includes(project.type)) {
+                    zip.file("/common/dto/PageRequest.java", JavaConverter.toDTO(COMMON_REQUEST_TEMPLATE, tempalteData));
+                }
+                if (['total', 'response'].includes(project.type)) {
+                    zip.file("/common/dto/PageResponse.java", JavaConverter.toDTO(COMMON_RESPONSE_TEMPLATE, tempalteData));
+                }
+
+                if (project.type === 'total') {
+                    const responseData = JavaConverter.getTemplateData(Object.assign({}, project, {type: 'response', dtoPostfix: 'Response'}));
+                    zip.file(`/${project.table.name}/dto/${responseData.className}.java`, JavaConverter.toDTO(DTO_TEMPLATE, responseData));
+
+                    const searchRequestData = JavaConverter.getTemplateData(Object.assign({}, project, {type: 'search request', dtoPostfix: 'SearchRequest'}));
+                    zip.file(`/${project.table.name}/dto/${searchRequestData.className}.java`, JavaConverter.toDTO(DTO_TEMPLATE, searchRequestData));
+
+                    const saveRequestData = JavaConverter.getTemplateData(Object.assign({}, project, {type: 'save request', dtoPostfix: 'SaveRequest'}));
+                    zip.file(`/${project.table.name}/dto/${saveRequestData.className}.java`, JavaConverter.toDTO(DTO_TEMPLATE, saveRequestData));
+                } else {
+                    zip.file(`/${project.table.name}/dto/${tempalteData.className}.java`, JavaConverter.toDTO(DTO_TEMPLATE, tempalteData));
+                }
+
+                const content = await zip.generateAsync({ type: "blob" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(content);
+                link.download = `dto.zip`;
+                link.click();
+
+                textarea.valiue = JavaConverter.toDTO(DTO_TEMPLATE, tempalteData);
+            }
+
+            function preview() {
+                // 데이터 생성
+                let obj = {};
+                obj.name = tableName1.value;
+                obj.comment = tableComment1.value;
+                obj.columns = [];
+                [...document.querySelectorAll("tbody tr")].forEach(tr => obj.columns.push(extractObjectFromElement(tr, "data-field")));
+
+                let table = new Table(obj);
+
+                let project = new SpringBootProject({table : table});
+                project.teamName = teamName.value; // 팀명
+                project.projectName = projectName.value; // 프로젝트명
+                project.dtoPostfix = dtoPostfix.value; // DTO 접미사
+                project.writeComment = writeComment.checked; // 주석
+                project.useSwagger = useSwagger.checked; // Swagger
+                project.useLombok = useLombok.checked; // Lombok
+                project.type = document.querySelector('[name="type"]:checked')? document.querySelector('[name="type"]:checked').value : 'common';
+
+                if (project.type === 'search request') {
+                    project.useDateRange = true;
+                }
+                
+                const tempalteData = JavaConverter.getTemplateData(project);
+                textarea.value = JavaConverter.toDTO(DTO_TEMPLATE, tempalteData);
             }
         </script>
     </body>

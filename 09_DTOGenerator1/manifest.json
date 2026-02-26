@@ -1,12 +1,12 @@
 {
-    "name": "빈 페이지",
-    "short_name": "빈 페이지",
-    "description": "빈 페이지 템플릿",
+    "name": "🚀 DTO Architect",
+    "short_name": "DTO Architect",
+    "description": "일일이 타이핑하기 귀찮은 DTO 코드, 이제 클릭 몇 번으로 끝내세요. 화면에서 필드만 슥슥 만들면 스프링 부트 코드가 짠! 하고 나타납니다.",
     "start_url": "/index.html",
     "scope": "/",
     "display": "standalone",
-    "background_color": "#FFFFFF",
-    "theme_color": "#000000",
+    "background_color": "#000000",
+    "theme_color": "#1cecbf",
     "icons": [
         {
             "src": "/assets/favicons/favicon-72x72.png",

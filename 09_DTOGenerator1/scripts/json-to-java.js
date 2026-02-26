@@ -36,7 +36,7 @@ const DEFAULT_COLUMN_OPTIONS = {
     pk: false,
     notNull: false,
     autoIncrease: false,
-    defaultValue: "기본값"
+    defaultValue: ""
 };
 
 const DEFAULT_TABLE_OPTIONS = {
@@ -435,15 +435,21 @@ const JavaConverter = {
         return null;
     },
 
-    // 렌더링 실행
-    toDTO(template, project) {
-        const handlebar = Handlebars.compile(template);
+    getTemplateData(project) {
         const table = project.table;
         const data = {};
 
         data.teamName = project.teamName;
         data.projectName = project.projectName;
         data.tableName = table.name;
+
+        if (project.type === 'search request') {
+            data.isSearchRequest = true;
+        } else if (project.type === 'save request') {
+            data.isSaveRequest = true;
+        } else if (project.type === 'response') {
+            data.isResponse = true;
+        }
 
         const importSet = new Set();
         table.columns.map(c => this.toJavaTypeImport(c)).filter(s => s).map(arr => [].concat(arr).forEach(s => importSet.add(`${s}`)));
@@ -496,6 +502,13 @@ const JavaConverter = {
             col.isString = col.javaType === 'String';
         });
         data.targetColumns = targetColumns;
+
+        return data;
+    },
+
+    // 렌더링 실행
+    toDTO(template, data) {
+        const handlebar = Handlebars.compile(template);
 
         return handlebar(data);
     },
@@ -554,10 +567,7 @@ class ColumnRow {
         const autoIncEl = this.el.querySelector('[name="autoIncrease"]');
         const notNullEl = this.el.querySelector('[name="notNull"]');
         const defaultValueEl = this.el.querySelector('[name="defaultValue"]');
-        
 
-        const lengthTypes = ['VARCHAR', 'CHARACTER', 'CHAR'];
-        lengthEl.disabled = !lengthTypes.includes(typeEl.value);
 
         // auto increase인 경우
         if (autoIncEl.checked) {
@@ -583,6 +593,10 @@ class ColumnRow {
             notNullEl.disabled = false;
             defaultValueEl.disabled = false;
         }
+        
+
+        const lengthTypes = ['VARCHAR', 'CHARACTER', 'CHAR'];
+        lengthEl.disabled = !lengthTypes.includes(typeEl.value);
     }
 
     _applyFilters() {
