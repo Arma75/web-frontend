@@ -31,13 +31,13 @@ public class {{className}} {
     {{#if ../useSwagger}}
     @Schema(description = "{{comment}}")
     {{/if}}
-    {{~#if isLocalTime}}
+    {{#if isLocalTime}}
     @DateTimeFormat(pattern = "HH:mm:ss")
     {{else if isLocalDate}}
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     {{else if isLocalDateTime}}
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    {{/if~}}
+    {{/if}}
     private {{javaType}} {{fieldName}};
 {{/each}}
 {{#unless useLombok}}
@@ -53,8 +53,6 @@ public class {{className}} {
         this.{{fieldName}} = {{fieldName}};
     }
     {{/each}}
-{{/unless}}
-{{#unless useLombok}}
 
     {{#each targetColumns}}
     {{#if ../writeComment}}
@@ -67,8 +65,6 @@ public class {{className}} {
         return this.{{fieldName}};
     }
     {{/each}}
-{{/unless}}
-{{#unless useLombok}}
 
     @Override
     public String toString() {

@@ -1,13 +1,13 @@
 @use 'variables' as *;
 
-input[type="checkbox"] {
+input[type="radio"] {
     appearance: none;
     width: 20px;
     height: 20px;
     background-color: $checkbox-default-normal-bg-color;
 
     border: 1px solid $checkbox-default-normal-border-color;
-    border-radius: 6px;
+    border-radius: 999em;
 
     position: relative;
     cursor: pointer;
@@ -15,17 +15,17 @@ input[type="checkbox"] {
 
     &::after {
         content: '';
-        
+
         position: absolute;
-        top: 4px;
-        left: 7px;
-
-        width: 3px;
-        height: 6px;
-        border: solid $checkbox-default-normal-check-color;
-        border-width: 0 2px 2px 0;
-
-        transform: rotate(45deg) scale(0);
+        top: 50%;
+        left: 50%;
+        
+        width: 8px;
+        height: 8px;
+        background-color: $checkbox-default-normal-check-color;
+        border-radius: 999em;
+        
+        transform: translate(-50%, -50%) scale(0);
         transition: transform 0.2s ease;
     }
 
@@ -34,7 +34,7 @@ input[type="checkbox"] {
         border-color: $checkbox-default-checked-border-color;
         
         &::after {
-            transform: rotate(45deg) scale(1);
+            transform: translate(-50%, -50%) scale(1);
         }
     }
 
@@ -47,5 +47,9 @@ input[type="checkbox"] {
         cursor: not-allowed;
         background-color: $checkbox-default-disabled-bg-color;
         border-color: $checkbox-default-disabled-border-color;
+        
+        // &::after {
+        //     background-color: rgba(0, 0, 0, 0.1); // 비활성화 시 중앙 원 색상 변경
+        // }
     }
 }

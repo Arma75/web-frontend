@@ -59,7 +59,29 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                gap: 4px;
+                gap: 8px;
+            }
+            .type-section {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                background-color: #ffffff;
+                border: 1px solid #f1f3f5;
+                border-radius: 16px;
+                padding: 24px;
+            }
+
+            .type-section > section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .type-section > section > label {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px;
             }
 
             .options-section {
@@ -82,7 +104,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 align-items: center;
-                gap: 4px;
+                gap: 8px;
             }
 
             .table-section {
@@ -99,7 +121,7 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                gap: 4px;
+                gap: 8px;
             }
             .table-section > .table-button-article {
                 display: flex;
@@ -116,7 +138,6 @@
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
-                display: none;
             }
 
             .results-section {
@@ -127,6 +148,7 @@
                 border: 1px solid #f1f3f5;
                 border-radius: 16px;
                 padding: 24px;
+                /* display: none; */
             }
 
             table {
@@ -201,52 +223,61 @@
             </section>
 
             <section class="project-section">
-                <h2>Project</h2>
+                <h2>프로젝트 정보</h2>
 
                 <article>
-                    <label for="teamName">TEAM</label>
+                    <label for="teamName">팀명</label>
                     <input type="text" id="teamName" value="team"/>
                 </article>
 
                 <article>
-                    <label for="projectName">PROJECT</label>
+                    <label for="projectName">프로젝트명</label>
                     <input type="text" id="projectName" value="demoProject"/>
                 </article>
 
                 <article>
-                    <label for="dtoPostfix">POSTFIX</label>
+                    <label for="dtoPostfix">DTO 접미사</label>
                     <input type="text" id="dtoPostfix" value="DTO"/>
                 </article>
             </section>
 
-            <section class="options-section">
-                <h2>Options</h2>
+            <section class="type-section">
+                <h2>타입</h2>
                 <section>
-                    <label><input type="checkbox" id="writeComment" data-field="writeComment"/> Comment</label>
-                    <label><input type="checkbox" id="useSwagger" data-field="useSwagger"/> Swagger</label>
-                    <label><input type="checkbox" id="useLombok" data-field="useLombok"/> Lombok</label>
-                    <label><input type="checkbox" id="useDateRange" data-field="useDateRange"/> Date Range</label>
+                    <label><input type="radio" name="type" data-field="type" value="common" checked/>공용</label>
+                    <label><input type="radio" name="type" data-field="type" value="request"/>요청용</label>
+                    <label><input type="radio" name="type" data-field="type" value="response"/>응답용</label>
+                </section>
+            </section>
+
+            <section class="options-section">
+                <h2>옵션</h2>
+                <section>
+                    <label><input type="checkbox" id="writeComment" data-field="writeComment"/>주석</label>
+                    <label><input type="checkbox" id="useSwagger" data-field="useSwagger"/>Swagger</label>
+                    <label><input type="checkbox" id="useLombok" data-field="useLombok"/>Lombok</label>
+                    <!-- <label><input type="checkbox" id="useDateRange" data-field="useDateRange"/> Date Range</label> -->
                 </section>
             </section>
 
             <section class="table-section">
-                <h2>TABLE</h2>
+                <h2>테이블</h2>
 
                 <article>
-                    <label for="tableName1">NAME</label>
-                    <input type="text" id="tableName1"/>
+                    <label for="tableName1">테이블명</label>
+                    <input type="text" id="tableName1" value="table"/>
                 </article>
 
                 <article>
-                    <label for="tableComment1">COMMENT</label>
+                    <label for="tableComment1">테이블 설명</label>
                     <input type="text" id="tableComment1"/>
                 </article>
 
                 <hr/>
 
                 <article class="table-button-article">
-                    <button id="rowAddButton" class="small">add</button>
-                    <button id="rowRemoveButton" class="small">remove</button>
+                    <button id="rowAddButton" class="small">컬럼 추가</button>
+                    <button id="rowRemoveButton" class="small">컬럼 삭제</button>
                 </article>
 
                 <article class="table-article">
@@ -266,8 +297,8 @@
                                 <th>
                                     <input type="checkbox" id="totalCheck"/>
                                 </th>
-                                <th>아이디</th>
-                                <th>코멘트</th>
+                                <th>컬럼명</th>
+                                <th>설명</th>
                                 <th>타입</th>
                                 <th>길이</th>
                                 <th>PK</th>
@@ -283,7 +314,7 @@
             </section>
 
             <section class="generate-button-section">
-                <button id="generate" class="primary">generate</button>
+                <button id="generate" class="primary">생성하기</button>
             </section>
 
             <section class="results-section">
@@ -375,30 +406,91 @@
 
             generate.onclick = generateFileContent;
 
-            document.addEventListener('input', generateFileContent);
-            document.addEventListener('change', generateFileContent);
+            // document.addEventListener('input', generateFileContent);
+            // document.addEventListener('change', generateFileContent);
+
+            teamName.addEventListener('input', _ => {
+                if (!teamName.value) {
+                    teamName.classList.add('warning');
+                } else {
+                    teamName.classList.remove('warning');
+                    teamName.classList.remove('danger');
+                }
+            });
+            projectName.addEventListener('input', _ => {
+                if (!projectName.value) {
+                    projectName.classList.add('warning');
+                } else {
+                    projectName.classList.remove('warning');
+                    projectName.classList.remove('danger');
+                }
+            });
+            dtoPostfix.addEventListener('input', _ => {
+                if (!dtoPostfix.value) {
+                    dtoPostfix.classList.add('warning');
+                } else {
+                    dtoPostfix.classList.remove('warning');
+                    dtoPostfix.classList.remove('danger');
+                }
+            });
+            tableName1.addEventListener('input', _ => {
+                if (!tableName1.value) {
+                    tableName1.classList.add('warning');
+                } else {
+                    tableName1.classList.remove('warning');
+                    tableName1.classList.remove('danger');
+                }
+            });
 
             function generateFileContent() {
+                // 데이터 생성
                 let obj = {};
                 obj.name = tableName1.value;
                 obj.comment = tableComment1.value;
                 obj.columns = [];
-                [...document.querySelectorAll("tbody tr")].forEach(tr => {
-                    let col = extractObjectFromElement(tr, "data-field");;
-                    console.log(col);
-                    obj.columns.push(col);
-                });
+                [...document.querySelectorAll("tbody tr")].forEach(tr => obj.columns.push(extractObjectFromElement(tr, "data-field")));
 
                 let table = new Table(obj);
 
                 let project = new SpringBootProject({table : table});
-                project.teamName = teamName.value;
-                project.projectName = projectName.value;
-                project.writeComment = writeComment.checked;
-                project.useSwagger = useSwagger.checked;
-                project.useLombok = useLombok.checked;
-                project.dtoPostfix = dtoPostfix.value;
-                project.useDateRange = useDateRange.checked;
+                project.teamName = teamName.value; // 팀명
+                project.projectName = projectName.value; // 프로젝트명
+                project.dtoPostfix = dtoPostfix.value; // DTO 접미사
+                project.writeComment = writeComment.checked; // 주석
+                project.useSwagger = useSwagger.checked; // Swagger
+                project.useLombok = useLombok.checked; // Lombok
+                project.type = document.querySelector('[name="type"]:checked')? document.querySelector('[name="type"]:checked').value : 'common';
+                console.log(project);
+                // return;
+                // project.useDateRange = useDateRange.checked; 
+                
+                // 데이터 밸리데이션
+                if (!project.teamName) {
+                    teamName.classList.add('danger');
+                    teamName.focus();
+                    return;
+                }
+
+                if (!project.projectName) {
+                    projectName.classList.add('danger');
+                    projectName.focus();
+                    return;
+                }
+
+                if (!project.dtoPostfix) {
+                    dtoPostfix.classList.add('danger');
+                    dtoPostfix.focus();
+                    return;
+                }
+
+                if (!project.table.name) {
+                    tableName1.classList.add('danger');
+                    tableName1.focus();
+                    return;
+                }
+                // return;
+
+                // 다운로드
 
                 textarea.value = JavaConverter.toDTO(DTO_TEMPLATE, project);
             }
