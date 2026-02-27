@@ -1,0 +1,407 @@
+@use 'variables' as *;
+
+textarea {
+    min-height: 146px;
+    resize: none;
+}
+
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='tel'],
+input[type='url'],
+textarea {
+    width: 100%;
+    padding: 12px 24px;
+    border-radius: 12px;
+
+    font-size: inherit;
+    font-family: inherit;
+
+    background-color: $text-input-default-normal-bg-color;
+    border: 1px solid $text-input-default-normal-border-color;
+    color: $text-input-default-normal-text-color;
+    
+    transition: all 0.2s ease-in-out;
+    outline: none;
+
+    &.small {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.875rem;
+    }
+
+    &::placeholder {
+        color: $text-input-default-normal-placeholder-color;
+    }
+
+    @media (hover: hover) {
+        &:hover:not(:disabled):not([readonly]),
+        &.is-hovered:not(:disabled):not([readonly]) {
+            background-color: $text-input-default-hover-bg-color;
+            border: 1px solid $text-input-default-hover-border-color;
+            color: $text-input-default-hover-text-color;
+        }
+    }
+    &:active:not(:disabled):not([readonly]),
+    &.is-actived:not(:disabled):not([readonly]) {
+        background-color: $text-input-default-active-bg-color;
+        border-color: $text-input-default-active-border-color;
+        color: $text-input-default-active-text-color;
+        transform: scale(0.98);
+    }
+
+    &:focus:not(:disabled):not([readonly]),
+    &.is-focused:not(:disabled):not([readonly]) {
+        outline: 2px solid $text-input-default-focus-outline-color;
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        background-color: $text-input-default-disabled-bg-color;
+        border-color: $text-input-default-disabled-border-color;
+        color: $text-input-default-disabled-text-color;
+        transform: none;
+
+        &::placeholder {
+            color: $text-input-default-disabled-text-color;
+        }
+    }
+
+    &[readonly] {
+        cursor: default;
+        background-color: $text-input-default-readonly-bg-color;
+        border-color: $text-input-default-readonly-border-color;
+        color: $text-input-default-readonly-text-color;
+    }
+
+    &.primary {
+        background-color: $text-input-primary-normal-bg-color;
+        border: 1px solid $text-input-primary-normal-border-color;
+        color: $text-input-primary-normal-text-color;
+
+        &::placeholder {
+            color: $text-input-primary-normal-placeholder-color;
+        }
+
+        @media (hover: hover) {
+            &:hover:not(:disabled):not([readonly]),
+            &.is-hovered:not(:disabled):not([readonly]) {
+                background-color: $text-input-primary-hover-bg-color;
+                border: 1px solid $text-input-primary-hover-border-color;
+                color: $text-input-primary-hover-text-color;
+            }
+        }
+        &:active:not(:disabled):not([readonly]),
+        &.is-actived:not(:disabled):not([readonly]) {
+            background-color: $text-input-primary-active-bg-color;
+            border-color: $text-input-primary-active-border-color;
+            color: $text-input-primary-active-text-color;
+        }
+
+        &:focus:not(:disabled):not([readonly]),
+        &.is-focused:not(:disabled):not([readonly]) {
+            outline: 2px solid $text-input-primary-focus-outline-color;
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            background-color: $text-input-primary-disabled-bg-color;
+            border-color: $text-input-primary-disabled-border-color;
+            color: $text-input-primary-disabled-text-color;
+
+            &::placeholder {
+                color: $text-input-primary-disabled-text-color;
+            }
+        }
+
+        &[readonly] {
+            background-color: $text-input-primary-readonly-bg-color;
+            border-color: $text-input-primary-readonly-border-color;
+            color: $text-input-primary-readonly-text-color;
+        }
+    }
+
+    &.secondary {
+        background-color: $text-input-secondary-normal-bg-color;
+        border: 1px solid $text-input-secondary-normal-border-color;
+        color: $text-input-secondary-normal-text-color;
+
+        &::placeholder {
+            color: $text-input-secondary-normal-placeholder-color;
+        }
+
+        @media (hover: hover) {
+            &:hover:not(:disabled):not([readonly]),
+            &.is-hovered:not(:disabled):not([readonly]) {
+                background-color: $text-input-secondary-hover-bg-color;
+                border: 1px solid $text-input-secondary-hover-border-color;
+                color: $text-input-secondary-hover-text-color;
+            }
+        }
+        &:active:not(:disabled):not([readonly]),
+        &.is-actived:not(:disabled):not([readonly]) {
+            background-color: $text-input-secondary-active-bg-color;
+            border-color: $text-input-secondary-active-border-color;
+            color: $text-input-secondary-active-text-color;
+        }
+
+        &:focus:not(:disabled):not([readonly]),
+        &.is-focused:not(:disabled):not([readonly]) {
+            outline: 2px solid $text-input-secondary-focus-outline-color;
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            background-color: $text-input-secondary-disabled-bg-color;
+            border-color: $text-input-secondary-disabled-border-color;
+            color: $text-input-secondary-disabled-text-color;
+
+            &::placeholder {
+                color: $text-input-secondary-disabled-text-color;
+            }
+        }
+
+        &[readonly] {
+            background-color: $text-input-secondary-readonly-bg-color;
+            border-color: $text-input-secondary-readonly-border-color;
+            color: $text-input-secondary-readonly-text-color;
+        }
+    }
+
+    &.success {
+        background-color: $text-input-success-normal-bg-color;
+        border: 1px solid $text-input-success-normal-border-color;
+        color: $text-input-success-normal-text-color;
+
+        &::placeholder {
+            color: $text-input-success-normal-placeholder-color;
+        }
+
+        @media (hover: hover) {
+            &:hover:not(:disabled):not([readonly]),
+            &.is-hovered:not(:disabled):not([readonly]) {
+                background-color: $text-input-success-hover-bg-color;
+                border: 1px solid $text-input-success-hover-border-color;
+                color: $text-input-success-hover-text-color;
+            }
+        }
+        &:active:not(:disabled):not([readonly]),
+        &.is-actived:not(:disabled):not([readonly]) {
+            background-color: $text-input-success-active-bg-color;
+            border-color: $text-input-success-active-border-color;
+            color: $text-input-success-active-text-color;
+        }
+
+        &:focus:not(:disabled):not([readonly]),
+        &.is-focused:not(:disabled):not([readonly]) {
+            outline: 2px solid $text-input-success-focus-outline-color;
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            background-color: $text-input-success-disabled-bg-color;
+            border-color: $text-input-success-disabled-border-color;
+            color: $text-input-success-disabled-text-color;
+
+            &::placeholder {
+                color: $text-input-success-disabled-text-color;
+            }
+        }
+
+        &[readonly] {
+            background-color: $text-input-success-readonly-bg-color;
+            border-color: $text-input-success-readonly-border-color;
+            color: $text-input-success-readonly-text-color;
+        }
+    }
+
+    &.warning {
+        background-color: $text-input-warning-normal-bg-color;
+        border: 1px solid $text-input-warning-normal-border-color;
+        color: $text-input-warning-normal-text-color;
+
+        &::placeholder {
+            color: $text-input-warning-normal-placeholder-color;
+        }
+
+        @media (hover: hover) {
+            &:hover:not(:disabled):not([readonly]),
+            &.is-hovered:not(:disabled):not([readonly]) {
+                background-color: $text-input-warning-hover-bg-color;
+                border: 1px solid $text-input-warning-hover-border-color;
+                color: $text-input-warning-hover-text-color;
+            }
+        }
+        &:active:not(:disabled):not([readonly]),
+        &.is-actived:not(:disabled):not([readonly]) {
+            background-color: $text-input-warning-active-bg-color;
+            border-color: $text-input-warning-active-border-color;
+            color: $text-input-warning-active-text-color;
+        }
+
+        &:focus:not(:disabled):not([readonly]),
+        &.is-focused:not(:disabled):not([readonly]) {
+            outline: 2px solid $text-input-warning-focus-outline-color;
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            background-color: $text-input-warning-disabled-bg-color;
+            border-color: $text-input-warning-disabled-border-color;
+            color: $text-input-warning-disabled-text-color;
+
+            &::placeholder {
+                color: $text-input-warning-disabled-text-color;
+            }
+        }
+
+        &[readonly] {
+            background-color: $text-input-warning-readonly-bg-color;
+            border-color: $text-input-warning-readonly-border-color;
+            color: $text-input-warning-readonly-text-color;
+        }
+    }
+
+    &.danger {
+        background-color: $text-input-danger-normal-bg-color;
+        border: 1px solid $text-input-danger-normal-border-color;
+        color: $text-input-danger-normal-text-color;
+
+        &::placeholder {
+            color: $text-input-danger-normal-placeholder-color;
+        }
+
+        @media (hover: hover) {
+            &:hover:not(:disabled):not([readonly]),
+            &.is-hovered:not(:disabled):not([readonly]) {
+                background-color: $text-input-danger-hover-bg-color;
+                border: 1px solid $text-input-danger-hover-border-color;
+                color: $text-input-danger-hover-text-color;
+            }
+        }
+        &:active:not(:disabled):not([readonly]),
+        &.is-actived:not(:disabled):not([readonly]) {
+            background-color: $text-input-danger-active-bg-color;
+            border-color: $text-input-danger-active-border-color;
+            color: $text-input-danger-active-text-color;
+        }
+
+        &:focus:not(:disabled):not([readonly]),
+        &.is-focused:not(:disabled):not([readonly]) {
+            outline: 2px solid $text-input-danger-focus-outline-color;
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            background-color: $text-input-danger-disabled-bg-color;
+            border-color: $text-input-danger-disabled-border-color;
+            color: $text-input-danger-disabled-text-color;
+
+            &::placeholder {
+                color: $text-input-danger-disabled-text-color;
+            }
+        }
+
+        &[readonly] {
+            background-color: $text-input-danger-readonly-bg-color;
+            border-color: $text-input-danger-readonly-border-color;
+            color: $text-input-danger-readonly-text-color;
+        }
+    }
+
+    &.info {
+        background-color: $text-input-info-normal-bg-color;
+        border: 1px solid $text-input-info-normal-border-color;
+        color: $text-input-info-normal-text-color;
+
+        &::placeholder {
+            color: $text-input-info-normal-placeholder-color;
+        }
+
+        @media (hover: hover) {
+            &:hover:not(:disabled):not([readonly]),
+            &.is-hovered:not(:disabled):not([readonly]) {
+                background-color: $text-input-info-hover-bg-color;
+                border: 1px solid $text-input-info-hover-border-color;
+                color: $text-input-info-hover-text-color;
+            }
+        }
+        &:active:not(:disabled):not([readonly]),
+        &.is-actived:not(:disabled):not([readonly]) {
+            background-color: $text-input-info-active-bg-color;
+            border-color: $text-input-info-active-border-color;
+            color: $text-input-info-active-text-color;
+        }
+
+        &:focus:not(:disabled):not([readonly]),
+        &.is-focused:not(:disabled):not([readonly]) {
+            outline: 2px solid $text-input-info-focus-outline-color;
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            background-color: $text-input-info-disabled-bg-color;
+            border-color: $text-input-info-disabled-border-color;
+            color: $text-input-info-disabled-text-color;
+
+            &::placeholder {
+                color: $text-input-info-disabled-text-color;
+            }
+        }
+
+        &[readonly] {
+            background-color: $text-input-info-readonly-bg-color;
+            border-color: $text-input-info-readonly-border-color;
+            color: $text-input-info-readonly-text-color;
+        }
+    }
+
+    &.help {
+        background-color: $text-input-help-normal-bg-color;
+        border: 1px solid $text-input-help-normal-border-color;
+        color: $text-input-help-normal-text-color;
+
+        &::placeholder {
+            color: $text-input-help-normal-placeholder-color;
+        }
+
+        @media (hover: hover) {
+            &:hover:not(:disabled):not([readonly]),
+            &.is-hovered:not(:disabled):not([readonly]) {
+                background-color: $text-input-help-hover-bg-color;
+                border: 1px solid $text-input-help-hover-border-color;
+                color: $text-input-help-hover-text-color;
+            }
+        }
+        &:active:not(:disabled):not([readonly]),
+        &.is-actived:not(:disabled):not([readonly]) {
+            background-color: $text-input-help-active-bg-color;
+            border-color: $text-input-help-active-border-color;
+            color: $text-input-help-active-text-color;
+        }
+
+        &:focus:not(:disabled):not([readonly]),
+        &.is-focused:not(:disabled):not([readonly]) {
+            outline: 2px solid $text-input-help-focus-outline-color;
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            background-color: $text-input-help-disabled-bg-color;
+            border-color: $text-input-help-disabled-border-color;
+            color: $text-input-help-disabled-text-color;
+
+            &::placeholder {
+                color: $text-input-help-disabled-text-color;
+            }
+        }
+
+        &[readonly] {
+            background-color: $text-input-help-readonly-bg-color;
+            border-color: $text-input-help-readonly-border-color;
+            color: $text-input-help-readonly-text-color;
+        }
+    }
+}

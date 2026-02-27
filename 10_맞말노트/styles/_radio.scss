@@ -1,0 +1,51 @@
+@use 'variables' as *;
+
+input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: $checkbox-default-normal-bg-color;
+
+    border: 1px solid $checkbox-default-normal-border-color;
+    border-radius: 999em;
+
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &::after {
+        content: '';
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        
+        width: 8px;
+        height: 8px;
+        background-color: $checkbox-default-normal-check-color;
+        border-radius: 999em;
+        
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.2s ease;
+    }
+
+    &:checked {
+        background-color: $checkbox-default-checked-bg-color;
+        border-color: $checkbox-default-checked-border-color;
+        
+        &::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid $checkbox-default-focus-outline-color;
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        background-color: $checkbox-default-disabled-bg-color;
+        border-color: $checkbox-default-disabled-border-color;
+    }
+}
