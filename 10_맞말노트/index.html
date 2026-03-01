@@ -178,6 +178,9 @@
                 /* background-color: black; */
                 color: white;
             }
+            .page.cover > p {
+                color: black;
+            }
 
             @media screen and (max-width: 600px) {
                 body {
@@ -268,43 +271,16 @@
 
             // 메뉴 버튼 클릭
             document.querySelector(".menu-item:nth-child(1)").addEventListener("click", _ => {
-                document.querySelector(".main-page").style.display = "none";
-                document.querySelector(".book-page").style.display = "flex";
-
                 initBook("love");
-
-                document.querySelector(".book").style.background = "#9b4655";
-                document.querySelector(".book").style.boxShadow = "0 0 12px #ff7b92";
-                document.querySelector(".book").style.border = "1px solid #ff7b92";
-                document.querySelector(".page.cover").style.background = "#9b4655";
-                document.querySelector(".page.cover").style.boxShadow = "0 0 12px #ff7b92";
-                document.querySelector(".page.cover").style.border = "1px solid #ff7b92";
+                history.pushState({ page: "love" }, "맞말노트 - 연애", "#book");
             });
             document.querySelector(".menu-item:nth-child(2)").addEventListener("click", _ => {
-                document.querySelector(".main-page").style.display = "none";
-                document.querySelector(".book-page").style.display = "flex";
-
                 initBook("archive");
-
-                document.querySelector(".book").style.background = "#9b7446";
-                document.querySelector(".book").style.boxShadow = "0 0 12px #ffac49";
-                document.querySelector(".book").style.border = "1px solid #ffac49";
-                document.querySelector(".page.cover").style.background = "#9b7446";
-                document.querySelector(".page.cover").style.boxShadow = "0 0 12px #ffac49";
-                document.querySelector(".page.cover").style.border = "1px solid #ffac49";
+                history.pushState({ page: "archive" }, "맞말노트", "#book");
             });
             document.querySelector(".menu-item:nth-child(3)").addEventListener("click", _ => {
-                document.querySelector(".main-page").style.display = "none";
-                document.querySelector(".book-page").style.display = "flex";
-
                 initBook("life");
-
-                document.querySelector(".book").style.background = "#46699b";
-                document.querySelector(".book").style.boxShadow = "0 0 12px #5c9ef9";
-                document.querySelector(".book").style.border = "1px solid #5c9ef9";
-                document.querySelector(".page.cover").style.background = "#46699b";
-                document.querySelector(".page.cover").style.boxShadow = "0 0 12px #5c9ef9";
-                document.querySelector(".page.cover").style.border = "1px solid #5c9ef9";
+                history.pushState({ page: "life" }, "맞말노트", "#book");
             });
 
 
@@ -314,6 +290,9 @@
             let adviceList;
 
             function initBook(menu) {
+                document.querySelector(".main-page").style.display = "none";
+                document.querySelector(".book-page").style.display = "flex";
+
                 book.innerHTML = "";
 
                 let type = document.querySelector("[name='type']:checked").value;
@@ -339,6 +318,35 @@
                 cover.innerHTML += `<p>질문을 생각하고<br>클릭해주세요</p>`;
                 cover.style.zIndex = 999;
                 book.appendChild(cover);
+
+                if (menu === 'love') {
+                    // document.querySelector(".book").style.background = "#9b4655";
+                    document.querySelector(".book").style.background = "#ff7b92";
+                    document.querySelector(".book").style.boxShadow = "0 0 12px #ff7b92";
+                    document.querySelector(".book").style.border = "1px solid #ff7b92";
+                    // document.querySelector(".page.cover").style.background = "#9b4655";
+                    document.querySelector(".page.cover").style.background = "#ff7b92";
+                    document.querySelector(".page.cover").style.boxShadow = "0 0 12px #ff7b92";
+                    document.querySelector(".page.cover").style.border = "1px solid #ff7b92";
+                } else if (menu === 'archive') {
+                    // document.querySelector(".book").style.background = "#9b7446";
+                    document.querySelector(".book").style.background = "#ffac49";
+                    document.querySelector(".book").style.boxShadow = "0 0 12px #ffac49";
+                    document.querySelector(".book").style.border = "1px solid #ffac49";
+                    // document.querySelector(".page.cover").style.background = "#9b7446";
+                    document.querySelector(".page.cover").style.background = "#ffac49";
+                    document.querySelector(".page.cover").style.boxShadow = "0 0 12px #ffac49";
+                    document.querySelector(".page.cover").style.border = "1px solid #ffac49";
+                } else {
+                    // document.querySelector(".book").style.background = "#46699b";
+                    document.querySelector(".book").style.background = "#5c9ef9";
+                    document.querySelector(".book").style.boxShadow = "0 0 12px #5c9ef9";
+                    document.querySelector(".book").style.border = "1px solid #5c9ef9";
+                    // document.querySelector(".page.cover").style.background = "#46699b";
+                    document.querySelector(".page.cover").style.background = "#5c9ef9";
+                    document.querySelector(".page.cover").style.boxShadow = "0 0 12px #5c9ef9";
+                    document.querySelector(".page.cover").style.border = "1px solid #5c9ef9";
+                }
             }
 
             async function openBook() {
@@ -381,10 +389,27 @@
                     if (!opened) {
                         openBook();
                     } else {
-                        document.querySelector(".main-page").style.display = "flex";
-                        document.querySelector(".book-page").style.display = "none";
+                        history.back();
                     }
                     opened = !opened;
+                }
+            });
+
+            function showMainPage() {
+                opened = false;
+                isAnimating = false;
+                document.querySelector(".main-page").style.display = "flex";
+                document.querySelector(".book-page").style.display = "none";
+            }
+
+            window.onload = () => {
+                history.replaceState({ page: "main" }, "맞말노트", window.location.pathname);
+            };
+            window.addEventListener('popstate', (event) => {
+                if (!event.state || event.state.page === "main") {
+                    showMainPage();
+                } else if (event.state) {
+                    initBook(event.state.page);
                 }
             });
         </script>
