@@ -39,174 +39,348 @@
         <!-- CSS Stylesheet -->
         <link rel="stylesheet" href="./styles/main.css">
         <style>
-            :root {
-                color-scheme: light !important;
-            }
-            html, body {
-                filter: none !important;
-                -webkit-filter: none !important;
-            }
-            
-            body {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: space-between;
-                background-color: #1d1e20;
-                color: #8a90a1;
-                min-height: 100vh;
-            }
-            main {
-                background-color: #222326;
-                border: 1px solid #0e0f14;
-                padding: 40px;
-                border-radius: 24px;
-                width: 440px;
-                max-width: 100%;
-                box-shadow: 0 2px 24px #0e0f14;
-                display: flex;
-                flex-direction: column;
-                gap: 32px;
-                align-items: center;
-            }
-            .main-page {
-                display: flex;
-                flex-direction: column;
-                gap: 32px;
-                align-items: center;
-            }
-            header {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-            }
-            h1 {
-                color: white;
-                text-shadow: 0 0 12px white;
-            }
-            p {
-                color: #8a90a1;
-                text-align: center;
-            }
-
-            footer {
-                color: #b5baca;
-                font-weight: 600;
-                padding: 20px;
-            }
-
-            nav {
-                display: flex;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 24px;
-                width: 100%;
-            }
-
-            .mode-section {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-            }
-            .mode-buttons {
-                display: flex;
-                gap: 12px;
-            }
-            .mode-buttons > label {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .menu-item:nth-child(1) {
-                background: #9b4655;
-                box-shadow: 0 0 12px #ff7b92;
-                border: 1px solid #ff7b92;
-            }
-            .menu-item:nth-child(2) {
-                background: #9b7446;
-                box-shadow: 0 0 12px #ffac49;
-                border: 1px solid #ffac49;
-            }
-            .menu-item:nth-child(3) {
-                background: #46699b;
-                box-shadow: 0 0 12px #5c9ef9;
-                border: 1px solid #5c9ef9;
-            }
-
-            .book-page {
-                flex: 1;
-                display: none;
-                width: 100%;
-                justify-content: center;
-            }
-
-            .book {
-                flex: 1;
-                background: #9b4655;
-                box-shadow: 0 0 12px #ff7b92;
-                border: 1px solid #ff7b92;
+            @media (prefers-color-scheme: light) {
+                :root {
+                    color-scheme: light !important;
+                }
+                html, body {
+                    filter: none !important;
+                    -webkit-filter: none !important;
+                }
                 
-                padding: 40px;
-                border-radius: 0 24px 24px 0;
-                width: 100%;
-
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                font-size: 2rem;
-                font-weight: 600;
-                text-align: center;
-                position: relative;
-            }
-
-            .page {
-                font-size: 1.4rem;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-                gap: 20px;
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                background-color: #fdfdfd;
-                border: 1px solid #e8e6e6;
-                box-shadow: inset 3px 0px 20px rgba(0,0,0,0.1);
-                transition: transform 0.4s ease-in-out;
-                padding: 32px;
-                border-radius: 0 24px 24px 0;
-            }
-            .page.flipped {
-                transform-origin: left;
-                transform: rotateY(-170deg);
-            }
-            .page.cover {
-                /* background-color: black; */
-                color: white;
-            }
-            .page.cover > p {
-                color: black;
-            }
-
-            @media screen and (max-width: 600px) {
                 body {
-                    padding: 0;
-                    min-width: 100vw;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: #1d1e20;
+                    color: #8a90a1;
                     min-height: 100vh;
                 }
-                .main-page {
-                    width: 100%;
-                    flex: 1;
-                    justify-content: space-between;
+                main {
+                    background-color: #222326;
+                    border: 1px solid #0e0f14;
+                    padding: 40px;
+                    border-radius: 24px;
+                    width: 440px;
+                    max-width: 100%;
+                    box-shadow: 0 2px 24px #0e0f14;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+                    align-items: center;
                 }
-                .book-page {
+                .main-page {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+                    align-items: center;
+                }
+                header {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 12px;
+                }
+                h1 {
+                    color: white;
+                    text-shadow: 0 0 12px white;
+                }
+                p {
+                    color: #8a90a1;
+                    text-align: center;
+                }
+
+                footer {
+                    color: #b5baca;
+                    font-weight: 600;
                     padding: 20px;
+                }
+
+                nav {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 24px;
+                    width: 100%;
+                }
+
+                .mode-section {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .mode-buttons {
+                    display: flex;
+                    gap: 12px;
+                }
+                .mode-buttons > label {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .menu-item:nth-child(1) {
+                    background: #9b4655;
+                    box-shadow: 0 0 12px #ff7b92;
+                    border: 1px solid #ff7b92;
+                }
+                .menu-item:nth-child(2) {
+                    background: #9b7446;
+                    box-shadow: 0 0 12px #ffac49;
+                    border: 1px solid #ffac49;
+                }
+                .menu-item:nth-child(3) {
+                    background: #46699b;
+                    box-shadow: 0 0 12px #5c9ef9;
+                    border: 1px solid #5c9ef9;
+                }
+
+                .book-page {
+                    flex: 1;
+                    display: none;
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                .book {
+                    flex: 1;
+                    background: #9b4655;
+                    box-shadow: 0 0 12px #ff7b92;
+                    border: 1px solid #ff7b92;
+                    
+                    padding: 40px;
+                    border-radius: 0 24px 24px 0;
+                    width: 100%;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    font-size: 2rem;
+                    font-weight: 600;
+                    text-align: center;
+                    position: relative;
+                }
+
+                .page {
+                    font-size: 1.4rem;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    gap: 20px;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background-color: #fdfdfd;
+                    border: 1px solid #e8e6e6;
+                    box-shadow: inset 3px 0px 20px rgba(0,0,0,0.1);
+                    transition: transform 0.4s ease-in-out;
+                    padding: 32px;
+                    border-radius: 0 24px 24px 0;
+                }
+                .page.flipped {
+                    transform-origin: left;
+                    transform: rotateY(-170deg);
+                }
+                .page.cover {
+                    /* background-color: black; */
+                    color: white;
+                }
+                .page.cover > p {
+                    color: black;
+                }
+
+                @media screen and (max-width: 600px) {
+                    body {
+                        padding: 0;
+                        min-width: 100vw;
+                        min-height: 100vh;
+                    }
+                    .main-page {
+                        width: 100%;
+                        flex: 1;
+                        justify-content: space-between;
+                    }
+                    .book-page {
+                        padding: 20px;
+                    }
+                }
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    color-scheme: light !important;
+                }
+                html, body {
+                    filter: none !important;
+                    -webkit-filter: none !important;
+                }
+                
+                body {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: #1d1e20;
+                    color: #8a90a1;
+                    min-height: 100vh;
+                }
+                main {
+                    background-color: #222326;
+                    border: 1px solid #0e0f14;
+                    padding: 40px;
+                    border-radius: 24px;
+                    width: 440px;
+                    max-width: 100%;
+                    box-shadow: 0 2px 24px #0e0f14;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+                    align-items: center;
+                }
+                .main-page {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+                    align-items: center;
+                }
+                header {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 12px;
+                }
+                h1 {
+                    color: white;
+                    text-shadow: 0 0 12px white;
+                }
+                p {
+                    color: #8a90a1;
+                    text-align: center;
+                }
+
+                footer {
+                    color: #b5baca;
+                    font-weight: 600;
+                    padding: 20px;
+                }
+
+                nav {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 24px;
+                    width: 100%;
+                }
+
+                .mode-section {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .mode-buttons {
+                    display: flex;
+                    gap: 12px;
+                }
+                .mode-buttons > label {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .menu-item:nth-child(1) {
+                    background: #9b4655;
+                    box-shadow: 0 0 12px #ff7b92;
+                    border: 1px solid #ff7b92;
+                }
+                .menu-item:nth-child(2) {
+                    background: #9b7446;
+                    box-shadow: 0 0 12px #ffac49;
+                    border: 1px solid #ffac49;
+                }
+                .menu-item:nth-child(3) {
+                    background: #46699b;
+                    box-shadow: 0 0 12px #5c9ef9;
+                    border: 1px solid #5c9ef9;
+                }
+
+                .book-page {
+                    flex: 1;
+                    display: none;
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                .book {
+                    flex: 1;
+                    background: #9b4655;
+                    box-shadow: 0 0 12px #ff7b92;
+                    border: 1px solid #ff7b92;
+                    
+                    padding: 40px;
+                    border-radius: 0 24px 24px 0;
+                    width: 100%;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    font-size: 2rem;
+                    font-weight: 600;
+                    text-align: center;
+                    position: relative;
+                }
+
+                .page {
+                    font-size: 1.4rem;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    gap: 20px;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background-color: #fdfdfd;
+                    border: 1px solid #e8e6e6;
+                    box-shadow: inset 3px 0px 20px rgba(0,0,0,0.1);
+                    transition: transform 0.4s ease-in-out;
+                    padding: 32px;
+                    border-radius: 0 24px 24px 0;
+                }
+                .page.flipped {
+                    transform-origin: left;
+                    transform: rotateY(-170deg);
+                }
+                .page.cover {
+                    /* background-color: black; */
+                    color: white;
+                }
+                .page.cover > p {
+                    color: black;
+                }
+
+                @media screen and (max-width: 600px) {
+                    body {
+                        padding: 0;
+                        min-width: 100vw;
+                        min-height: 100vh;
+                    }
+                    .main-page {
+                        width: 100%;
+                        flex: 1;
+                        justify-content: space-between;
+                    }
+                    .book-page {
+                        padding: 20px;
+                    }
                 }
             }
         </style>
