@@ -442,15 +442,15 @@
         <audio id="page-flip-sound" src="https://assets.mixkit.co/active_storage/sfx/1101/1101-preview.mp3" preload="auto"></audio>
 
         <script src="./scripts/constants.js"></script>
-        <script src="./sw.js"></script>
+        <!-- <script src="./sw.js"></script> -->
         <script>
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then((reg) => console.log('서비스 워커 등록 성공!', reg))
-                    .catch((err) => console.log('서비스 워커 등록 실패:', err));
-                });
-            }
+            // if ('serviceWorker' in navigator) {
+            //     window.addEventListener('load', () => {
+            //     navigator.serviceWorker.register('/sw.js')
+            //         .then((reg) => console.log('서비스 워커 등록 성공!', reg))
+            //         .catch((err) => console.log('서비스 워커 등록 실패:', err));
+            //     });
+            // }
             // 오디오 플레이
             function playAudio(audioElement) {
                 let audio = null;
