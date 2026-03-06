@@ -37,6 +37,10 @@ self.addEventListener('activate', (event) => {
 
 // 3. 네트워크 요청 가로채기: 캐시된 게 있으면 캐시 사용, 없으면 네트워크 호출
 self.addEventListener('fetch', (event) => {
+  if (event.request.url.includes('t1.daumcdn.net')) {
+    return fetch(event.request);
+  }
+  
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request);
