@@ -446,6 +446,10 @@
         <script src="./scripts/constants.js"></script>
         <!-- <script src="./sw.js"></script> -->
         <script>
+            window.onload = () => {
+                document.documentElement.style.setProperty('color-scheme', 'light');
+                document.body.style.backgroundColor = '#1d1e20'; // 본래 배경색 다시 지정
+            };
             // if ('serviceWorker' in navigator) {
             //     window.addEventListener('load', () => {
             //     navigator.serviceWorker.register('/sw.js')
