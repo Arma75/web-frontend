@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>프로젝트명</title>
+
+        <!-- Meta Tags -->
+        <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
+        <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
+        <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
+        <meta name="title" content="프로젝트명"/> <!-- 제목 설정 -->
+        <meta name="description" content="프로젝트설명"/> <!-- 설명 설정 -->
+        <meta name="keywords" content="키워드"/> <!-- 키워드 설정 -->
+        <meta name="author" content="attickok"/> <!-- 작성자 설정 -->
+
+        <!-- Open Graph Meta Tags(SNS 공유) -->
+        <meta property="og:type" content="website" /> <!-- 타입 설정 -->
+        <meta property="og:title" content="프로젝트명" /> <!-- 제목 설정 -->
+        <meta property="og:description" content="프로젝트설명" /> <!-- 설명 설정 -->
+        <meta property="og:image" content="./assets/images/thumbnail.png" /> <!-- 이미지 설정 -->
+        <meta property="og:url" content="project_url" /> <!-- URL 설정 -->
+
+        <!-- Progressive Web App -->
+        <link rel="manifest" href="/manifest.json">
+
+        <!-- Favicon Links -->
+        <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicons/favicon-16x16.png"> <!-- 16x16 파비콘 -->
+        <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32x32.png"> <!-- 32x32 파비콘 -->
+        <link rel="icon" type="image/png" sizes="64x64" href="./assets/favicons/favicon-64x64.png"> <!-- 64x64 파비콘 -->
+        <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/favicon-180x180.png"> <!-- 애플 터치 아이콘 -->
+
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheet -->
+        <link rel="stylesheet" href="./styles/main.css">
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .kok-input-group {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .kok-input-group[data-layout='horizontal'] {
+                display: grid;
+                grid-template: auto 1fr / auto 1fr;
+                align-items: center;
+            }
+
+            .kok-input-group.error .kok-input-field {
+                background-color: #fee2e2;
+                border: 1px solid #fecaca;
+                color: #7f1d1d;
+            }
+            .kok-input-group.error .kok-input-field-error-msg {
+                max-height: 100px;
+            }
+
+            .kok-input-group.success .kok-input-field {
+                background-color: #dcfce7;
+                border: 1px solid #bbf7d0;
+                color: #14532d;
+            }
+            .kok-input-group.success .kok-input-field-success-msg {
+                max-height: 100px;
+            }
+
+            .kok-input-group .kok-input-field-error-msg {
+                color: #7f1d1d;
+            }
+            .kok-input-group .kok-input-field-success-msg {
+                color: #14532d;
+            }
+
+            .kok-input-group .kok-input-field-error-msg,
+            .kok-input-group .kok-input-field-success-msg {
+                padding-left: 8px;
+                max-height: 0;
+                overflow: hidden;
+                transition: all 0.3s ease-in-out;
+            }
+
+            .kok-input-group[data-layout='horizontal'] .kok-input-field-error-msg,
+            .kok-input-group[data-layout='horizontal'] .kok-input-field-success-msg {
+                grid-row: 2;
+                grid-column: 2;
+            }
+
+            /* messages */
+            .kok-input-group *[class^='kok-input-field'][class$='msg'] {
+                padding-left: 8px;
+                max-height: 0;
+                overflow: hidden;
+                transition: all 0.3s ease-in-out;
+            }
+            .kok-input-group.danger 
+
+            /* required indicator */
+            .kok-input-group[data-required='true'] .kok-input-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .kok-input-group[data-required='true'] .kok-input-label::after {
+                content: '*';
+                position: relative;
+                top: -8px;
+
+                color: #d66363;
+                font-size: 0.7rem;
+            }
+            .kok-input-group[data-required='true'] .kok-input-label[data-required-text]:not([data-required-text=''])::after {
+                content: attr(data-required-text);
+            }
+            .kok-input-group[data-required='true'] .kok-input-label[date-required-type='badge']::after {
+                padding: 1px 2px;
+                background: #fccfcf;
+                border: 1px solid #f0a0a0;
+                border-radius: 4px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <article class="kok-input-group"
+                 data-layout="vertical"
+                 data-required="true"
+                 data-type="int"
+                 data-valid-regexp="/[0-9]{10}/g">
+            <label class="kok-input-label" data-required-text="필수" date-required-type="badge">프로젝트명</label>
+            <input type="text" class="kok-input-field" placeholder="프로젝트명을 입력해주세요" required>
+            <span class="kok-input-field-required-msg">프로젝트명은 필수 입력 값입니다.</span>
+            <span class="kok-input-field-danger-msg">프로젝트명은 숫자만 입력해야합니다.</span>
+            <span class="kok-input-field-warning-msg">프로젝트명은 숫자 10자 이상으로 입력하면 좋습니다.</span>
+            <span class="kok-input-field-success-msg">프로젝트명을 잘 입력하셨네요.</span>
+        </article>
+<!-- 
+        <article class="kok-input-group" data-required="true" data-type="email">
+            <label class="kok-input-label" data-required-text="REQ">이메일 주소</label>
+            <input type="email" class="kok-input-field" placeholder="example@email.com">
+            <span class="kok-input-field-error-msg">올바른 이메일 형식이 아닙니다.</span>
+            <span class="kok-input-field-required-error-msg">이메일은 필수 입력 값입니다.</span>
+            <span class="kok-input-field-success-msg">사용 가능한 이메일입니다.</span>
+        </article> -->
+<!-- 
+        <article class="kok-input-group" data-layout="vertical" data-type="email" data-required="true" data-required-text="REQ">
+            <label class="kok-input-label">이메일 주소</label>
+            <input type="email" class="kok-input-field" placeholder="example@email.com">
+            <span class="kok-input-field-error-msg">올바른 이메일 형식이 아닙니다.</span>
+            <span class="kok-input-field-success-msg">사용 가능한 이메일입니다.</span>
+        </article>
+
+        <article class="kok-input-group" data-layout="horizontal" data-type="date">
+            <label class="kok-input-label">출시일</label>
+            <input type="text" class="kok-input-field" placeholder="YYYY-MM-DD">
+            <span class="kok-input-field-error-msg">날짜 형식(YYYY-MM-DD)을 맞춰주세요.</span>
+        </article>
+
+        <article class="kok-input-group" data-layout="vertical" data-regexp="^\d{4}$">
+            <label class="kok-input-label">PIN 번호 (4자리 숫자)</label>
+            <input type="password" class="kok-input-field" maxlength="4" placeholder="****">
+            <span class="kok-input-field-error-msg">숫자 4자리를 정확히 입력해주세요.</span>
+        </article>
+
+        <article class="kok-input-group" data-layout="vertical">
+            <label class="kok-input-label">프로젝트 설명</label>
+            <input type="text" class="kok-input-field" placeholder="프로젝트 설명을 입력해주세요">
+        </article>
+
+        <article class="kok-input-group" data-layout="vertical">
+            <label class="kok-input-label" data-required="true">테이블명</label>
+            <input type="text" id="teamName" class="kok-input-field" placeholder="테이블명을 입력해주세요" required>
+            <span class="kok-input-field-error-msg">테이블명은 필수 입력 값입니다.</span>
+            <span class="kok-input-field-success-msg">테이블명을 잘 입력하셨네요.</span>
+        </article>
+         -->
+
+        <!-- scripts-->
+        <script>
+            const KOK_INPUT_FILTER_TYPES = {
+                int: /[0-9]/g,
+                float: /[0-9.]/g,
+                alpha: /[a-zA-Z]/g,
+                lowercase: /[a-z]/g,
+                uppercase: /[A-Z]/g,
+                korean: /[ㄱ-ㅎㅏ-ㅣ가-힣]/g,
+                variable: /[a-zA-Z0-9_]/g,
+                email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                date: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/, 
+                regexp: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) (0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)$/, 
+            };
+
+            class KokInputDecorator {
+                constructor() {
+                    this.inputSelector = '.kok-input-field';
+                    this.groupSelector = '.kok-input-group';
+                }
+
+                init() {
+                    document.addEventListener('blur', e => {
+                        if (e.target.matches(this.inputSelector)) {
+                            this.validate(e.target);
+                        }
+                    }, true);
+                    
+                    document.addEventListener('input', (e) => {
+                        if (e.target.matches(this.inputSelector)) {
+                            const group = e.target.closest(this.groupSelector);
+                            if (group) {
+                                group.classList.remove('kok-input-decorator-success', 'kok-input-decorator-required-danger', 'kok-input-decorator-type-danger', 'kok-input-decorator-regexp-danger');
+                            }
+                        }
+                    });
+                }
+
+                validate(input) {
+                    // .kok-input-group 유무 체크
+                    const group = input.closest(this.groupSelector);
+                    if (!group) {
+                        return;
+                    }
+
+                    const isRequired = input.hasAttribute('required') || group.querySelector(this.inputSelector + '[required]');
+                    const value = input.value.trim();
+                    const isEmpty = value === "";
+                    let isValid = true;
+                    let invalidType = null;
+                    
+                    // 필수 값 밸리데이션
+                    if (isEmpty && isRequired) {
+                        isValid = false;
+                        invalidType = 'REQUIRED';
+                    } else {
+                        const type = group.dataset.type;
+                        const regexp = group.dataset.regexp;
+
+                        if (type) {
+                            if (KOK_INPUT_FILTER_TYPES[type] && KOK_INPUT_FILTER_TYPES[type].test(value)) {
+                                isValid = false;
+                                invalidType = 'TYPE';
+                            }
+                        } else if(regexp && !regexp.test(value)) {
+                            isValid = false;
+                            invalidType = 'REGEXP';
+                        }
+                    }
+
+                    if (isValid) {
+                        group.classList.add('kok-input-decorator-success');
+                    } else {
+                        if (invalidType === 'REQUIRED') {
+                            group.classList.add('kok-input-decorator-required-danger');
+                        } else if(invalidType === 'TYPE') {
+                            group.classList.add('kok-input-decorator-type-danger');
+                        } else if(invalidType === 'REGEXP') {
+                            group.classList.add('kok-input-decorator-regexp-danger');
+                        }
+                    }
+                }
+            }
+            new KokInputDecorator().init();
+        </script>
+    </body>
+</html>
