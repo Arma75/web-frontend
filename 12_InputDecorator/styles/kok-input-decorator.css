@@ -1,0 +1,80 @@
+
+
+/* kok-input vertical layout */
+.kok-input-group:not([data-layout='horizontal']) {
+    display: flex;
+    flex-direction: column;
+}
+.kok-input-group:not([data-layout='horizontal']) .kok-input-label {
+    margin-bottom: 12px;
+}
+.kok-input-group:not([data-layout='horizontal']) .kok-input-field {
+    margin-bottom: 8px;
+}
+
+/* kok-input horizontal layout */
+.kok-input-group[data-layout='horizontal'] {
+    display: grid;
+    grid-template: auto 1fr / auto 1fr;
+    align-items: center;
+    gap: 8px;
+}
+.kok-input-group[data-layout='horizontal'] .kok-input-label {
+    margin-right: 12px;
+}
+.kok-input-group[data-layout='horizontal'] *[class^='kok-input-field'][class$='msg'] {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+/* kok-input messages */
+.kok-input-group *[class^='kok-input-field'][class$='msg'] {
+    padding-left: 8px;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+.kok-input-group.success .kok-input-field-success-msg {
+    max-height: 100px;
+    color: #14532d;
+}
+.kok-input-group.required .kok-input-field-required-msg {
+    max-height: 100px;
+    color: #7f1d1d;
+}
+.kok-input-group.danger .kok-input-field-danger-msg {
+    max-height: 100px;
+    color: #7f1d1d;
+}
+.kok-input-group.warning .kok-input-field-warning-msg {
+    max-height: 100px;
+    color: #78350f;
+}
+
+/* kok-input required indicator */
+.kok-input-group[data-required='true'] .kok-input-label,
+.kok-input-group:has(.kok-input-field[required]) .kok-input-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.kok-input-group[data-required='true'] .kok-input-label::after,
+.kok-input-group:has(.kok-input-field[required]) .kok-input-label::after {
+    content: '*';
+    position: relative;
+    top: -8px;
+
+    color: #d66363;
+    font-size: 0.7rem;
+}
+.kok-input-group[data-required='true'] .kok-input-label[data-required-text]:not([data-required-text=''])::after,
+.kok-input-group:has(.kok-input-field[required]) .kok-input-label[data-required-text]:not([data-required-text=''])::after {
+    content: attr(data-required-text);
+}
+.kok-input-group[data-required='true'] .kok-input-label[data-required-type='badge']::after,
+.kok-input-group:has(.kok-input-field[required]) .kok-input-label[data-required-type='badge']::after {
+    padding: 1px 2px;
+    background: #fccfcf;
+    border: 1px solid #f0a0a0;
+    border-radius: 4px;
+}
