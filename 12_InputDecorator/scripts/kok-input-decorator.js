@@ -1,12 +1,12 @@
 class KokInputDecorator {
-    static STATUS = {
+    static STATUS = Object.freeze({
         SUCCESS: 'success',
         WARNING: 'warning',
         DANGER: 'danger',
         REQUIRED: 'required'
-    };
+    });
 
-    static FILTER_TYPES = {
+    static FILTER_TYPES = Object.freeze({
         int: /^[0-9]+$/,
         float: /^[0-9.]+$/,
         alpha: /^[a-zA-Z]+$/,
@@ -17,16 +17,15 @@ class KokInputDecorator {
         email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         date: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/, 
         datetime: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) (0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)$/, 
-    };
+    });
+
+    static DEFAULT_OPTIONS = Object.freeze({
+        inputSelector: '.kok-input-field',
+        groupSelector: '.kok-input-group'
+    });
 
     constructor(userOptions = {}) {
-        // 기본값 설정
-        const defaultOptions = {
-            inputSelector: '.kok-input-field',
-            groupSelector: '.kok-input-group'
-        };
-        
-        const options = { ...defaultOptions, ...userOptions };
+        const options = { ...KokInputDecorator.DEFAULT_OPTIONS, ...userOptions };
 
         this.inputSelector = options.inputSelector;
         this.groupSelector = options.groupSelector;
@@ -93,6 +92,10 @@ class KokInputDecorator {
             return;
         }
 
+        if (isEmpty) {
+            return;
+        }
+
         // danger 체크
         const dangerType = group.dataset.type;
         const dangerRegexp = this._parseRegExp(group.dataset.regexp);
@@ -123,9 +126,7 @@ class KokInputDecorator {
             return;
         }
 
-        if (!isEmpty) {
-            group.classList.add(KokInputDecorator.STATUS.SUCCESS);
-            input.classList.add(KokInputDecorator.STATUS.SUCCESS);
-        }
+        group.classList.add(KokInputDecorator.STATUS.SUCCESS);
+        input.classList.add(KokInputDecorator.STATUS.SUCCESS);
     }
 }

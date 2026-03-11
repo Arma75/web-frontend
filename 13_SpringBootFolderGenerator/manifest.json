@@ -1,0 +1,154 @@
+{
+    "id": "com.attickok.template",
+    "lang": "ko-KR",
+    "dir": "ltr",
+    "name": "프로젝트명",
+    "short_name": "프로젝트명",
+    "description": "프로젝트설명",
+    "start_url": "/index.html",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "categories": [
+        "category1",
+        "category2"
+    ],
+    "background_color": "#1D1E20",
+    "theme_color": "#1D1E20",
+    "display_override": [
+        "window-controls-overlay",
+        "standalone"
+    ],
+    "icons": [
+        {
+            "src": "/assets/favicons/favicon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/favicons/favicon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/favicons/favicon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/favicons/favicon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/assets/images/screenshot-mobile1.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "프로젝트 모바일 화면"
+        },
+        {
+            "src": "/assets/images/screenshot-mobile2.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "프로젝트 모바일 화면"
+        },
+        {
+            "src": "/assets/images/screenshot-mobile3.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "프로젝트 모바일 화면"
+        },
+        {
+            "src": "/assets/images/screenshot-desktop1.png",
+            "sizes": "1920x1080",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "프로젝트 데스크탑 화면"
+        },
+        {
+            "src": "/assets/images/screenshot-desktop2.png",
+            "sizes": "1920x1080",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "프로젝트 데스크탑 화면"
+        },
+        {
+            "src": "/assets/images/screenshot-desktop3.png",
+            "sizes": "1920x1080",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "프로젝트 데스크탑 화면"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "프로젝트명",
+            "url": "/",
+            "icons": [
+                {
+                    "src": "/assets/favicons/favicon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ],
+    "share_target": {
+        "action": "/",
+        "method": "GET",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    },
+    "file_handlers": [
+        {
+            "action": "/",
+            "accept": {
+                "text/plain": [".txt"]
+            }
+        }
+    ],
+    "launch_handler": {
+        "client_mode": "focus-existing"
+    },
+    "protocol_handlers": [
+        {
+            "protocol": "web+project",
+            "url": "/?type=%s"
+        }
+    ],
+    "note_taking": {
+        "new_note_url": "/"
+    },
+    "widgets": [],
+    "edge_side_panel": {
+        "preferred_width": 440
+    },
+    "scope_extensions": [
+        {
+            "origin": "project_url"
+        },
+        {
+            "origin": "project_url/*"
+        }
+    ],
+    "iarc_rating_id": "12345678",
+    "related_applications": [
+        {
+            "id": "com.attickok.project",
+            "url": "project_url",
+            "platform": "play"
+        }
+    ],
+    "prefer_related_applications": false
+}

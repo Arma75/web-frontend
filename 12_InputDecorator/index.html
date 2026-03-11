@@ -60,7 +60,7 @@
 
         <article class="kok-input-group" data-layout="vertical" data-required="true" data-type="int">
             <label class="kok-input-label" data-required-text="필수" data-required-type="badge">프로젝트명</label>
-            <input type="text" class="kok-input-field" placeholder="숫자만 입력 가능" required>
+            <input type="text" id="number" class="kok-input-field" placeholder="숫자만 입력 가능" required>
             <span class="kok-input-field-required-msg">프로젝트명은 필수 입력 값입니다.</span>
             <span class="kok-input-field-danger-msg">숫자만 입력해야 합니다.</span>
         </article>
@@ -88,8 +88,8 @@
         </article>
 
         <article class="kok-input-group" data-layout="vertical" data-valid-regexp="^.{10,}$">
-            <label class="kok-input-label" data-required-text="!!!" data-required-type="badge">상세 설명</label>
-            <input type="text" class="kok-input-field" placeholder="10자 이상 입력해주세요" required>
+            <label class="kok-input-label">상세 설명</label>
+            <input type="text" id="description" class="kok-input-field" placeholder="10자 이상 입력해주세요" required>
             <span class="kok-input-field-required-msg">설명은 필수 입력 값입니다.</span>
             <span class="kok-input-field-warning-msg">10자 이상 입력하면 더 좋습니다.</span>
             <span class="kok-input-field-success-msg">완벽한 설명입니다!</span>
@@ -97,14 +97,24 @@
 
         <article class="kok-input-group" data-layout="horizontal" data-type="korean">
             <label class="kok-input-label">작성자 성함</label>
-            <input type="text" class="kok-input-field" placeholder="한글만 입력하세요">
+            <input type="text" id="name" class="kok-input-field" placeholder="한글만 입력하세요">
             <span class="kok-input-field-danger-msg">한글만 입력 가능합니다.</span>
         </article>
 
         <!-- scripts-->
+        <script src="./scripts/kok-input-filter.js"></script>
         <script src="./scripts/kok-input-decorator.js"></script>
         <script>
             new KokInputDecorator().init();
+            new KokInputFilter("#name", {type: "korean"});
+            new KokInputFilter("#description", {required: true, type: "variable"});
+            new KokInputFilter("#number", {required: true, type: "int"});
+            number.addEventListener('success', e => {
+                console.log('success', e);
+            });
+            number.addEventListener('error', e => {
+                console.log('error', e);
+            });
         </script>
     </body>
 </html>
