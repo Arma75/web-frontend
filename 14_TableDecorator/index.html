@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>프로젝트명</title>
+
+        <!-- Meta Tags -->
+        <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
+        <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
+        <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
+        <meta name="title" content="프로젝트명"/> <!-- 제목 설정 -->
+        <meta name="description" content="프로젝트설명"/> <!-- 설명 설정 -->
+        <meta name="keywords" content="키워드"/> <!-- 키워드 설정 -->
+        <meta name="author" content="attickok"/> <!-- 작성자 설정 -->
+
+        <!-- Open Graph Meta Tags(SNS 공유) -->
+        <meta property="og:type" content="website" /> <!-- 타입 설정 -->
+        <meta property="og:title" content="프로젝트명" /> <!-- 제목 설정 -->
+        <meta property="og:description" content="프로젝트설명" /> <!-- 설명 설정 -->
+        <meta property="og:image" content="./assets/images/thumbnail.png" /> <!-- 이미지 설정 -->
+        <meta property="og:url" content="project_url" /> <!-- URL 설정 -->
+
+        <!-- Progressive Web App -->
+        <link rel="manifest" href="/manifest.json">
+
+        <!-- Favicon Links -->
+        <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicons/favicon-16x16.png"> <!-- 16x16 파비콘 -->
+        <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32x32.png"> <!-- 32x32 파비콘 -->
+        <link rel="icon" type="image/png" sizes="64x64" href="./assets/favicons/favicon-64x64.png"> <!-- 64x64 파비콘 -->
+        <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/favicon-180x180.png"> <!-- 애플 터치 아이콘 -->
+
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheet -->
+        <link rel="stylesheet" href="./styles/main.css">
+        <style>
+        </style>
+    </head>
+
+    <body>
+        <main>
+            <h1>1</h1>
+            <table id="kok-table">
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>이메일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>우로로</td>
+                        <td>test@gmail.com</td>
+                    </tr>
+                    <tr>
+                        <td>마지카</td>
+                        <td>magic@gmail.com</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+
+            <h1>2</h1>
+            <table class="kok-table">
+                <tr>
+                    <th>ID</th>
+                    <th>상태</th>
+                </tr>
+                <tr>
+                    <td>101</td>
+                    <td>활성</td>
+                </tr>
+                <tr>
+                    <td>102</td>
+                    <td>비활성</td>
+                </tr>
+                <tr>
+                    <td>103</td>
+                    <td>비활성</td>
+                </tr>
+                <tr>
+                    <td>104</td>
+                    <td>비활성</td>
+                </tr>
+                <tr>
+                    <td>105</td>
+                    <td>비활성</td>
+                </tr>
+            </table>
+            <br>
+
+            <h1>3</h1>
+            <table class="kok-table">
+                <thead>
+                    <tr><th>구분</th><th>항목</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>그룹 A</td><td>항목 1</td></tr>
+                </tbody>
+                <tbody>
+                    <tr><td>그룹 B</td><td>항목 2</td></tr>
+                </tbody>
+            </table>
+            <br>
+
+            <h1>4</h1>
+            <table class="kok-table">
+                <thead>
+                    <tr>
+                        <th>선택</th> <th>부서</th>
+                        <th>이름</th>
+                        <th>역할</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td rowspan="2">개발팀</td> <td>김개발</td>
+                        <td>백엔드</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>이코드</td>
+                        <td>프론트</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+
+            <h1>5</h1>
+            <table class="kok-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2">선택</th>
+                        <th colspan="2">지역</th>
+                        <th rowspan="2">매출</th>
+                    </tr>
+                    <tr>
+                        <th>국가</th>
+                        <th>도시</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>한국</td>
+                        <td>서울</td>
+                        <td>1000</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+
+            <h1>6</h1>
+            <table class="kok-table">
+                <tr>
+                    <th rowspan="2">선택</th>
+                    <th colspan="2">사용자 정보</th>
+                </tr>
+                <tr>
+                    <th>아이디</th>
+                    <th>닉네임</th>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>user01</td>
+                    <td>우로로</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>user02</td>
+                    <td>마지카</td>
+                </tr>
+            </table>
+            <br>
+
+            <h1>7</h1>
+            <table class="kok-table">
+                <thead>
+                    <tr>
+                        <th colspan="3">사용자 정보 상세</th>
+                    </tr>
+                    <tr>
+                        <th>선택</th>
+                        <th>ID</th>
+                        <th>이메일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>user01</td>
+                        <td>test@test.com</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+
+            <h1>8</h1>
+            <table class="kok-table" id="test1">
+                <tr>
+                    <th>이름</th>
+                    <th>타입</th>
+                </tr>
+                <tr>
+                    <td>user_id</td>
+                    <td>VARCHAR</td>
+                </tr>
+            </table>
+            <br>
+
+            <h1>9</h1>
+            <table class="kok-table">
+                <caption>DB 스키마 정보</caption>
+                <thead>
+                    <tr><th>컬럼</th><th>설명</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>user_name</td><td>사용자명</td></tr>
+                    <tr><td>user_age</td><td>나이</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">합계: 2개 항목</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </main>
+
+        <!-- scripts-->
+        <script src="./scripts/kok-table-decorator.js"></script>
+        <script>
+            new KokTableDecorator('.kok-table');
+
+            const rowTemplate = 
+            `<tr>
+                <td><input type='text' class='small'></td>
+                <td><input type='text' class='small'></td>
+            </tr>`;
+            new KokTableDecorator('#kok-table', {rowTemplate});
+        </script>
+    </body>
+</html>
