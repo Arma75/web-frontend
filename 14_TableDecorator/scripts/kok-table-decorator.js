@@ -1,4 +1,3 @@
-
 class KokTableDecorator {
     static DEFAULT_OPTIONS = Object.freeze({
         checkbox: true,
@@ -179,6 +178,10 @@ class KokTableDecorator {
         this._reorderNumbers(element);
     }
 
+    _dispatchEvent(element, eventName, data) {
+        element.dispatchEvent(new CustomEvent(eventName, { detail: data }));
+    }
+
     _renderControls(element) {
         const controls = document.createElement('div');
         controls.className = 'kok-controls';
@@ -188,11 +191,16 @@ class KokTableDecorator {
         controls.style.marginBottom = '8px';
 
         // 추가 버튼
-        if (this.options.add && this.options.rowTemplate) {
+        if (this.options.add) {
             const addButton = document.createElement('button');
             addButton.classList.add('kok-row-add-button', 'small', 'success');
             addButton.innerText = '추가';
             addButton.onclick = () => {
+                if (!this.options.rowTemplate) {
+                    this._dispatchEvent(element, 'addRow');
+                    return;
+                }
+                
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = this.options.rowTemplate; 
                 
@@ -201,6 +209,8 @@ class KokTableDecorator {
                 
                 this.decorateRow(element, newRow);
                 this._reorderNumbers(element);
+
+                this._dispatchEvent(element, 'addRow', { newRow });
             };
             controls.appendChild(addButton);
         }
@@ -212,11 +222,22 @@ class KokTableDecorator {
             deleteButton.innerText = '삭제';
             deleteButton.disabled = true;
             deleteButton.onclick = () => {
-                element.querySelectorAll('.kok-check:checked').forEach(checkbox => checkbox.closest('tr').remove());
+                const deletedRows = [];
+                element.querySelectorAll('.kok-check:checked').forEach(checkbox => {
+                    const row = checkbox.closest('tr');
+                    deletedRows.push({
+                        row: row,
+                        index: row.rowIndex - 1
+                    });
+                });
+                
+                deletedRows.forEach(obj => obj.row.remove());
 
                 // 번호 다시 세팅
                 this._reorderNumbers(element);
                 this._uncheckBoxes(element);
+
+                this._dispatchEvent(element, 'deleteRow', { deletedRows });
             };
             controls.appendChild(deleteButton);
         }
@@ -228,8 +249,19 @@ class KokTableDecorator {
             swapButton.innerText = '교체';
             swapButton.disabled = true;
             swapButton.onclick = () => {
-                const checkedRows = Array.from(element.querySelectorAll('.kok-check:checked')).map(cb => cb.closest('tr'));
+                const swapRows = [];
+                const checkedRows = Array.from(element.querySelectorAll('.kok-check:checked')).map(checkbox => {
+                    const row = checkbox.closest('tr');
+                    swapRows.push({
+                        row: row,
+                        index: row.rowIndex - 1
+                    });
+
+                    return row;
+                });
+
                 if (checkedRows.length !== 2) {
+                    this._dispatchEvent(element, 'swapRow');
                     return;
                 }
                 
@@ -248,6 +280,8 @@ class KokTableDecorator {
 
                 this._reorderNumbers(element);
                 this._uncheckBoxes(element);
+                
+                this._dispatchEvent(element, 'swapRow', { swapRows });
             };
             controls.appendChild(swapButton);
         }

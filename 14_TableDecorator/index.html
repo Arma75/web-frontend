@@ -33,211 +33,303 @@
 
         <!-- CSS Stylesheet -->
         <link rel="stylesheet" href="./styles/main.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Arma75/kok-input-decorator@main/kok-input-decorator.css">
         <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                gap: 40px;
+            }
+            header {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;
+            }
+            main {
+                display: flex;
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .card-layout {
+                background: white;
+                padding: 24px;
+                border-radius: 18px;
+                border: 1px solid #e9ecef;
+            }
+            .table-container {
+                overflow: scroll;
+            }
         </style>
     </head>
 
     <body>
+        <header>
+            <h1>🚀 스프링부트의 무엇인가 생성기</h1>
+            <p>스프링부트의 무엇인가를 자동으로 생성해주는 도구입니다.</p>
+        </header>
+
         <main>
-            <h1>1</h1>
-            <table id="kok-table">
-                <thead>
-                    <tr>
-                        <th>이름</th>
-                        <th>이메일</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>우로로</td>
-                        <td>test@gmail.com</td>
-                    </tr>
-                    <tr>
-                        <td>마지카</td>
-                        <td>magic@gmail.com</td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
+            <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9]+$/">
+                <label class="kok-input-label" data-required-text="필수" data-required-type="badge">팀명</label>
+                <input type="text" id="teamName" class="kok-input-field" placeholder="팀명을 입력해주세요" required>
+                <span class="kok-input-field-required-msg">팀명은 필수 입력 항목입니다.</span>
+                <span class="kok-input-field-danger-msg">팀은 영문, 숫자만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
 
-            <h1>2</h1>
-            <table class="kok-table">
-                <tr>
-                    <th>ID</th>
-                    <th>상태</th>
-                </tr>
-                <tr>
-                    <td>101</td>
-                    <td>활성</td>
-                </tr>
-                <tr>
-                    <td>102</td>
-                    <td>비활성</td>
-                </tr>
-                <tr>
-                    <td>103</td>
-                    <td>비활성</td>
-                </tr>
-                <tr>
-                    <td>104</td>
-                    <td>비활성</td>
-                </tr>
-                <tr>
-                    <td>105</td>
-                    <td>비활성</td>
-                </tr>
-            </table>
-            <br>
+            <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9]+$/">
+                <label class="kok-input-label" data-required-text="필수" data-required-type="badge">프로젝트명</label>
+                <input type="text" id="projectName" class="kok-input-field" placeholder="프로젝트명을 입력해주세요" required>
+                <span class="kok-input-field-required-msg">프로젝트명은 필수 입력 항목입니다.</span>
+                <span class="kok-input-field-danger-msg">프로젝트명은 영문, 숫자만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
 
-            <h1>3</h1>
-            <table class="kok-table">
-                <thead>
-                    <tr><th>구분</th><th>항목</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>그룹 A</td><td>항목 1</td></tr>
-                </tbody>
-                <tbody>
-                    <tr><td>그룹 B</td><td>항목 2</td></tr>
-                </tbody>
-            </table>
-            <br>
+            <!-- <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9 ]+$/"> -->
+            <article class="kok-input-group" data-layout="vertical">
+                <label class="kok-input-label">프로젝트 설명</label>
+                <input type="text" id="projectDescription" class="kok-input-field" placeholder="프로젝트 설명을 입력해주세요">
+                <span class="kok-input-field-danger-msg">프로젝트 설명은 영문, 숫자, 공백만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
 
-            <h1>4</h1>
-            <table class="kok-table">
-                <thead>
-                    <tr>
-                        <th>선택</th> <th>부서</th>
-                        <th>이름</th>
-                        <th>역할</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td rowspan="2">개발팀</td> <td>김개발</td>
-                        <td>백엔드</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>이코드</td>
-                        <td>프론트</td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
+            <hr>
 
-            <h1>5</h1>
-            <table class="kok-table">
-                <thead>
-                    <tr>
-                        <th rowspan="2">선택</th>
-                        <th colspan="2">지역</th>
-                        <th rowspan="2">매출</th>
-                    </tr>
-                    <tr>
-                        <th>국가</th>
-                        <th>도시</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>한국</td>
-                        <td>서울</td>
-                        <td>1000</td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
+            <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9]+$/">
+                <label class="kok-input-label" data-required-text="필수" data-required-type="badge">테이블명</label>
+                <input type="text" id="tableName" class="kok-input-field" placeholder="테이블명을 입력해주세요" required>
+                <span class="kok-input-field-required-msg">테이블명은 필수 입력 항목입니다.</span>
+                <span class="kok-input-field-danger-msg">테이블명은 영문, 숫자만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
 
-            <h1>6</h1>
-            <table class="kok-table">
-                <tr>
-                    <th rowspan="2">선택</th>
-                    <th colspan="2">사용자 정보</th>
-                </tr>
-                <tr>
-                    <th>아이디</th>
-                    <th>닉네임</th>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>user01</td>
-                    <td>우로로</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>user02</td>
-                    <td>마지카</td>
-                </tr>
-            </table>
-            <br>
+            <!-- <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9 ]+$/"> -->
+            <article class="kok-input-group" data-layout="vertical">
+                <label class="kok-input-label">테이블 설명</label>
+                <input type="text" id="tableDescription" class="kok-input-field" placeholder="테이블 설명을 입력해주세요">
+                <span class="kok-input-field-danger-msg">테이블 설명은 영문, 숫자, 공백만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
 
-            <h1>7</h1>
-            <table class="kok-table">
-                <thead>
-                    <tr>
-                        <th colspan="3">사용자 정보 상세</th>
-                    </tr>
-                    <tr>
-                        <th>선택</th>
-                        <th>ID</th>
-                        <th>이메일</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>user01</td>
-                        <td>test@test.com</td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
+            <article class="card-layout">
+                <article class="table-container">
+                    <table class="kok-table">
+                        <colgroup>
+                            <col width="*">
+                            <col width="*">
+                            <col width="200">
+                            <col width="200">
+                            <col width="200">
+                            <col width="200">
+                            <col width="200">
+                            <col width="120">
+                            <col width="120">
+                            <col width="120">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>컬럼명</th>
+                                <th>코멘트</th>
+                                <th>타입</th>
+                                <th>길이</th>
+                                <th>디폴트 값</th>
+                                <th>PK 여부</th>
+                                <th>자동 증가 여부</th>
+                                <th>NULLABLE</th>
+                            </tr>
+                        </thead>
 
-            <h1>8</h1>
-            <table class="kok-table" id="test1">
-                <tr>
-                    <th>이름</th>
-                    <th>타입</th>
-                </tr>
-                <tr>
-                    <td>user_id</td>
-                    <td>VARCHAR</td>
-                </tr>
-            </table>
-            <br>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </article>
+            </article>
 
-            <h1>9</h1>
-            <table class="kok-table">
-                <caption>DB 스키마 정보</caption>
-                <thead>
-                    <tr><th>컬럼</th><th>설명</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>user_name</td><td>사용자명</td></tr>
-                    <tr><td>user_age</td><td>나이</td></tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="2">합계: 2개 항목</td>
-                    </tr>
-                </tfoot>
-            </table>
+            <button id="generateButton" class="primary">생성하기</button>
         </main>
 
         <!-- scripts-->
-        <script src="./scripts/kok-table-decorator.js"></script>
-        <script>
-            new KokTableDecorator('.kok-table');
+        <script src="https://cdn.jsdelivr.net/gh/Arma75/kok-input-filter@main/kok-input-filter.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/Arma75/kok-input-decorator@main/kok-input-decorator.js"></script>
 
-            const rowTemplate = 
-            `<tr>
-                <td><input type='text' class='small'></td>
-                <td><input type='text' class='small'></td>
-            </tr>`;
-            new KokTableDecorator('#kok-table', {rowTemplate});
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
+
+        <script src="./templates/test-class-template.js"></script>
+        <script src="./templates/build-gradle.js"></script>
+        <script src="./templates/settings-gradle.js"></script>
+        <script src="./scripts/case-converter.js"></script>
+        <script src="./scripts/kok-table-decorator.js"></script>
+        <script src="./scripts/kok-schema.js"></script>
+
+        <script>
+            const PROJECT_INFO_LOCAL_STORAGE_KEY = 'vkdnjfpdlswj';
+
+            const teamNameElem = document.querySelector("#teamName");
+            const projectNameElem = document.querySelector("#projectName");
+            const projectDescriptionElem = document.querySelector("#projectDescription");
+            const tableNameElem = document.querySelector("#tableName");
+            const tableDescriptionElem = document.querySelector("#tableDescription");
+
+            new KokInputDecorator().init();
+            
+            new KokInputFilter("#teamName", { regexp: /[^a-zA-Z0-9]/g, required: true });
+            new KokInputFilter("#projectName", { regexp: /[^a-zA-Z0-9]/g, required: true });
+            // new KokInputFilter("#projectDescription", { regexp: /[^a-zA-Z0-9 ]/g });
+            new KokInputFilter("#tableName", { regexp: /[^a-zA-Z0-9]/g, required: true });
+            // new KokInputFilter("#tableDescription", { regexp: /[^a-zA-Z0-9 ]/g });
+
+            window.onload = _ => {
+                readProjectInfo();
+            };
+
+            // 파일 내용 읽기
+            async function readFile(filePath) {
+                try {
+                    const response = await fetch(filePath);
+                    if (!response.ok) {
+                        throw new Error('파일을 찾을 수 없습니다. 경로를 확인해주세요.');
+                    }
+
+                    return await response.arrayBuffer();
+                } catch (error) {
+                    console.error("❌ error::", error);
+                    return null;
+                }
+            }
+
+            // generate 정보 읽기
+            function readProjectInfo() {
+                const localStorageItem = localStorage.getItem(PROJECT_INFO_LOCAL_STORAGE_KEY);
+                if (!localStorageItem) {
+                    return;
+                }
+
+                const projectInfo = JSON.parse(localStorageItem);
+                teamNameElem.value = projectInfo.teamName;
+                projectNameElem.value = projectInfo.projectName;
+                projectDescriptionElem.value = projectInfo.projectDescription;
+                tableNameElem.value = projectInfo.tableName;
+                tableDescriptionElem.value = projectInfo.tableDescription;
+            }
+
+            // generate 정보 저장
+            function saveProjectInfo() {
+                const teamName = teamNameElem.value;
+                const projectName = projectNameElem.value;
+                const projectDescription = projectDescriptionElem.value;
+                const tableName = tableNameElem.value;
+                const tableDescription = tableDescriptionElem.value;
+
+                const infoJson = JSON.stringify({
+                    teamName, projectName, projectDescription, tableName, tableDescription
+                });
+
+                localStorage.setItem(PROJECT_INFO_LOCAL_STORAGE_KEY, infoJson);
+            }
+
+            // 핸들바 템플릿을 이용하여 파일 내용 생성
+            function createContentsByTemplate(template, data) {
+                const handlebar = Handlebars.compile(template);
+                return handlebar(data);
+            }
+
+            // 스프링부트 폴더 생성
+            async function createSpringBootProject() {
+                const zip = new JSZip();
+
+                const teamName = toCamelCase(teamNameElem.value).toLowerCase();
+                const projectName = toCamelCase(projectNameElem.value).toLowerCase();
+                const projectDescription = projectDescriptionElem.value;
+                const tableName = toCamelCase(tableNameElem.value).toLowerCase();
+                const tableDescription = tableDescriptionElem.value;
+
+                // 필수 값 체크
+                if (teamName == '') {
+                    teamNameElem.focus();
+                    return;
+                } else if (projectName == '') {
+                    projectNameElem.focus();
+                    return;
+                } else if (tableName == '') {
+                    tableNameElem.focus();
+                    return;
+                }
+
+                // generate 정보 저장
+                saveProjectInfo();
+
+                zip.file(`${projectName}/gradlew`, readFile('./assets/files/gradlew'));
+                zip.file(`${projectName}/gradlew.bat`, readFile('./assets/files/gradlew.bat'));
+                zip.file(`${projectName}/gradle/wrapper/gradle-wrapper.jar`, readFile('./assets/files/gradle-wrapper.jar'));
+                zip.file(`${projectName}/gradle/wrapper/gradle-wrapper.properties`, readFile('./assets/files/gradle-wrapper.properties'));
+
+                let className = `${toPascalCase(projectNameElem.value)}Application`;
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${className}.java`, createContentsByTemplate(TEST_CLASS_TEMPLATE, {className}));
+
+                zip.file(`${projectName}/build.gradle`, createContentsByTemplate(BUILD_GRADLE_TEMPLATE, {teamName, projectDescription}));
+                zip.file(`${projectName}/settings.gradle`, createContentsByTemplate(SETTINGS_GRADLE_TEMPLATE, {projectName}));
+
+                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/dto`);
+                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/exception`);
+                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/utils`);
+
+                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/controller`);
+                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/service`);
+                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dao`);
+                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto`);
+
+                zip.folder(`${projectName}/src/main/resources`);
+
+                const content = await zip.generateAsync({ type: "blob" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(content);
+                link.download = `${projectName}.zip`;
+                link.click();
+            }
+
+            generateButton.addEventListener('click', createSpringBootProject);
+
+            const schema = new Schema();
+            const kokTableDecorator = new KokTableDecorator('.kok-table');
+            const table = document.querySelector('.kok-table');
+
+            table.addEventListener('addRow', e => {
+                const column = new Column();
+                const columnComponent = new ColumnComponent(column);
+
+                const tbody = table.querySelector('tbody');
+                tbody.appendChild(columnComponent.element);
+
+                schema.options.columns.push(column);
+                
+                kokTableDecorator.decorateRow(table, columnComponent.element);
+                kokTableDecorator._reorderNumbers(table);
+            });
+
+            table.addEventListener('deleteRow', e => {
+                if (!e.detail || !e.detail.deletedRows) {
+                    return;
+                }
+
+                e.detail.deletedRows.map(obj => obj.index).sort().reverse().forEach(index => {
+                    schema.options.columns.splice(index, 1);
+                });
+            });
+
+            table.addEventListener('swapRow', e => {
+                if (!e.detail || !e.detail.swapRows) {
+                    return;
+                }
+
+                const swapIndexes = e.detail.swapRows.map(obj => obj.index);
+                const temp = schema.options.columns[swapIndexes[0]];
+                schema.options.columns[swapIndexes[0]] = schema.options.columns[swapIndexes[1]];
+                schema.options.columns[swapIndexes[1]] = temp;
+            });
         </script>
     </body>
 </html>
