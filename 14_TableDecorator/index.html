@@ -166,6 +166,7 @@
         <script src="./templates/excel-util.js"></script>
         <script src="./templates/global-exception-handler.js"></script>
         <script src="./templates/application.js"></script>
+        <script src="./templates/save-request.js"></script>
 
         <script src="./scripts/case-converter.js"></script>
         <script src="./scripts/kok-table-decorator.js"></script>
@@ -287,6 +288,28 @@
                 // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/dto`);
                 // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/exception`);
                 // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/utils`);
+                var data = {};
+                let tablePascalName = toPascalCase(tableNameElem.value);
+                data.teamName = teamName;
+                data.projectName = projectName;
+                data.tableName = tableName;
+                data.tablePascalName = tablePascalName;
+                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
+                data.tableComment = tableDescription;
+                data.today = new Date().toISOString().split('T')[0];
+                data.targetColumns = schema.options.columns.map(c => {
+                    c.isString = c.getJavaType() === 'String';
+                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                    c.javaType = c.getJavaType();
+                    c.fieldName = toCamelCase(c.options.name);
+                    return c;
+                });
+                console.log(data);
+                // console.log(schema.options.columns);
+                // console.log(schema.options.columns.map(c => c.getJavaTypeImport()).filter(s => s));
+                
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto/${tablePascalName}SaveRequest.java`, createContentsByTemplate(SAVE_REQUEST_TEMPLATE, data));
+                console.log(createContentsByTemplate(SAVE_REQUEST_TEMPLATE, data));
 
                 zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/controller`);
                 zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/service`);
@@ -299,7 +322,7 @@
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(content);
                 link.download = `${projectName}.zip`;
-                link.click();
+                // link.click();
             }
 
             generateButton.addEventListener('click', createSpringBootProject);

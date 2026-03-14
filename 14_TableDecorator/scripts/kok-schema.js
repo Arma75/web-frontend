@@ -8,6 +8,15 @@ class Column {
         TIMESTAMP: { hasLength: false, hasPrecision: true },
         BOOLEAN: { hasLength: false, hasPrecision: false },
     });
+    static TYPE_TO_JAVA_MAP = Object.freeze({
+        'CHAR': { javaType: 'String', import: null },
+        'VARCHAR': { javaType: 'String', import: null },
+        'TEXT': { javaType: 'String', import: null },
+        'INTEGER': { javaType: 'Integer', import: null },
+        'NUMERIC': { javaType: 'BigDecimal', import: 'java.math.BigDecimal' },
+        'TIMESTAMP': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime', 'org.springframework.format.annotation.DateTimeFormat'] },
+        'BOOLEAN': { javaType: 'Boolean', import: null },
+    });
 
     static DEFAULT_OPTIONS = Object.freeze({
         name: null,
@@ -35,6 +44,29 @@ class Column {
                 return true;
             }
         });
+    }
+
+    getJavaType() {
+        if (this.options.autoIncrease) {
+            return 'Long';
+        }
+        
+        const type = this.options.type.toUpperCase();
+        if (Column.TYPE_TO_JAVA_MAP[type]) {
+            return Column.TYPE_TO_JAVA_MAP[type].javaType;
+        }
+
+        return 'Object';
+    }
+
+    getJavaTypeImport() {
+        const type = this.options.type.toUpperCase();
+
+        if (Column.TYPE_TO_JAVA_MAP[type]) {
+            return Column.TYPE_TO_JAVA_MAP[type].import;
+        }
+
+        return null;
     }
 }
 
