@@ -161,6 +161,12 @@
         <script src="./templates/test-class-template.js"></script>
         <script src="./templates/build-gradle.js"></script>
         <script src="./templates/settings-gradle.js"></script>
+        <script src="./templates/page-request.js"></script>
+        <script src="./templates/page-response.js"></script>
+        <script src="./templates/excel-util.js"></script>
+        <script src="./templates/global-exception-handler.js"></script>
+        <script src="./templates/application.js"></script>
+
         <script src="./scripts/case-converter.js"></script>
         <script src="./scripts/kok-table-decorator.js"></script>
         <script src="./scripts/kok-schema.js"></script>
@@ -267,15 +273,20 @@
                 zip.file(`${projectName}/gradle/wrapper/gradle-wrapper.jar`, readFile('./assets/files/gradle-wrapper.jar'));
                 zip.file(`${projectName}/gradle/wrapper/gradle-wrapper.properties`, readFile('./assets/files/gradle-wrapper.properties'));
 
-                let className = `${toPascalCase(projectNameElem.value)}Application`;
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${className}.java`, createContentsByTemplate(TEST_CLASS_TEMPLATE, {className}));
+                let projectPascalName = `${toPascalCase(projectNameElem.value)}`;
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${projectPascalName}Application.java`, createContentsByTemplate(APPLICATION_TEMPLATE, {teamName, projectName, projectPascalName}));
 
                 zip.file(`${projectName}/build.gradle`, createContentsByTemplate(BUILD_GRADLE_TEMPLATE, {teamName, projectDescription}));
                 zip.file(`${projectName}/settings.gradle`, createContentsByTemplate(SETTINGS_GRADLE_TEMPLATE, {projectName}));
 
-                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/dto`);
-                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/exception`);
-                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/utils`);
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/dto/PageRequest.java`, createContentsByTemplate(PAGE_REQUEST_TEMPLATE, {teamName, projectName}));
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/dto/PageResponse.java`, createContentsByTemplate(PAGE_RESPONSE_TEMPLATE, {teamName, projectName}));
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/utils/ExcelUtil.java`, createContentsByTemplate(EXCEL_UTIL_TEMPLATE, {teamName, projectName}));
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/exception/GlobalExceptionHandler.java`, createContentsByTemplate(GLOBAL_EXCEPTION_HANDLER_TEMPLATE, {teamName, projectName}));
+
+                // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/dto`);
+                // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/exception`);
+                // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/utils`);
 
                 zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/controller`);
                 zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/service`);
