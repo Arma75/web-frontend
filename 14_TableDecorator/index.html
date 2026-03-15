@@ -167,6 +167,7 @@
         <script src="./templates/global-exception-handler.js"></script>
         <script src="./templates/application.js"></script>
         <script src="./templates/save-request.js"></script>
+        <script src="./templates/search-request.js"></script>
 
         <script src="./scripts/case-converter.js"></script>
         <script src="./scripts/kok-table-decorator.js"></script>
@@ -304,17 +305,50 @@
                     c.fieldName = toCamelCase(c.options.name);
                     return c;
                 });
-                console.log(data);
-                // console.log(schema.options.columns);
-                // console.log(schema.options.columns.map(c => c.getJavaTypeImport()).filter(s => s));
-                
                 zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto/${tablePascalName}SaveRequest.java`, createContentsByTemplate(SAVE_REQUEST_TEMPLATE, data));
-                console.log(createContentsByTemplate(SAVE_REQUEST_TEMPLATE, data));
+
+                var data = {};
+                data.teamName = teamName;
+                data.projectName = projectName;
+                data.tableName = tableName;
+                data.tablePascalName = tablePascalName;
+                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
+                data.tableComment = tableDescription;
+                data.today = new Date().toISOString().split('T')[0];
+                data.targetColumns = [];
+                
+                let tempColumns = schema.options.columns.map(c => {
+                    c.isString = c.getJavaType() === 'String';
+                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                    c.javaType = c.getJavaType();
+                    c.fieldName = toCamelCase(c.options.name);
+
+                    data.targetColumns.push(c);
+
+                    return c;
+                });
+                tempColumns.forEach(c => {
+                    if (c.isLocalDateTime) {
+                        let startDateColumn = {...c};
+                        startDateColumn.fieldName += 'Start';
+                        startDateColumn.options.name += 'Start';
+                        startDateColumn.options.comment = (c.options.comment || c.options.name) + ' 시작일';
+                        data.targetColumns.push(startDateColumn);
+
+                        let endDateColumn = {...c};
+                        endDateColumn.fieldName += 'End';
+                        endDateColumn.options.name += 'End';
+                        endDateColumn.options.comment = (c.options.comment || c.options.name) + ' 종료일';
+                        data.targetColumns.push(endDateColumn);
+                    }
+                });
+
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto/${tablePascalName}SearchRequest.java`, createContentsByTemplate(SEARCH_REQUEST_TEMPLATE, data));
 
                 zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/controller`);
                 zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/service`);
                 zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dao`);
-                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto`);
+                // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto`);
 
                 zip.folder(`${projectName}/src/main/resources`);
 
@@ -322,7 +356,7 @@
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(content);
                 link.download = `${projectName}.zip`;
-                // link.click();
+                link.click();
             }
 
             generateButton.addEventListener('click', createSpringBootProject);

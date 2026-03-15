@@ -1,6 +1,7 @@
 const SAVE_REQUEST_TEMPLATE =
 `package com.{{teamName}}.{{projectName}}.{{tableName}}.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
