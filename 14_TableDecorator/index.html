@@ -168,6 +168,9 @@
         <script src="./templates/application.js"></script>
         <script src="./templates/save-request.js"></script>
         <script src="./templates/search-request.js"></script>
+        <script src="./templates/response.js"></script>
+        <script src="./templates/controller.js"></script>
+        <script src="./templates/service.js"></script>
 
         <script src="./scripts/case-converter.js"></script>
         <script src="./scripts/kok-table-decorator.js"></script>
@@ -345,10 +348,65 @@
 
                 zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto/${tablePascalName}SearchRequest.java`, createContentsByTemplate(SEARCH_REQUEST_TEMPLATE, data));
 
+                var data = {};
+                data.teamName = teamName;
+                data.projectName = projectName;
+                data.tableName = tableName;
+                data.tablePascalName = tablePascalName;
+                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
+                data.tableComment = tableDescription;
+                data.today = new Date().toISOString().split('T')[0];
+                data.targetColumns = schema.options.columns.map(c => {
+                    c.isString = c.getJavaType() === 'String';
+                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                    c.javaType = c.getJavaType();
+                    c.fieldName = toCamelCase(c.options.name);
+                    return c;
+                });
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto/${tablePascalName}Response.java`, createContentsByTemplate(RESPONSE_TEMPLATE, data));
+
+                var data = {};
+                data.teamName = teamName;
+                data.projectName = projectName;
+                data.tableName = tableName;
+                data.tablePascalName = tablePascalName;
+                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
+                data.tableComment = tableDescription;
+                data.today = new Date().toISOString().split('T')[0];
+                data.targetColumns = schema.options.columns.map(c => {
+                    c.isString = c.getJavaType() === 'String';
+                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                    c.javaType = c.getJavaType();
+                    c.fieldName = toCamelCase(c.options.name);
+                    return c;
+                });
+                data.pkColumns = data.targetColumns.map(c => c.options.isPK);
+                data.isSinglePk = data.pkColumns.length === 1;
+
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/controller/${tablePascalName}Controller.java`, createContentsByTemplate(CONTROLLER_TEMPLATE, data));
+
+                var data = {};
+                data.teamName = teamName;
+                data.projectName = projectName;
+                data.tableName = tableName;
+                data.tablePascalName = tablePascalName;
+                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
+                data.tableComment = tableDescription;
+                data.today = new Date().toISOString().split('T')[0];
+                data.targetColumns = schema.options.columns.map(c => {
+                    c.isString = c.getJavaType() === 'String';
+                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                    c.javaType = c.getJavaType();
+                    c.fieldName = toCamelCase(c.options.name);
+                    return c;
+                });
+                data.pkColumns = data.targetColumns.map(c => c.options.isPK);
+                data.isSinglePk = data.pkColumns.length === 1;
+                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/service/${tablePascalName}Service.java`, createContentsByTemplate(SERVICE_TEMPLATE, data));
+
                 zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/controller`);
                 zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/service`);
-                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dao`);
-                // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto`);
+                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/mapper`);
 
                 zip.folder(`${projectName}/src/main/resources`);
 
