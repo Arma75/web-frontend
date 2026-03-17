@@ -177,8 +177,10 @@
         <script src="./scripts/kok-schema.js"></script>
 
         <script>
+            const schema = new Schema();
             const PROJECT_INFO_LOCAL_STORAGE_KEY = 'vkdnjfpdlswj';
 
+            const kokTableDecorator = new KokTableDecorator('.kok-table');
             const teamNameElem = document.querySelector("#teamName");
             const projectNameElem = document.querySelector("#projectName");
             const projectDescriptionElem = document.querySelector("#projectDescription");
@@ -225,6 +227,21 @@
                 projectDescriptionElem.value = projectInfo.projectDescription;
                 tableNameElem.value = projectInfo.tableName;
                 tableDescriptionElem.value = projectInfo.tableDescription;
+
+                [].concat(projectInfo.columns || []).forEach(col => {
+                    const table = document.querySelector('.kok-table');
+
+                    const column = new Column(col.options);
+                    const columnComponent = new ColumnComponent(column);
+
+                    const tbody = table.querySelector('tbody');
+                    tbody.appendChild(columnComponent.element);
+
+                    schema.options.columns.push(column);
+                    
+                    kokTableDecorator.decorateRow(table, columnComponent.element);
+                    kokTableDecorator._reorderNumbers(table);
+                });
             }
 
             // generate 정보 저장
@@ -235,8 +252,9 @@
                 const tableName = tableNameElem.value;
                 const tableDescription = tableDescriptionElem.value;
 
+                const columns = schema.options.columns;
                 const infoJson = JSON.stringify({
-                    teamName, projectName, projectDescription, tableName, tableDescription
+                    teamName, projectName, projectDescription, tableName, tableDescription, columns
                 });
 
                 localStorage.setItem(PROJECT_INFO_LOCAL_STORAGE_KEY, infoJson);
@@ -247,6 +265,16 @@
                 const handlebar = Handlebars.compile(template);
                 return handlebar(data);
             }
+
+            document.addEventListener('input', e => {
+                saveProjectInfo();
+            });
+            document.addEventListener('change', e => {
+                saveProjectInfo();
+            });
+            document.addEventListener('click', e => {
+                saveProjectInfo();
+            });
 
             // 스프링부트 폴더 생성
             async function createSpringBootProject() {
@@ -271,7 +299,7 @@
                 }
 
                 // generate 정보 저장
-                saveProjectInfo();
+                // saveProjectInfo();
 
                 zip.file(`${projectName}/gradlew`, readFile('./assets/files/gradlew'));
                 zip.file(`${projectName}/gradlew.bat`, readFile('./assets/files/gradlew.bat'));
@@ -419,12 +447,17 @@
 
             generateButton.addEventListener('click', createSpringBootProject);
 
-            const schema = new Schema();
-            const kokTableDecorator = new KokTableDecorator('.kok-table');
             const table = document.querySelector('.kok-table');
 
             table.addEventListener('addRow', e => {
                 const column = new Column();
+                if (schema.options.columns.length == 0) {
+                    column.options.name = 'ID';
+                    column.options.comment = '아이디';
+                    column.options.type = 'NUMERIC';
+                    column.options.isAutoIncrement = true;
+                    column.options.isPK = true;
+                }
                 const columnComponent = new ColumnComponent(column);
 
                 const tbody = table.querySelector('tbody');
