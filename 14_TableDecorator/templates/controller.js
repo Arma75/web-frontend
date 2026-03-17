@@ -24,6 +24,9 @@ import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}Sav
 import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}Response;
 import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}SearchRequest;
 import com.{{teamName}}.{{projectName}}.{{tableName}}.service.{{tablePascalName}}Service;
+{{#each pkColumnImportList}}
+import {{this}};
+{{/each}}
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -72,7 +75,7 @@ public class {{tablePascalName}}Controller {
     }
     
     @GetMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}")
-    public ResponseEntity<{{tablePascalName}}Response> findById({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.type}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
+    public ResponseEntity<{{tablePascalName}}Response> findById({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
         logger.info("[FIND_BY_ID] {{tablePascalName}} search started. id: {}", id);
         {{tablePascalName}}Response {{tableName}}Response = {{tableName}}Service.findById(id);
 
@@ -97,7 +100,7 @@ public class {{tablePascalName}}Controller {
     }
 
     @PutMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}")
-    public ResponseEntity<?> update({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.type}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
+    public ResponseEntity<?> update({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
         logger.info("[UPLOAD] {{tablePascalName}} upload started. id: {}, {{tableName}}SaveRequest: {}", id, {{tableName}}SaveRequest);
 
         {{tableName}}SaveRequest.validate(false);
@@ -122,7 +125,7 @@ public class {{tablePascalName}}Controller {
     }
 
     @PatchMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}")
-    public ResponseEntity<?> patch({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.type}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
+    public ResponseEntity<?> patch({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
         logger.info("[PATCH] {{tablePascalName}} patch started. id: {}, {{tableName}}SaveRequest: {}", id, {{tableName}}SaveRequest);
         {{tableName}}SaveRequest.validate(true);
         
@@ -146,7 +149,7 @@ public class {{tablePascalName}}Controller {
     }
 
     @PatchMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}/unuse")
-    public ResponseEntity<?> unuse({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.type}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
+    public ResponseEntity<?> unuse({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
         logger.info("[UNUSE] {{tablePascalName}} unuse started. id: {}", id);
 
         {{tableName}}Service.unuse(id);
@@ -156,7 +159,7 @@ public class {{tablePascalName}}Controller {
     }
 
     @PatchMapping("/bulk/unuse")
-    public ResponseEntity<?> unuseBulk(@RequestBody {{#if isSinglePk}}List<{{pkColumns.[0].type}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}}) {
+    public ResponseEntity<?> unuseBulk(@RequestBody {{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}}) {
         logger.info("[UNUSE_BULK] {{tablePascalName}} unuse started. ids: {}", ids);
         if (ids == null || ids.isEmpty()) {
             throw new IllegalArgumentException("The 'ids' is required.");
@@ -169,7 +172,7 @@ public class {{tablePascalName}}Controller {
     }
 
     @DeleteMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}")
-    public ResponseEntity<?> delete({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.type}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
+    public ResponseEntity<?> delete({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
         logger.info("[DELETE] {{tablePascalName}} delete started. id: {}", id);
 
         {{tableName}}Service.delete(id);
@@ -179,7 +182,7 @@ public class {{tablePascalName}}Controller {
     }
 
     @DeleteMapping("/bulk")
-    public ResponseEntity<?> deleteBulk(@RequestBody {{#if isSinglePk}}List<{{pkColumns.[0].type}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}}) {
+    public ResponseEntity<?> deleteBulk(@RequestBody {{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}}) {
         logger.info("[DELETE_BULK] {{tablePascalName}} delete started. ids: {}", ids);
         if (ids == null || ids.isEmpty()) {
             throw new IllegalArgumentException("The 'ids' is required.");

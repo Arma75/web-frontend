@@ -10,7 +10,7 @@ import {{this}};
 {{/each}}
 
 /**
- * {{tableComment}}
+ * {{tableDescription}}
  * 
  * @author system
  * @since {{today}}
@@ -18,9 +18,9 @@ import {{this}};
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "{{tableComment}} 저장 정보")
+@Schema(description = "{{tableDescription}} 저장 정보")
 public class {{tablePascalName}}SaveRequest {
-{{#each targetColumns}}
+{{#each columns}}
     /**
      * {{options.comment}}
      */

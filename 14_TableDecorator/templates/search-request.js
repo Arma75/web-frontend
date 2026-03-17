@@ -13,7 +13,7 @@ import {{this}};
 {{/each}}
 
 /**
- * {{tableComment}}
+ * {{tableDescription}}
  * 
  * @author system
  * @since {{today}}
@@ -23,9 +23,9 @@ import {{this}};
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "{{tableComment}} 조회 정보")
+@Schema(description = "{{tableDescription}} 조회 정보")
 public class {{tablePascalName}}SearchRequest extends PageRequest {
-{{#each targetColumns}}
+{{#each searchColumns}}
     /**
      * {{options.comment}}
      */

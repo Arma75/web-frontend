@@ -266,6 +266,109 @@
                 return handlebar(data);
             }
 
+            function validate() {
+                const teamName = toCamelCase(teamNameElem.value).toLowerCase();
+                const projectName = toCamelCase(projectNameElem.value).toLowerCase();
+                const projectDescription = projectDescriptionElem.value;
+                const tableName = toCamelCase(tableNameElem.value).toLowerCase();
+                const tableDescription = tableDescriptionElem.value;
+
+                // 필수 값 체크
+                if (teamName == '') {
+                    teamNameElem.focus();
+                    return false;
+                } else if (projectName == '') {
+                    projectNameElem.focus();
+                    return false;
+                } else if (tableName == '') {
+                    tableNameElem.focus();
+                    return false;
+                }
+
+                if (schema.options.columns.length == 0) {
+                    tableNameElem.focus();
+                    alert('컬럼을 작성해주세요.');
+                    return false;
+                }
+
+                if (schema.options.columns.filter(c => c.options.isPK).length !== 1) {
+                    tableNameElem.focus();
+                    alert('PK 컬럼은 1개 작성해야합니다.');
+                    return false;
+                }
+
+                const columnNameSet = new Set();
+                for (let i = 0; i < schema.options.columns.length; i++) {
+                    if (columnNameSet.has(toCamelCase(schema.options.columns[i].options.name))) {
+                        tableNameElem.focus();
+                        alert('중복된 컬럼명이 존재합니다.');
+                        return false;
+                    }
+
+                    columnNameSet.add(toCamelCase(schema.options.columns[i].options.name));
+                }
+
+
+                return true;
+            }
+
+            function createTemplateData() {
+                const data = {};
+                data.today = new Date().toISOString().split('T')[0];
+                
+                data.teamName = toCamelCase(teamNameElem.value).toLowerCase();
+                
+                data.projectName = toCamelCase(projectNameElem.value).toLowerCase();
+                data.projectPascalName = toPascalCase(projectNameElem.value);
+                data.projectDescription = projectDescriptionElem.value;
+
+                data.tableName = toCamelCase(tableNameElem.value).toLowerCase();
+                data.tablePascalName = toPascalCase(tableNameElem.value);
+                data.tableDescription = tableDescriptionElem.value;
+
+                data.columns = schema.options.columns.map(c => {
+                    const newColumn = new Column({...c.options});
+                    newColumn.isString = c.getJavaType() === 'String';
+                    newColumn.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                    newColumn.javaType = c.getJavaType();
+                    newColumn.fieldName = toCamelCase(c.options.name);
+
+                    return newColumn;
+                });
+                data.searchColumns = [...data.columns];
+                data.columns.forEach(c => {
+                    if (c.isLocalDateTime) {
+                        console.log(c.options);
+                        const startDateColumn = new Column({...c.options});
+                        console.log(startDateColumn.options);
+                        startDateColumn.isString = c.isString;
+                        startDateColumn.isLocalDateTime = c.isLocalDateTime;
+                        startDateColumn.javaType = c.javaType;
+                        startDateColumn.fieldName = c.fieldName + 'Start';
+                        startDateColumn.options.name += 'Start';
+                        startDateColumn.options.comment = (c.options.comment || c.options.name) + ' 시작일';
+                        data.searchColumns.push(startDateColumn);
+
+                        const endDateColumn = new Column({...c.options});
+                        endDateColumn.isString = c.isString;
+                        endDateColumn.isLocalDateTime = c.isLocalDateTime;
+                        endDateColumn.javaType = c.javaType;
+                        endDateColumn.fieldName = c.fieldName + 'End';
+                        endDateColumn.options.name += 'End';
+                        endDateColumn.options.comment = (c.options.comment || c.options.name) + ' 종료일';
+                        data.searchColumns.push(endDateColumn);
+                    }
+                });
+
+                data.pkColumns = data.columns.filter(c => c.options.isPK);
+                data.isSinglePk = data.pkColumns.length === 1;
+
+                data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                data.pkColumnImportList = data.pkColumns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+
+                return data;
+            }
+
             document.addEventListener('input', e => {
                 saveProjectInfo();
             });
@@ -280,168 +383,165 @@
             async function createSpringBootProject() {
                 const zip = new JSZip();
 
-                const teamName = toCamelCase(teamNameElem.value).toLowerCase();
-                const projectName = toCamelCase(projectNameElem.value).toLowerCase();
-                const projectDescription = projectDescriptionElem.value;
-                const tableName = toCamelCase(tableNameElem.value).toLowerCase();
-                const tableDescription = tableDescriptionElem.value;
-
-                // 필수 값 체크
-                if (teamName == '') {
-                    teamNameElem.focus();
-                    return;
-                } else if (projectName == '') {
-                    projectNameElem.focus();
-                    return;
-                } else if (tableName == '') {
-                    tableNameElem.focus();
+                if (!validate()) {
                     return;
                 }
+
+                // const teamName = toCamelCase(teamNameElem.value).toLowerCase();
+                // const projectName = toCamelCase(projectNameElem.value).toLowerCase();
+                // const projectDescription = projectDescriptionElem.value;
+                // const tableName = toCamelCase(tableNameElem.value).toLowerCase();
+                // const tableDescription = tableDescriptionElem.value;
+
+                const templateData = createTemplateData();
+                console.log(templateData);
 
                 // generate 정보 저장
                 // saveProjectInfo();
 
-                zip.file(`${projectName}/gradlew`, readFile('./assets/files/gradlew'));
-                zip.file(`${projectName}/gradlew.bat`, readFile('./assets/files/gradlew.bat'));
-                zip.file(`${projectName}/gradle/wrapper/gradle-wrapper.jar`, readFile('./assets/files/gradle-wrapper.jar'));
-                zip.file(`${projectName}/gradle/wrapper/gradle-wrapper.properties`, readFile('./assets/files/gradle-wrapper.properties'));
+                zip.file(`${templateData.projectName}/gradlew`, readFile('./assets/files/gradlew'));
+                zip.file(`${templateData.projectName}/gradlew.bat`, readFile('./assets/files/gradlew.bat'));
+                zip.file(`${templateData.projectName}/gradle/wrapper/gradle-wrapper.jar`, readFile('./assets/files/gradle-wrapper.jar'));
+                zip.file(`${templateData.projectName}/gradle/wrapper/gradle-wrapper.properties`, readFile('./assets/files/gradle-wrapper.properties'));
 
-                let projectPascalName = `${toPascalCase(projectNameElem.value)}`;
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${projectPascalName}Application.java`, createContentsByTemplate(APPLICATION_TEMPLATE, {teamName, projectName, projectPascalName}));
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.projectPascalName}Application.java`, createContentsByTemplate(APPLICATION_TEMPLATE, templateData));
 
-                zip.file(`${projectName}/build.gradle`, createContentsByTemplate(BUILD_GRADLE_TEMPLATE, {teamName, projectDescription}));
-                zip.file(`${projectName}/settings.gradle`, createContentsByTemplate(SETTINGS_GRADLE_TEMPLATE, {projectName}));
+                zip.file(`${templateData.projectName}/build.gradle`, createContentsByTemplate(BUILD_GRADLE_TEMPLATE, templateData));
+                zip.file(`${templateData.projectName}/settings.gradle`, createContentsByTemplate(SETTINGS_GRADLE_TEMPLATE, templateData));
 
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/dto/PageRequest.java`, createContentsByTemplate(PAGE_REQUEST_TEMPLATE, {teamName, projectName}));
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/dto/PageResponse.java`, createContentsByTemplate(PAGE_RESPONSE_TEMPLATE, {teamName, projectName}));
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/utils/ExcelUtil.java`, createContentsByTemplate(EXCEL_UTIL_TEMPLATE, {teamName, projectName}));
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/exception/GlobalExceptionHandler.java`, createContentsByTemplate(GLOBAL_EXCEPTION_HANDLER_TEMPLATE, {teamName, projectName}));
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/dto/PageRequest.java`, createContentsByTemplate(PAGE_REQUEST_TEMPLATE, templateData));
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/dto/PageResponse.java`, createContentsByTemplate(PAGE_RESPONSE_TEMPLATE, templateData));
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/utils/ExcelUtil.java`, createContentsByTemplate(EXCEL_UTIL_TEMPLATE, templateData));
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/exception/GlobalExceptionHandler.java`, createContentsByTemplate(GLOBAL_EXCEPTION_HANDLER_TEMPLATE, templateData));
 
-                // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/dto`);
-                // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/exception`);
-                // zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/common/utils`);
-                var data = {};
-                let tablePascalName = toPascalCase(tableNameElem.value);
-                data.teamName = teamName;
-                data.projectName = projectName;
-                data.tableName = tableName;
-                data.tablePascalName = tablePascalName;
-                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
-                data.tableComment = tableDescription;
-                data.today = new Date().toISOString().split('T')[0];
-                data.targetColumns = schema.options.columns.map(c => {
-                    c.isString = c.getJavaType() === 'String';
-                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
-                    c.javaType = c.getJavaType();
-                    c.fieldName = toCamelCase(c.options.name);
-                    return c;
-                });
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto/${tablePascalName}SaveRequest.java`, createContentsByTemplate(SAVE_REQUEST_TEMPLATE, data));
+                // zip.folder(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/dto`);
+                // zip.folder(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/exception`);
+                // zip.folder(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/utils`);
+                // var data = {};
+                // let tablePascalName = toPascalCase(tableNameElem.value);
+                // data.teamName = teamName;
+                // data.projectName = projectName;
+                // data.tableName = tableName;
+                // data.tablePascalName = tablePascalName;
+                // data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                // data.tableComment = tableDescription;
+                // data.today = new Date().toISOString().split('T')[0];
+                // data.targetColumns = schema.options.columns.map(c => {
+                //     c.isString = c.getJavaType() === 'String';
+                //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                //     c.javaType = c.getJavaType();
+                //     c.fieldName = toCamelCase(c.options.name);
+                //     return c;
+                // });
 
-                var data = {};
-                data.teamName = teamName;
-                data.projectName = projectName;
-                data.tableName = tableName;
-                data.tablePascalName = tablePascalName;
-                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
-                data.tableComment = tableDescription;
-                data.today = new Date().toISOString().split('T')[0];
-                data.targetColumns = [];
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}SaveRequest.java`, createContentsByTemplate(SAVE_REQUEST_TEMPLATE, templateData));
+
+                // var data = {};
+                // data.teamName = teamName;
+                // data.projectName = projectName;
+                // data.tableName = tableName;
+                // data.tablePascalName = tablePascalName;
+                // data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                // data.tableComment = tableDescription;
+                // data.today = new Date().toISOString().split('T')[0];
+                // data.targetColumns = [];
                 
-                let tempColumns = schema.options.columns.map(c => {
-                    c.isString = c.getJavaType() === 'String';
-                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
-                    c.javaType = c.getJavaType();
-                    c.fieldName = toCamelCase(c.options.name);
+                // let tempColumns = schema.options.columns.map(c => {
+                //     c.isString = c.getJavaType() === 'String';
+                //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                //     c.javaType = c.getJavaType();
+                //     c.fieldName = toCamelCase(c.options.name);
 
-                    data.targetColumns.push(c);
+                //     data.targetColumns.push(c);
 
-                    return c;
-                });
-                tempColumns.forEach(c => {
-                    if (c.isLocalDateTime) {
-                        let startDateColumn = {...c};
-                        startDateColumn.fieldName += 'Start';
-                        startDateColumn.options.name += 'Start';
-                        startDateColumn.options.comment = (c.options.comment || c.options.name) + ' 시작일';
-                        data.targetColumns.push(startDateColumn);
+                //     return c;
+                // });
+                // tempColumns.forEach(c => {
+                //     if (c.isLocalDateTime) {
+                //         let startDateColumn = {...c};
+                //         startDateColumn.fieldName += 'Start';
+                //         startDateColumn.options.name += 'Start';
+                //         startDateColumn.options.comment = (c.options.comment || c.options.name) + ' 시작일';
+                //         data.targetColumns.push(startDateColumn);
 
-                        let endDateColumn = {...c};
-                        endDateColumn.fieldName += 'End';
-                        endDateColumn.options.name += 'End';
-                        endDateColumn.options.comment = (c.options.comment || c.options.name) + ' 종료일';
-                        data.targetColumns.push(endDateColumn);
-                    }
-                });
+                //         let endDateColumn = {...c};
+                //         endDateColumn.fieldName += 'End';
+                //         endDateColumn.options.name += 'End';
+                //         endDateColumn.options.comment = (c.options.comment || c.options.name) + ' 종료일';
+                //         data.targetColumns.push(endDateColumn);
+                //     }
+                // });
 
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto/${tablePascalName}SearchRequest.java`, createContentsByTemplate(SEARCH_REQUEST_TEMPLATE, data));
+                // console.log(templateData);
+                // console.log(createContentsByTemplate(SEARCH_REQUEST_TEMPLATE, templateData));
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}SearchRequest.java`, createContentsByTemplate(SEARCH_REQUEST_TEMPLATE, templateData));
 
-                var data = {};
-                data.teamName = teamName;
-                data.projectName = projectName;
-                data.tableName = tableName;
-                data.tablePascalName = tablePascalName;
-                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
-                data.tableComment = tableDescription;
-                data.today = new Date().toISOString().split('T')[0];
-                data.targetColumns = schema.options.columns.map(c => {
-                    c.isString = c.getJavaType() === 'String';
-                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
-                    c.javaType = c.getJavaType();
-                    c.fieldName = toCamelCase(c.options.name);
-                    return c;
-                });
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/dto/${tablePascalName}Response.java`, createContentsByTemplate(RESPONSE_TEMPLATE, data));
+                // var data = {};
+                // data.teamName = teamName;
+                // data.projectName = projectName;
+                // data.tableName = tableName;
+                // data.tablePascalName = tablePascalName;
+                // data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                // data.tableComment = tableDescription;
+                // data.today = new Date().toISOString().split('T')[0];
+                // data.targetColumns = schema.options.columns.map(c => {
+                //     c.isString = c.getJavaType() === 'String';
+                //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                //     c.javaType = c.getJavaType();
+                //     c.fieldName = toCamelCase(c.options.name);
+                //     return c;
+                // });
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}Response.java`, createContentsByTemplate(RESPONSE_TEMPLATE, templateData));
 
-                var data = {};
-                data.teamName = teamName;
-                data.projectName = projectName;
-                data.tableName = tableName;
-                data.tablePascalName = tablePascalName;
-                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
-                data.tableComment = tableDescription;
-                data.today = new Date().toISOString().split('T')[0];
-                data.targetColumns = schema.options.columns.map(c => {
-                    c.isString = c.getJavaType() === 'String';
-                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
-                    c.javaType = c.getJavaType();
-                    c.fieldName = toCamelCase(c.options.name);
-                    return c;
-                });
-                data.pkColumns = data.targetColumns.map(c => c.options.isPK);
-                data.isSinglePk = data.pkColumns.length === 1;
+                // var data = {};
+                // data.teamName = teamName;
+                // data.projectName = projectName;
+                // data.tableName = tableName;
+                // data.tablePascalName = tablePascalName;
+                // data.tableComment = tableDescription;
+                // data.today = new Date().toISOString().split('T')[0];
+                // data.targetColumns = schema.options.columns.map(c => {
+                //     c.isString = c.getJavaType() === 'String';
+                //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                //     c.javaType = c.getJavaType();
+                //     c.fieldName = toCamelCase(c.options.name);
+                //     return c;
+                // });
+                // data.pkColumns = data.targetColumns.filter(c => c.options.isPK);
+                // data.isSinglePk = data.pkColumns.length === 1;
+                // data.pkColumnimportList = data.pkColumns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
 
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/controller/${tablePascalName}Controller.java`, createContentsByTemplate(CONTROLLER_TEMPLATE, data));
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/controller/${templateData.tablePascalName}Controller.java`, createContentsByTemplate(CONTROLLER_TEMPLATE, templateData));
 
-                var data = {};
-                data.teamName = teamName;
-                data.projectName = projectName;
-                data.tableName = tableName;
-                data.tablePascalName = tablePascalName;
-                data.importList = schema.options.columns.reduce((a, b) => [].concat(a.getJavaTypeImport(), b.getJavaTypeImport())).filter(s => s);
-                data.tableComment = tableDescription;
-                data.today = new Date().toISOString().split('T')[0];
-                data.targetColumns = schema.options.columns.map(c => {
-                    c.isString = c.getJavaType() === 'String';
-                    c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
-                    c.javaType = c.getJavaType();
-                    c.fieldName = toCamelCase(c.options.name);
-                    return c;
-                });
-                data.pkColumns = data.targetColumns.map(c => c.options.isPK);
-                data.isSinglePk = data.pkColumns.length === 1;
-                zip.file(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/service/${tablePascalName}Service.java`, createContentsByTemplate(SERVICE_TEMPLATE, data));
+                // var data = {};
+                // data.teamName = teamName;
+                // data.projectName = projectName;
+                // data.tableName = tableName;
+                // data.tablePascalName = tablePascalName;
+                // data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                // data.tableComment = tableDescription;
+                // data.today = new Date().toISOString().split('T')[0];
+                // data.targetColumns = schema.options.columns.map(c => {
+                //     c.isString = c.getJavaType() === 'String';
+                //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                //     c.javaType = c.getJavaType();
+                //     c.fieldName = toCamelCase(c.options.name);
+                //     return c;
+                // });
+                // data.pkColumns = data.targetColumns.filter(c => c.options.isPK);
+                // data.isSinglePk = data.pkColumns.length === 1;
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/service/${templateData.tablePascalName}Service.java`, createContentsByTemplate(SERVICE_TEMPLATE, templateData));
 
-                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/controller`);
-                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/service`);
-                zip.folder(`${projectName}/src/main/java/com/${teamName}/${projectName}/${tableName}/mapper`);
+                zip.folder(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/controller`);
+                zip.folder(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/service`);
+                zip.folder(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/mapper`);
 
-                zip.folder(`${projectName}/src/main/resources`);
+                zip.folder(`${templateData.projectName}/src/main/resources`);
 
                 const content = await zip.generateAsync({ type: "blob" });
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(content);
-                link.download = `${projectName}.zip`;
+                link.download = `${templateData.projectName}.zip`;
                 link.click();
             }
 

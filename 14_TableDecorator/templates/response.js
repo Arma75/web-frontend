@@ -10,7 +10,7 @@ import {{this}};
 {{/each}}
 
 /**
- * {{tableComment}}
+ * {{tableDescription}}
  * 
  * @author system
  * @since {{today}}
@@ -18,9 +18,9 @@ import {{this}};
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "{{tableComment}} 응답 정보")
+@Schema(description = "{{tableDescription}} 응답 정보")
 public class {{tablePascalName}}Response {
-{{#each targetColumns}}
+{{#each columns}}
     /**
      * {{options.comment}}
      */
