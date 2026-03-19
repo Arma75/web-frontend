@@ -13,24 +13,27 @@ import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}Sav
 import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}Response;
 import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}SearchRequest;
 import com.{{teamName}}.{{projectName}}.{{tableName}}.mapper.{{tablePascalName}}Mapper;
+{{#each pkColumnImportList}}
+import {{this}};
+{{/each}}
 
 import jakarta.servlet.http.HttpServletResponse;
 
 @Transactional(readOnly = true)
 @Service
 public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Service {
-    private final {{tablePascalName}}Mapper {{projectName}}Mapper;
+    private final {{tablePascalName}}Mapper {{tableName}}Mapper;
 
-    public {{tablePascalName}}ServiceImpl({{tablePascalName}}Mapper {{projectName}}Mapper) {
-        this.{{projectName}}Mapper = {{projectName}}Mapper;
+    public {{tablePascalName}}ServiceImpl({{tablePascalName}}Mapper {{tableName}}Mapper) {
+        this.{{tableName}}Mapper = {{tableName}}Mapper;
     }
 
     @Transactional
     @Override
-    public int create({{tablePascalName}}SaveRequest {{projectName}}SaveRequest) {
-        int createdCount = {{projectName}}Mapper.create({{projectName}}SaveRequest);
+    public int create({{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
+        int createdCount = {{tableName}}Mapper.create({{tableName}}SaveRequest);
         if (createdCount < 1) {
-            throw new RuntimeException("Failed to create {{projectName}} record.");
+            throw new RuntimeException("Failed to create {{tablePascalName}} record.");
         }
 
         return createdCount;
@@ -38,10 +41,10 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
 
     @Transactional
     @Override
-    public int createBulk(List<{{tablePascalName}}SaveRequest> {{projectName}}SaveRequests) {
-        int createdCount = {{projectName}}Mapper.createBulk({{projectName}}SaveRequests);
+    public int createBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests) {
+        int createdCount = {{tableName}}Mapper.createBulk({{tableName}}SaveRequests);
         if (createdCount < 1) {
-            throw new RuntimeException("Failed to create {{projectName}} record.");
+            throw new RuntimeException("Failed to create {{tablePascalName}} record.");
         }
 
         return createdCount;
@@ -50,22 +53,22 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
     @Transactional
     @Override
     public int uploadExcel(MultipartFile file) {
-        List<{{tablePascalName}}SaveRequest> {{projectName}}SaveRequests = ExcelUtil.convertToList(file, 1, {{tablePascalName}}SaveRequest.class);
-        for ({{tablePascalName}}SaveRequest {{projectName}}SaveRequest : {{projectName}}SaveRequests) {
-            {{projectName}}SaveRequest.validate(false);
+        List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests = ExcelUtil.convertToList(file, 1, {{tablePascalName}}SaveRequest.class);
+        for ({{tablePascalName}}SaveRequest {{tableName}}SaveRequest : {{tableName}}SaveRequests) {
+            {{tableName}}SaveRequest.validate(false);
         }
 
-        return createBulk({{projectName}}SaveRequests);
+        return createBulk({{tableName}}SaveRequests);
     }
 
     @Override
     public {{tablePascalName}}Response findById({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
-        return {{projectName}}Mapper.findById({{#each pkColumns}}{{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
+        return {{tableName}}Mapper.findById({{#each pkColumns}}{{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
     }
 
     @Override
-    public PageResponse<{{tablePascalName}}Response> findAll({{tablePascalName}}SearchRequest {{projectName}}SearchRequest) {
-        String sort = {{projectName}}SearchRequest.getSort();
+    public PageResponse<{{tablePascalName}}Response> findAll({{tablePascalName}}SearchRequest {{tableName}}SearchRequest) {
+        String sort = {{tableName}}SearchRequest.getSort();
         StringBuilder useSort = new StringBuilder();
         if (sort != null && !sort.isBlank()) {
             String[] orders = sort.split(";");
@@ -77,7 +80,7 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
                 String column = tokens[0];
                 String direction = tokens[1];
 
-                List<String> allowedColumns = List.of("ID", "GENRE", "ARTIST", "SONG_TITLE", "USE_YN", "REG_DTM", "UPD_DTM");
+                List<String> allowedColumns = List.of({{#each columns}}"{{this.options.name}}"{{#unless @last}}, {{/unless}}{{/each}});
                 if (!allowedColumns.contains(column.toUpperCase())) {
                     throw new IllegalArgumentException("Invalid sort parameter.");
                 }
@@ -91,34 +94,34 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
                 useSort.append(column + " " + direction);
             }
         } else {
-            useSort.append("ID DESC");
+            useSort.append("{{pkColumns.[0].options.name}} DESC");
         }
 
-        {{projectName}}SearchRequest.setSort(useSort.toString());
+        {{tableName}}SearchRequest.setSort(useSort.toString());
 
-        List<{{tablePascalName}}Response> data = {{projectName}}Mapper.findAll({{projectName}}SearchRequest);
-        long totalCount = {{projectName}}Mapper.countAll({{projectName}}SearchRequest);
+        List<{{tablePascalName}}Response> data = {{tableName}}Mapper.findAll({{tableName}}SearchRequest);
+        long totalCount = {{tableName}}Mapper.countAll({{tableName}}SearchRequest);
         
-        return new PageResponse<>(data, totalCount, {{projectName}}SearchRequest.getSize(), {{projectName}}SearchRequest.getPage());
+        return new PageResponse<>(data, totalCount, {{tableName}}SearchRequest.getSize(), {{tableName}}SearchRequest.getPage());
     }
 
     @Override
-    public void downloadExcel({{tablePascalName}}SearchRequest {{projectName}}SearchRequest, HttpServletResponse response) {
-        PageResponse<{{tablePascalName}}Response> pageResponse = findAll({{projectName}}SearchRequest);
-        List<{{tablePascalName}}Response> {{projectName}}Responses = pageResponse.getData();
-        String[] headers = {"아이디", "장르", "아티스트", "제목", "사용여부", "등록일시", "수정일시"};
+    public void downloadExcel({{tablePascalName}}SearchRequest {{tableName}}SearchRequest, HttpServletResponse response) {
+        PageResponse<{{tablePascalName}}Response> pageResponse = findAll({{tableName}}SearchRequest);
+        List<{{tablePascalName}}Response> {{tableName}}Responses = pageResponse.getData();
+        String[] headers = { {{#each columns}}"{{this.options.name}}"{{#unless @last}}, {{/unless}}{{/each}} };
         
-        ExcelUtil.download({{projectName}}Responses, "{{tablePascalName}}", headers, response);
+        ExcelUtil.download({{tableName}}Responses, "{{tablePascalName}}", headers, response);
     }
 
     @Transactional
     @Override
-    public int update(Long id, {{tablePascalName}}SaveRequest {{projectName}}SaveRequest) {
-        {{projectName}}SaveRequest.setId(id);
+    public int update({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
+        {{tableName}}SaveRequest.setId(id);
 
-        int updatedCount = {{projectName}}Mapper.update({{projectName}}SaveRequest);
+        int updatedCount = {{tableName}}Mapper.update({{tableName}}SaveRequest);
         if (updatedCount < 1) {
-            throw new RuntimeException("Failed to update {{projectName}} record.");
+            throw new RuntimeException("Failed to update {{tableName}} record.");
         }
 
         return updatedCount;
@@ -126,10 +129,10 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
 
     @Transactional
     @Override
-    public int updateBulk(List<{{tablePascalName}}SaveRequest> {{projectName}}SaveRequests) {
-        int updatedCount = {{projectName}}Mapper.updateBulk({{projectName}}SaveRequests);
+    public int updateBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests) {
+        int updatedCount = {{tableName}}Mapper.updateBulk({{tableName}}SaveRequests);
         if (updatedCount < 1) {
-            throw new RuntimeException("Failed to update {{projectName}} record.");
+            throw new RuntimeException("Failed to update {{tableName}} record.");
         }
 
         return updatedCount;
@@ -137,62 +140,64 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
 
     @Transactional
     @Override
-    public int patch(Long id, {{tablePascalName}}SaveRequest {{projectName}}SaveRequest) {
-        {{projectName}}SaveRequest.setId(id);
+    public int patch({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
+        {{#each pkColumns}}
+        {{../tableName}}SaveRequest.set{{this.fieldPascalName}}({{this.fieldName}});
+        {{/each}}
 
-        int patchedCount = {{projectName}}Mapper.patch({{projectName}}SaveRequest);
+        int patchedCount = {{tableName}}Mapper.patch({{tableName}}SaveRequest);
         if (patchedCount < 1) {
-            throw new RuntimeException("Failed to patch {{projectName}} record.");
+            throw new RuntimeException("Failed to patch {{tableName}} record.");
         }
         return patchedCount;
     }
 
     @Transactional
     @Override
-    public int patchBulk(List<{{tablePascalName}}SaveRequest> {{projectName}}SaveRequests) {
-        int patchedCount = {{projectName}}Mapper.patchBulk({{projectName}}SaveRequests);
+    public int patchBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests) {
+        int patchedCount = {{tableName}}Mapper.patchBulk({{tableName}}SaveRequests);
         if (patchedCount < 1) {
-            throw new RuntimeException("Failed to patch {{projectName}} record.");
+            throw new RuntimeException("Failed to patch {{tableName}} record.");
         }
         return patchedCount;
     }
 
     @Transactional
     @Override
-    public int unuse(Long id) {
-        int patchedCount = {{projectName}}Mapper.unuse(id);
+    public int unuse({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
+        int patchedCount = {{tableName}}Mapper.unuse({{#each pkColumns}}{{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
         if (patchedCount < 1) {
-            throw new RuntimeException("Failed to unuse {{projectName}} record.");
+            throw new RuntimeException("Failed to unuse {{tableName}} record.");
         }
         return patchedCount;
     }
 
     @Transactional
     @Override
-    public int unuseBulk(List<Long> ids) {
-        int patchedCount = {{projectName}}Mapper.unuseBulk(ids);
+    public int unuseBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}}) {
+        int patchedCount = {{tableName}}Mapper.unuseBulk({{#if isSinglePk}}{{pkColumns.[0].fieldName}}s{{else}}{{tableCamelName}}SaveRequests{{/if}});
         if (patchedCount < 1) {
-            throw new RuntimeException("Failed to unuse {{projectName}} record.");
+            throw new RuntimeException("Failed to unuse {{tableName}} record.");
         }
         return patchedCount;
     }
 
     @Transactional
     @Override
-    public int delete(Long id) {
-        int deletedCount = {{projectName}}Mapper.delete(id);
+    public int delete({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
+        int deletedCount = {{tableName}}Mapper.delete({{#each pkColumns}}{{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
         if (deletedCount < 1) {
-            throw new RuntimeException("Failed to delete {{projectName}} record.");
+            throw new RuntimeException("Failed to delete {{tableName}} record.");
         }
         return deletedCount;
     }
 
     @Transactional
     @Override
-    public int deleteBulk(List<Long> ids) {
-        int deletedCount = {{projectName}}Mapper.deleteBulk(ids);
+    public int deleteBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}}) {
+        int deletedCount = {{tableName}}Mapper.deleteBulk({{#if isSinglePk}}{{pkColumns.[0].fieldName}}s{{else}}{{tableCamelName}}SaveRequests{{/if}});
         if (deletedCount < 1) {
-            throw new RuntimeException("Failed to delete {{projectName}} record.");
+            throw new RuntimeException("Failed to delete {{tableName}} record.");
         }
         return deletedCount;
     }
