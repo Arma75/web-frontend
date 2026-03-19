@@ -173,6 +173,9 @@
         <script src="./templates/service.js"></script>
         <script src="./templates/service-impl.js"></script>
         <script src="./templates/mapper.js"></script>
+        <script src="./templates/application-properties.js"></script>
+        <script src="./templates/schema.js"></script>
+        <script src="./templates/mapper-xml.js"></script>
 
         <script src="./scripts/case-converter.js"></script>
         <script src="./scripts/kok-table-decorator.js"></script>
@@ -325,6 +328,7 @@
                 data.projectDescription = projectDescriptionElem.value;
 
                 data.tableName = toCamelCase(tableNameElem.value).toLowerCase();
+                data.tableScreamingSnakeName = toScreamingSnakeCase(tableNameElem.value);
                 data.tablePascalName = toPascalCase(tableNameElem.value);
                 data.tableDescription = tableDescriptionElem.value;
 
@@ -365,6 +369,8 @@
                         data.searchColumns.push(endDateColumn);
                     }
                 });
+
+                data.columnsWithoutAutoIncrement = data.columns.filter(c => !c.options.isAutoIncrement);
 
                 data.pkColumns = data.columns.filter(c => c.options.isPK);
                 data.isSinglePk = data.pkColumns.length === 1;
@@ -544,10 +550,18 @@
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/service/${templateData.tablePascalName}ServiceImpl.java`, createContentsByTemplate(SERVICE_IMPL_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/mapper/${templateData.tablePascalName}Mapper.java`, createContentsByTemplate(MAPPER_TEMPLATE, templateData));
 
-                zip.folder(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/controller`);
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/mapper/${templateData.tablePascalName}Mapper.java`, createContentsByTemplate(MAPPER_TEMPLATE, templateData));
+
+                // console.log(SCHEMA_TEMPLATE);
+                // console.log(APPLICATION_PROPERTIES_TEMPLATE);
+                zip.file(`${templateData.projectName}/src/main/resources/application-properties`, createContentsByTemplate(APPLICATION_PROPERTIES_TEMPLATE, templateData));
+                zip.file(`${templateData.projectName}/src/main/resources/schema.sql`, createContentsByTemplate(SCHEMA_TEMPLATE, templateData));
+                // console.log(createContentsByTemplate(MAPPER_XML_TEMPLATE, templateData));
+                // return;
+                zip.file(`${templateData.projectName}/src/main/resources/mapper/${templateData.tableName}/${templateData.tablePascalName}Mapper.xml`, createContentsByTemplate(MAPPER_XML_TEMPLATE, templateData));
                 // zip.folder(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/service`);
 
-                zip.folder(`${templateData.projectName}/src/main/resources`);
+                // zip.folder(`${templateData.projectName}/src/main/resources`);
 
                 const content = await zip.generateAsync({ type: "blob" });
                 const link = document.createElement("a");

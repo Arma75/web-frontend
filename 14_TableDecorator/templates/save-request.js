@@ -36,7 +36,7 @@ public class {{tablePascalName}}SaveRequest {
      * @param isPatch 패치 요청 여부 (true일 경우 필수값 검증 제외)
      */
     public void validate(boolean isPatch) {
-        {{#each targetColumns}}
+        {{#each columns}}
             {{#unless options.isAutoIncrement}}
                 {{#unless options.nullable}}
         if (!isPatch && ({{fieldName}} == null{{#if isString}} || {{fieldName}}.isBlank(){{/if}})) {
