@@ -245,7 +245,7 @@
                     schema.options.columns.push(column);
                     
                     kokTableDecorator.decorateRow(table, columnComponent.element);
-                    kokTableDecorator._reorderNumbers(table);
+                    kokTableDecorator.reorderNumbers(table);
                 });
             }
 
@@ -380,16 +380,6 @@
 
                 return data;
             }
-
-            document.addEventListener('input', e => {
-                saveProjectInfo();
-            });
-            document.addEventListener('change', e => {
-                saveProjectInfo();
-            });
-            document.addEventListener('click', e => {
-                saveProjectInfo();
-            });
 
             // 스프링부트 폴더 생성
             async function createSpringBootProject() {
@@ -574,7 +564,7 @@
 
             const table = document.querySelector('.kok-table');
 
-            table.addEventListener('addRow', e => {
+            table.addEventListener('add', e => {
                 const column = new Column();
                 if (schema.options.columns.length == 0) {
                     column.options.name = 'ID';
@@ -591,20 +581,22 @@
                 schema.options.columns.push(column);
                 
                 kokTableDecorator.decorateRow(table, columnComponent.element);
-                kokTableDecorator._reorderNumbers(table);
+                kokTableDecorator.reorderNumbers(table);
             });
 
-            table.addEventListener('deleteRow', e => {
+            table.addEventListener('delete', e => {
+                console.log(e);
                 if (!e.detail || !e.detail.deletedRows) {
                     return;
                 }
 
+                console.log(schema.options.columns);
                 e.detail.deletedRows.map(obj => obj.index).sort().reverse().forEach(index => {
                     schema.options.columns.splice(index, 1);
                 });
             });
 
-            table.addEventListener('swapRow', e => {
+            table.addEventListener('swap', e => {
                 if (!e.detail || !e.detail.swapRows) {
                     return;
                 }
@@ -613,6 +605,16 @@
                 const temp = schema.options.columns[swapIndexes[0]];
                 schema.options.columns[swapIndexes[0]] = schema.options.columns[swapIndexes[1]];
                 schema.options.columns[swapIndexes[1]] = temp;
+            });
+
+            document.addEventListener('input', e => {
+                saveProjectInfo();
+            });
+            document.addEventListener('change', e => {
+                saveProjectInfo();
+            });
+            document.addEventListener('click', e => {
+                saveProjectInfo();
             });
         </script>
     </body>
