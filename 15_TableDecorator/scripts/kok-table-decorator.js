@@ -51,6 +51,31 @@ class KokTableDecorator {
             this._init();
         }
     }
+    
+    _wrap(element) {
+        const parent = element.parentNode;
+
+        const wrapper = document.createElement('article');
+        wrapper.className = 'kok-table-wrapper';
+        parent.insertBefore(wrapper, element);
+
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'kok-table-toolbar';
+        buttonContainer.style.display = 'flex';
+        buttonContainer.style.justifyContent = 'flex-end';
+        buttonContainer.style.gap = '8px';
+        buttonContainer.style.marginBottom = '8px';
+        wrapper.appendChild(buttonContainer);
+
+        const tableContainer = document.createElement('div');
+        tableContainer.className = 'kok-table-container';
+        tableContainer.style.overflow = 'scroll';
+        wrapper.appendChild(tableContainer);
+
+        tableContainer.appendChild(element);
+
+        element._wrapper = wrapper;
+    }
 
     _normalize(element) {
         let thead = element.tHead;
@@ -85,33 +110,8 @@ class KokTableDecorator {
         }
     }
     
-    _wrap(element) {
-        const parent = element.parentNode;
-
-        const wrapper = document.createElement('article');
-        wrapper.className = 'kok-table-wrapper';
-        parent.insertBefore(wrapper, element);
-
-        const buttonContainer = document.createElement('div');
-        buttonContainer.className = 'kok-table-toolbar';
-        buttonContainer.style.display = 'flex';
-        buttonContainer.style.justifyContent = 'flex-end';
-        buttonContainer.style.gap = '8px';
-        buttonContainer.style.marginBottom = '8px';
-        wrapper.appendChild(buttonContainer);
-
-        const tableContainer = document.createElement('div');
-        tableContainer.className = 'kok-table-container';
-        tableContainer.style.overflow = 'scroll';
-        wrapper.appendChild(tableContainer);
-
-        tableContainer.appendChild(element);
-
-        element._wrapper = wrapper;
-    }
-    
     _init() {
-        this.targets.forEach((target, i) => {
+        this.targets.forEach(target => {
             if (target.dataset.kokDecorated === 'true') {
                 return;
             }
@@ -134,26 +134,16 @@ class KokTableDecorator {
                 this._createSwapButton(target);
             }
 
+            // 숫자 생성
+            if (this.number) {
+                this._createNumber(target);
+            }
             // 체크박스 생성
             if (this.checkbox) {
                 this._createCheckbox(target);
             }
-
-            // target._headerRows = this._getHeaderRows(target);
-            // target._headerSet = new Set(target._headerRows);
-            // target._headerCount = target._headerRows.length;
-
-            // if (this.checkbox) {
-            //     this._addCheckboxes(target);
-            // }
-            // if (this.number) {
-            //     this._addNumbers(target);
-            // }
-
         
             target.dataset.kokDecorated = 'true';
-
-            // this._renderControls(target);
         });
     }
     
@@ -165,7 +155,7 @@ class KokTableDecorator {
         button.innerText = '추가';
         button.onclick = () => {
             if (!this.template) {
-                this._dispatchEvent(element, 'add');
+                element.dispatchEvent(new CustomEvent('add'));
                 return;
             }
             
@@ -175,10 +165,11 @@ class KokTableDecorator {
             const tbody = element.tBodies[0];
             tbody.appendChild(newRow);
             
-            // this.decorateRow(element, newRow);
-            // this._reorderNumbers(element);
+            this.decorateRow(element, newRow);
+            this.reorderNumbers(element);
+            element.querySelector('.kok-all-check').checked = false;
 
-            this._dispatchEvent(element, 'add', { newRow });
+            element.dispatchEvent(new CustomEvent('add', { detail: newRow }));
         };
 
         toolbar.appendChild(button);
@@ -188,11 +179,18 @@ class KokTableDecorator {
         const toolbar = element._wrapper.querySelector('.kok-table-toolbar');
 
         const button = document.createElement('button');
+        button.disabled = true;
         button.className = 'kok-row-delete-button small danger';
         button.innerText = '삭제';
         button.onclick = () => {
+            const checkedRows = Array.from(element.querySelectorAll('.kok-check:checked'));
+            if (checkedRows.length < 1) {
+                element.dispatchEvent(new CustomEvent('delete'));
+                return;
+            }
+
             const deletedRows = [];
-            element.querySelectorAll('.kok-check:checked').forEach(checkbox => {
+            checkedRows.forEach(checkbox => {
                 const row = checkbox.closest('tr');
                 deletedRows.push({
                     row: row,
@@ -201,8 +199,10 @@ class KokTableDecorator {
             });
             
             deletedRows.forEach(obj => obj.row.remove());
+            this.reorderNumbers(element);
+            this._uncheckBoxes(element);
 
-            this._dispatchEvent(element, 'delete', { deletedRows });
+            element.dispatchEvent(new CustomEvent('delete', { detail: deletedRows }));
         };
 
         toolbar.appendChild(button);
@@ -212,11 +212,18 @@ class KokTableDecorator {
         const toolbar = element._wrapper.querySelector('.kok-table-toolbar');
 
         const button = document.createElement('button');
+        button.disabled = true;
         button.className = 'kok-row-swap-button small info';
         button.innerText = '교체';
         button.onclick = () => {
+            const checkedRows = Array.from(element.querySelectorAll('.kok-check:checked'));
+            if (checkedRows.length !== 2) {
+                element.dispatchEvent(new CustomEvent('swap'));
+                return;
+            }
+
             const swapRows = [];
-            const checkedRows = Array.from(element.querySelectorAll('.kok-check:checked')).map(checkbox => {
+            checkedRows.forEach(checkbox => {
                 const row = checkbox.closest('tr');
                 swapRows.push({
                     row: row,
@@ -225,13 +232,8 @@ class KokTableDecorator {
 
                 return row;
             });
-
-            if (checkedRows.length !== 2) {
-                this._dispatchEvent(element, 'swap');
-                return;
-            }
             
-            let [a, b] = checkedRows;
+            let [a, b] = swapRows.map(obj => obj.row);
             if (a.compareDocumentPosition(b) === Node.DOCUMENT_POSITION_PRECEDING) {
                 [a, b] = [b, a];
             }
@@ -242,88 +244,13 @@ class KokTableDecorator {
             temp.parentNode.insertBefore(b, temp);
             temp.remove();
             
-            this._dispatchEvent(element, 'swap', { swapRows });
+            this.reorderNumbers(element);
+            this._uncheckBoxes(element);
+            
+            element.dispatchEvent(new CustomEvent('swap', { detail: swapRows }));
         };
 
         toolbar.appendChild(button);
-    }
-
-    _getHeaderRows(element) {
-        // thead가 있는 경우 thead 기준으로 헤더 추출
-        // thead가 없는 경우 첫번째 로우부터 연속된 th 기준으로 헤더 추출
-        const thead = element.querySelector('thead');
-        if (thead) {
-            return thead.querySelectorAll('tr');
-        }
-
-        let headerRows = [];
-        const allRows = Array.from(element.rows);
-        for (let row of allRows) {
-            if (!row.querySelector('th')) {
-                break;
-            }
-
-            headerRows.push(row);
-        }
-        
-        return headerRows;
-    }
-
-    _uncheckBoxes(element) {
-        const allCheckBox = element.querySelector('.kok-all-check');
-        allCheckBox.checked = false;
-
-        const checkboxes = element.querySelectorAll('.kok-check');
-        checkboxes.forEach(checkbox => checkbox.checked = false);
-
-        this._updateButtonState(element);
-    }
-
-    _updateButtonState(element) {
-        const controls = element.previousElementSibling;
-        if (!controls || !controls.classList.contains('kok-controls')) {
-            return;
-        }
-        
-        const checkCount = element.querySelectorAll('.kok-check:checked').length;
-        const deleteButton = controls.querySelector('.kok-row-delete-button');
-        const swapButton = controls.querySelector('.kok-row-swap-button');
-        if (deleteButton) {
-            deleteButton.disabled = checkCount == 0;
-        }
-        if (swapButton) {
-            swapButton.disabled = checkCount != 2;
-        }
-    }
-
-    _addCheckbox(tableElem, row) {
-        const td = document.createElement('td');
-        const check = document.createElement('input');
-        check.type = 'checkbox';
-        check.className = 'kok-check';
-        check.onclick = _ => {
-            const checkboxes = tableElem.querySelectorAll('.kok-check');
-            const checkCount = tableElem.querySelectorAll('.kok-check:checked').length;
-            const isAllChecked = checkboxes.length == checkCount;
-            const allCheckBox = tableElem.querySelector('.kok-all-check');
-
-            allCheckBox.checked = isAllChecked;
-            
-            this._updateButtonState(tableElem);
-        };
-        
-        td.appendChild(check);
-        row.insertBefore(td, row.firstChild);
-    }
-
-    _addNumber(row) {
-        const td = document.createElement('td');
-        const number = document.createElement('span');
-        number.innerText = '0';
-        number.className = 'kok-number';
-        
-        td.appendChild(number);
-        row.insertBefore(td, row.firstChild);
     }
 
     _createCheckbox(element) {
@@ -348,7 +275,7 @@ class KokTableDecorator {
 
         // 바디 체크박스 생성
         Array.from(element.tBodies[0].rows).forEach(row => {
-            this._addCheckbox(element, row);
+            this._createCheckboxByRow(element, row);
         });
     }
     _createCheckboxByRow(table, row) {
@@ -371,191 +298,73 @@ class KokTableDecorator {
         row.insertBefore(td, row.firstChild);
     }
 
-    _addCheckboxes(element) {
-        // 전체 체크박스 추가
-        const allCheck = document.createElement('input');
-        allCheck.type = 'checkbox';
-        allCheck.className = 'kok-all-check';
-        allCheck.onclick = (e) => {
-            const isChecked = e.target.checked;
-            const checkboxes = element.querySelectorAll('.kok-check');
-
-            checkboxes.forEach(checkbox => checkbox.checked = isChecked);
-            
-            this._updateButtonState(element);
-        };
-
-        const allCheckTh = document.createElement('th');
-        allCheckTh.rowSpan = element._headerCount;
-        allCheckTh.style.width = '56px';
-        allCheckTh.appendChild(allCheck);
-        element._headerRows[0].insertBefore(allCheckTh, element._headerRows[0].firstChild);
-
-        // 로우별 체크박스 추가
-        const allRows = Array.from(element.rows);
-        allRows.forEach(row => {
-            if (element._headerSet.has(row)) {
-                return;
-            }
-            if (row.closest('tfoot')) {
-                return false;
-            }
-
-            this._addCheckbox(element, row);
-        });
-    }
-
-    _addNumbers(element) {
-        // 번호 헤더 추가
+    _createNumber(element) {
+        // 헤더 (전체 선택) 체크박스 생성
         const numberHeader = document.createElement('span');
         numberHeader.innerText = 'No.';
 
         const numberTh = document.createElement('th');
-        numberTh.rowSpan = element._headerCount;
+        numberTh.rowSpan = element.tHead.rows.length;
+        numberTh.style.width = '56px';
         numberTh.appendChild(numberHeader);
-        numberTh.style.width = '80px';
-        element._headerRows[0].insertBefore(numberTh, element._headerRows[0].firstChild);
+        element.tHead.rows[0].insertBefore(numberTh, element.tHead.rows[0].firstChild);
 
-        // 로우별 번호 추가
-        const allRows = Array.from(element.rows);
-        allRows.forEach(row => {
-            if (element._headerSet.has(row)) {
-                return;
-            }
-            if (row.closest('tfoot')) {
-                return false;
-            }
-
-            this._addNumber(row);
+        // 바디 넘버 생성
+        Array.from(element.tBodies[0].rows).forEach(row => {
+            this._createNumberByRow(element, row);
         });
-
-        this._reorderNumbers(element);
+    }
+    _createNumberByRow(table, row) {
+        const td = document.createElement('td');
+        const number = document.createElement('span');
+        number.className = 'kok-number';
+        number.innerText = row.rowIndex - table.tHead.rows.length + 1;
+        
+        td.appendChild(number);
+        row.insertBefore(td, row.firstChild);
     }
 
-    _dispatchEvent(element, eventName, data) {
-        element.dispatchEvent(new CustomEvent(eventName, { detail: data }));
+    _updateButtonState(element) {
+        const toolbar = element._wrapper.querySelector('.kok-table-toolbar');
+        if (!toolbar) {
+            return;
+        }
+
+        const checkCount = element.querySelectorAll('.kok-check:checked').length;
+        const deleteButton = toolbar.querySelector('.kok-row-delete-button');
+        const swapButton = toolbar.querySelector('.kok-row-swap-button');
+        if (deleteButton) {
+            deleteButton.disabled = checkCount == 0;
+        }
+        if (swapButton) {
+            swapButton.disabled = checkCount != 2;
+        }
     }
 
-    _renderControls(element) {
-        const controls = document.createElement('div');
-        controls.className = 'kok-controls';
-        controls.style.display = 'flex';
-        controls.style.justifyContent = 'flex-end';
-        controls.style.gap = '8px';
-        controls.style.marginBottom = '8px';
+    _uncheckBoxes(element) {
+        const allCheckBox = element.querySelector('.kok-all-check');
+        allCheckBox.checked = false;
 
-        // 추가 버튼
-        if (this.add) {
-            const addButton = document.createElement('button');
-            addButton.classList.add('kok-row-add-button', 'small', 'success');
-            addButton.innerText = '추가';
-            addButton.onclick = () => {
-                if (!this.template) {
-                    this._dispatchEvent(element, 'addRow');
-                    return;
-                }
-                
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = this.template; 
-                
-                const tbody = element.querySelector('tbody') || element;
-                tbody.appendChild(newRow);
-                
-                this.decorateRow(element, newRow);
-                this._reorderNumbers(element);
+        const checkboxes = element.querySelectorAll('.kok-check');
+        checkboxes.forEach(checkbox => checkbox.checked = false);
 
-                this._dispatchEvent(element, 'addRow', { newRow });
-            };
-            controls.appendChild(addButton);
-        }
-
-        // 삭제 버튼
-        if (this.delete) {
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('kok-row-delete-button', 'small', 'danger');
-            deleteButton.innerText = '삭제';
-            deleteButton.disabled = true;
-            deleteButton.onclick = () => {
-                const deletedRows = [];
-                element.querySelectorAll('.kok-check:checked').forEach(checkbox => {
-                    const row = checkbox.closest('tr');
-                    deletedRows.push({
-                        row: row,
-                        index: row.rowIndex - 1
-                    });
-                });
-                
-                deletedRows.forEach(obj => obj.row.remove());
-
-                // 번호 다시 세팅
-                this._reorderNumbers(element);
-                this._uncheckBoxes(element);
-
-                this._dispatchEvent(element, 'deleteRow', { deletedRows });
-            };
-            controls.appendChild(deleteButton);
-        }
-
-        // 순서 변경 버튼
-        if (this.swap) {
-            const swapButton = document.createElement('button');
-            swapButton.classList.add('kok-row-swap-button', 'small', 'info');
-            swapButton.innerText = '교체';
-            swapButton.disabled = true;
-            swapButton.onclick = () => {
-                const swapRows = [];
-                const checkedRows = Array.from(element.querySelectorAll('.kok-check:checked')).map(checkbox => {
-                    const row = checkbox.closest('tr');
-                    swapRows.push({
-                        row: row,
-                        index: row.rowIndex - 1
-                    });
-
-                    return row;
-                });
-
-                if (checkedRows.length !== 2) {
-                    this._dispatchEvent(element, 'swapRow');
-                    return;
-                }
-                
-                let [a, b] = checkedRows;
-                if (a.compareDocumentPosition(b) === Node.DOCUMENT_POSITION_PRECEDING) {
-                    [a, b] = [b, a];
-                }
-                
-                const temp = document.createElement('tr');
-                
-                a.parentNode.insertBefore(temp, a);
-                b.parentNode.insertBefore(a, b);
-                temp.parentNode.insertBefore(b, temp);
-
-                temp.remove();
-
-                this._reorderNumbers(element);
-                this._uncheckBoxes(element);
-                
-                this._dispatchEvent(element, 'swapRow', { swapRows });
-            };
-            controls.appendChild(swapButton);
-        }
-
-        element.parentNode.insertBefore(controls, element);
+        this._updateButtonState(element);
     }
 
-    _reorderNumbers(element) {
+    decorateRow(table, row) {
+        // 숫자 생성
+        if (this.number) {
+            this._createNumberByRow(table, row);
+        }
+        // 체크박스 생성
+        if (this.checkbox) {
+            this._createCheckboxByRow(table, row);
+        }
+    }
+    reorderNumbers(element) {
         let num = 1;
         element.querySelectorAll('.kok-number').forEach(span => {
             span.innerText = num++;
         });
-    }
-
-    decorateRow(element, row) {
-        if (this.checkbox) {
-            this._addCheckbox(element, row);
-        }
-        if (this.number) {
-            this._addNumber(row);
-        }
     }
 }
