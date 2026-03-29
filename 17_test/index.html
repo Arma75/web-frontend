@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Infinite Canvas - Final Version</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #1e1e1e; }
+        canvas { display: block; cursor: crosshair; }
+        .controls {
+            position: fixed; top: 10px; left: 10px;
+            background: rgba(255,255,255,0.9); padding: 15px;
+            border-radius: 8px; font-family: sans-serif; pointer-events: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        kbd { background: #eee; border-radius: 3px; padding: 2px 5px; border: 1px solid #999; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <b>최종 조작법:</b><br>
+        - <kbd>좌클릭 유지</kbd> / <kbd>Space 유지</kbd>: 원 생성 및 크기 키우기<br>
+        - <kbd>휠</kbd>: <b>마우스 포인터 기준</b> 확대/축소<br>
+        - <kbd>ESC</kbd>: <b>모든 원 지우기 (초기화)</b><br>
+        - 원 드래그: 이동 / <kbd>우클릭</kbd>: 캔버스 팬<br>
+    </div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        const savedData = JSON.parse(localStorage.getItem('canvas_state')) || {};
+        
+        let camera = savedData.camera || { x: 0, y: 0, zoom: 1 };
+        let circles = savedData.circles || [];
+        
+        let isDraggingCanvas = false;
+        let draggedCircle = null;
+        let growingCircle = null;
+        let lastMousePos = { x: 0, y: 0 };
+        let currentMousePos = { x: 0, y: 0 };
+
+        function init() {
+            window.addEventListener('resize', resize);
+            resize();
+            animate();
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        function saveState() {
+            localStorage.setItem('canvas_state', JSON.stringify({ camera, circles }));
+        }
+
+        function toWorld(x, y) {
+            return {
+                x: (x - width / 2) / camera.zoom - camera.x,
+                y: (y - height / 2) / camera.zoom - camera.y
+            };
+        }
+
+        function getRandomColor() {
+            const colors = ['#ff5f6d', '#ffc371', '#4facfe', '#00f2fe', '#43e97b', '#fa709a', '#fee140', '#96fbc4'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function startGrowing(clientX, clientY) {
+            const worldPos = toWorld(clientX, clientY);
+            const target = circles.find(c => {
+                const dx = c.x - worldPos.x;
+                const dy = c.y - worldPos.y;
+                return Math.sqrt(dx*dx + dy*dy) < c.r;
+            });
+
+            if (target) {
+                draggedCircle = target;
+            } else {
+                growingCircle = { x: worldPos.x, y: worldPos.y, r: 5, color: getRandomColor() };
+                circles.push(growingCircle);
+            }
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.button === 0) startGrowing(e.clientX, e.clientY);
+            else isDraggingCanvas = true;
+            lastMousePos = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            currentMousePos = { x: e.clientX, y: e.clientY };
+            const dx = (e.clientX - lastMousePos.x) / camera.zoom;
+            const dy = (e.clientY - lastMousePos.y) / camera.zoom;
+
+            if (draggedCircle) {
+                draggedCircle.x += dx;
+                draggedCircle.y += dy;
+            } else if (isDraggingCanvas) {
+                camera.x += dx;
+                camera.y += dy;
+            }
+            lastMousePos = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (draggedCircle || growingCircle || isDraggingCanvas) saveState();
+            draggedCircle = null;
+            growingCircle = null;
+            isDraggingCanvas = false;
+        });
+
+        // 키보드 이벤트: Space(생성), Escape(초기화)
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !e.repeat) {
+                e.preventDefault();
+                startGrowing(currentMousePos.x, currentMousePos.y);
+            }
+            if (e.code === 'Escape') {
+                if (confirm('모든 원을 삭제하시겠습니까?')) {
+                    circles = [];
+                    saveState();
+                }
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                saveState();
+                growingCircle = null;
+            }
+        });
+
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomIntensity = 0.1;
+            const delta = e.deltaY > 0 ? -zoomIntensity : zoomIntensity;
+            const factor = 1 + delta;
+
+            const beforeZoom = toWorld(e.clientX, e.clientY);
+            camera.zoom = Math.min(Math.max(camera.zoom * factor, 0.05), 20);
+            const afterZoom = toWorld(e.clientX, e.clientY);
+            
+            camera.x += (afterZoom.x - beforeZoom.x);
+            camera.y += (afterZoom.y - beforeZoom.y);
+
+            saveState();
+        }, { passive: false });
+
+        canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+        function animate() {
+            if (growingCircle) growingCircle.r += 2;
+
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.clearRect(0, 0, width, height);
+
+            ctx.translate(width / 2, height / 2);
+            ctx.scale(camera.zoom, camera.zoom);
+            ctx.translate(camera.x, camera.y);
+
+            // 그리드
+            const size = 100;
+            const worldTopLeft = toWorld(0, 0);
+            const worldBottomRight = toWorld(width, height);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1 / camera.zoom;
+            ctx.beginPath();
+            for (let x = Math.floor(worldTopLeft.x / size) * size; x < worldBottomRight.x; x += size) {
+                ctx.moveTo(x, worldTopLeft.y); ctx.lineTo(x, worldBottomRight.y);
+            }
+            for (let y = Math.floor(worldTopLeft.y / size) * size; y < worldBottomRight.y; y += size) {
+                ctx.moveTo(worldTopLeft.x, y); ctx.lineTo(worldBottomRight.x, y);
+            }
+            ctx.stroke();
+
+            // 원 그리기
+            circles.forEach(c => {
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                ctx.fillStyle = c.color;
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+                ctx.lineWidth = 2 / camera.zoom;
+                ctx.stroke();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        init();
+    </script>
+</body>
+</html>

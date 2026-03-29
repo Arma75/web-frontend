@@ -22,9 +22,9 @@ import {{this}};
 public class {{tablePascalName}}SaveRequest {
 {{#each columns}}
     /**
-     * {{options.comment}}
+     * {{comment}}
      */
-    @Schema(description = "{{options.comment}}")
+    @Schema(description = "{{comment}}")
     {{#if isLocalDateTime}}
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     {{/if}}
@@ -37,17 +37,17 @@ public class {{tablePascalName}}SaveRequest {
      */
     public void validate(boolean isPatch) {
         {{#each columns}}
-            {{#unless options.isAutoIncrement}}
-                {{#unless options.nullable}}
+            {{#unless isAutoIncrement}}
+                {{#unless nullable}}
         if (!isPatch && ({{fieldName}} == null{{#if isString}} || {{fieldName}}.isBlank(){{/if}})) {
             throw new IllegalArgumentException("{{fieldName}} is required.");
         }
                 {{/unless}}
 
-                {{#if options.length}}
+                {{#if length}}
                     {{#if isString}}
-        if ({{fieldName}} != null && {{fieldName}}.length() > {{options.length}}) {
-            throw new IllegalArgumentException("{{fieldName}} length cannot exceed {{options.length}}.");
+        if ({{fieldName}} != null && {{fieldName}}.length() > {{length}}) {
+            throw new IllegalArgumentException("{{fieldName}} length cannot exceed {{length}}.");
         }
                     {{/if}}
                 {{/if}}

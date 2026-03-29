@@ -4,14 +4,14 @@ DROP TABLE IF EXISTS {{tableScreamingSnakeName}};
 
 CREATE TABLE {{tableScreamingSnakeName}} (
 {{#each columns}}
-    {{options.name}} {{#if isAutoIncrement}}SERIAL{{else}}{{options.type}}{{#if isString}}({{length}}){{/if}}{{/if}}{{#unless nullable}} NOT NULL{{/unless}}{{#if defaultValue}} DEFAULT {{defaultValue}}{{/if}},
+    {{name}} {{#if isAutoIncrement}}SERIAL{{else}}{{type}}{{#if isString}}({{length}}){{/if}}{{/if}}{{#unless nullable}} NOT NULL{{/unless}}{{#if defaultValue}} DEFAULT {{defaultValue}}{{/if}},
 {{/each}}
     {{#if pkColumns.length}}
-    PRIMARY KEY ({{#each pkColumns}}{{options.name}}{{#unless @last}}, {{/unless}}{{/each}})
+    PRIMARY KEY ({{#each pkColumns}}{{name}}{{#unless @last}}, {{/unless}}{{/each}})
     {{/if}}
 );
 
 COMMENT ON TABLE {{tableScreamingSnakeName}} IS '{{tableDescription}}';
 {{#each columns}}
-COMMENT ON COLUMN {{../tableScreamingSnakeName}}.{{options.name}} IS '{{options.comment}}';
+COMMENT ON COLUMN {{../tableScreamingSnakeName}}.{{name}} IS '{{comment}}';
 {{/each}}`;

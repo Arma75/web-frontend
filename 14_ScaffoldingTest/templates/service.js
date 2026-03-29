@@ -35,10 +35,12 @@ public interface {{tablePascalName}}Service {
     int patch({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableName}}SaveRequest);
 
     int patchBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests);
+    {{#if hasLogicalUseColumn}}
 
     int unuse({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
 
     int unuseBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}});
+    {{/if}}
 
     int delete({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
 

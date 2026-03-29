@@ -147,6 +147,7 @@ public class {{tablePascalName}}Controller {
         logger.info("[PATCH_BULK] {{tablePascalName}} patched successfully.");
         return ResponseEntity.status(200).body("Patch success");
     }
+    {{#if hasLogicalUseColumn}}
 
     @PatchMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}/unuse")
     public ResponseEntity<?> unuse({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
@@ -170,6 +171,7 @@ public class {{tablePascalName}}Controller {
         logger.info("[UNUSE_BULK] {{tablePascalName}} unused successfully.");
         return ResponseEntity.status(200).body("Unuse success");
     }
+    {{/if}}
 
     @DeleteMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}")
     public ResponseEntity<?> delete({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {

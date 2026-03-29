@@ -27,9 +27,9 @@ import {{this}};
 public class {{tablePascalName}}SearchRequest extends PageRequest {
 {{#each searchColumns}}
     /**
-     * {{options.comment}}
+     * {{comment}}
      */
-    @Schema(description = "{{options.comment}}")
+    @Schema(description = "{{comment}}")
     {{#if isLocalDateTime}}
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     {{/if}}

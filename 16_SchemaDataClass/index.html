@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>테이블 데코</title>
+
+        <!-- Meta Tags -->
+        <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
+        <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
+        <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
+        <meta name="title" content="테이블 데코"/> <!-- 제목 설정 -->
+        <meta name="description" content="프로젝트설명"/> <!-- 설명 설정 -->
+        <meta name="keywords" content="키워드"/> <!-- 키워드 설정 -->
+        <meta name="author" content="attickok"/> <!-- 작성자 설정 -->
+
+        <!-- Open Graph Meta Tags(SNS 공유) -->
+        <meta property="og:type" content="website" /> <!-- 타입 설정 -->
+        <meta property="og:title" content="테이블 데코" /> <!-- 제목 설정 -->
+        <meta property="og:description" content="프로젝트설명" /> <!-- 설명 설정 -->
+        <meta property="og:image" content="./assets/images/thumbnail.png" /> <!-- 이미지 설정 -->
+        <meta property="og:url" content="project_url" /> <!-- URL 설정 -->
+
+        <!-- Progressive Web App -->
+        <link rel="manifest" href="/manifest.json">
+
+        <!-- Favicon Links -->
+        <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicons/favicon-16x16.png"> <!-- 16x16 파비콘 -->
+        <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32x32.png"> <!-- 32x32 파비콘 -->
+        <link rel="icon" type="image/png" sizes="64x64" href="./assets/favicons/favicon-64x64.png"> <!-- 64x64 파비콘 -->
+        <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/favicon-180x180.png"> <!-- 애플 터치 아이콘 -->
+
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheet -->
+        <link rel="stylesheet" href="./styles/main.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Arma75/kok-input-decorator@main/kok-input-decorator.css">
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                gap: 40px;
+            }
+            header {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;
+            }
+            main {
+                display: flex;
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .card-layout {
+                background: white;
+                padding: 24px;
+                border-radius: 18px;
+                border: 1px solid #e9ecef;
+            }
+            .table-container {
+                overflow: scroll;
+            }
+            .schema-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 32px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header>
+            <h1>테이블 데코</h1>
+        </header>
+
+        <main>
+            <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9]+$/">
+                <label class="kok-input-label" data-required-text="필수" data-required-type="badge">팀명</label>
+                <input type="text" id="teamName" class="kok-input-field" placeholder="팀명을 입력해주세요" required>
+                <span class="kok-input-field-required-msg">팀명은 필수 입력 항목입니다.</span>
+                <span class="kok-input-field-danger-msg">팀은 영문, 숫자만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
+
+            <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9]+$/">
+                <label class="kok-input-label" data-required-text="필수" data-required-type="badge">테이블 데코</label>
+                <input type="text" id="projectName" class="kok-input-field" placeholder="테이블 데코을 입력해주세요" required>
+                <span class="kok-input-field-required-msg">테이블 데코은 필수 입력 항목입니다.</span>
+                <span class="kok-input-field-danger-msg">테이블 데코은 영문, 숫자만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
+
+            <!-- <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9 ]+$/"> -->
+            <article class="kok-input-group" data-layout="vertical">
+                <label class="kok-input-label">프로젝트 설명</label>
+                <input type="text" id="projectDescription" class="kok-input-field" placeholder="프로젝트 설명을 입력해주세요">
+                <span class="kok-input-field-danger-msg">프로젝트 설명은 영문, 숫자, 공백만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
+
+            <hr>
+
+            <section id="schemaContainer">
+            </section>
+<!-- 
+            <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9]+$/">
+                <label class="kok-input-label" data-required-text="필수" data-required-type="badge">테이블명</label>
+                <input type="text" id="tableName" class="kok-input-field" placeholder="테이블명을 입력해주세요" required>
+                <span class="kok-input-field-required-msg">테이블명은 필수 입력 항목입니다.</span>
+                <span class="kok-input-field-danger-msg">테이블명은 영문, 숫자만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
+
+            <article class="kok-input-group" data-layout="vertical">
+                <label class="kok-input-label">테이블 설명</label>
+                <input type="text" id="tableDescription" class="kok-input-field" placeholder="테이블 설명을 입력해주세요">
+                <span class="kok-input-field-danger-msg">테이블 설명은 영문, 숫자, 공백만 입력 가능합니다.</span>
+                <span class="kok-input-field-success-msg">좋습니다!</span>
+            </article>
+
+            <article class="card-layout">
+                <article class="table-container">
+                    <table class="kok-table">
+                        <colgroup>
+                            <col width="*">
+                            <col width="*">
+                            <col width="200">
+                            <col width="200">
+                            <col width="200">
+                            <col width="200">
+                            <col width="200">
+                            <col width="120">
+                            <col width="120">
+                            <col width="120">
+                            <col width="200">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>컬럼명</th>
+                                <th>코멘트</th>
+                                <th>타입</th>
+                                <th>길이</th>
+                                <th>PK</th>
+                                <th>유니크</th>
+                                <th>NULLABLE</th>
+                                <th>자동 증가</th>
+                                <th>디폴트</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </article>
+            </article> -->
+
+            <button id="generateButton" class="primary">생성하기</button>
+        </main>
+
+        <!-- scripts-->
+        <script src="https://cdn.jsdelivr.net/gh/Arma75/kok-input-filter@main/kok-input-filter.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/Arma75/kok-input-decorator@main/kok-input-decorator.js"></script>
+
+        <script src="./scripts/case-converter.js"></script>
+        <script src="./scripts/kok-table-decorator.js"></script>
+        <script src="./scripts/kok-schema.js"></script>
+
+        <script>
+            // const columns = [];
+
+            new KokInputDecorator().init();
+            new KokInputFilter("#teamName", { regexp: /[^a-zA-Z0-9]/g, required: true });
+            new KokInputFilter("#projectName", { regexp: /[^a-zA-Z0-9]/g, required: true });
+            // new KokInputFilter("#tableName", { regexp: /[^a-zA-Z0-9]/g, required: true });
+
+            // let schema = new Schema();
+
+            // const kokTableDecorator = new KokTableDecorator('.kok-table');
+            // const table = document.querySelector('.kok-table');
+
+            // table.addEventListener('add', e => {
+            //     console.log(e);
+
+            //     const column = new Column();
+            //     const columnComponent = new ColumnComponent(column);
+            //     columns.push(column);
+
+            //     const tbody = table.querySelector('tbody');
+            //     tbody.appendChild(columnComponent.element);
+
+            //     // schema.options.columns.push(column);
+                
+            //     kokTableDecorator.decorateRow(table, columnComponent.element);
+            //     // kokTableDecorator.reorderNumbers(table);
+            // });
+            
+            // let column = new Column();
+            // console.log(column);
+            // column.name = 'id';
+            // column.onChange = 'e';
+            // console.log(column.toJSON());
+
+            // let schema = new Schema();
+            // console.log(schema);
+            // schema.columns.push(column);
+            // schema.addColumn({});
+            
+            const PROJECT_INFO_LOCAL_STORAGE_KEY = 'eqwkrwqlkf';
+
+            function saveProjectInfo() {
+                const data = {
+                    teamName: document.querySelector('#teamName').value,
+                    projectName: document.querySelector('#projectName').value,
+                    projectDescription: document.querySelector('#projectDescription').value,
+                    schemaJson: schema.toJSON()
+                };
+                console.log(data);
+                localStorage.setItem(PROJECT_INFO_LOCAL_STORAGE_KEY, JSON.stringify(data));
+            }
+
+            function loadProjectInfo() {
+                const savedData = localStorage.getItem(PROJECT_INFO_LOCAL_STORAGE_KEY);
+                if (!savedData) {
+                    return null;
+                }
+
+                try {
+                    const data = JSON.parse(savedData);
+                    
+                    document.querySelector('#teamName').value = data.teamName || '';
+                    document.querySelector('#projectName').value = data.projectName || '';
+                    document.querySelector('#projectDescription').value = data.projectDescription || '';
+
+                    const restoredSchema = new Schema({
+                        name: data.schemaJson.name,
+                        comment: data.schemaJson.comment
+                    });
+
+                    if (data.schemaJson.columns) {
+                        data.schemaJson.columns.forEach(colData => {
+                            restoredSchema.addColumn(colData);
+                        });
+                    }
+
+                    return restoredSchema;
+                } catch (e) {
+                    console.error("데이터 복원 중 오류 발생:", e);
+                    return null;
+                }
+            }
+
+            document.addEventListener('input', e => {
+                saveProjectInfo();
+            });
+            document.addEventListener('change', e => {
+                saveProjectInfo();
+            });
+            document.addEventListener('click', e => {
+                saveProjectInfo();
+            });
+
+            const savedSchema = loadProjectInfo();
+            let schema = savedSchema || new Schema();
+            let schemaComponent = new SchemaComponent(schema);
+            document.querySelector("#schemaContainer").appendChild(schemaComponent.element);
+
+        </script>
+    </body>
+</html>

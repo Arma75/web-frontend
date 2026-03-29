@@ -62,6 +62,11 @@
             .table-container {
                 overflow: scroll;
             }
+            .schema-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 32px;
+            }
         </style>
     </head>
 
@@ -98,55 +103,8 @@
 
             <hr>
 
-            <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9]+$/">
-                <label class="kok-input-label" data-required-text="필수" data-required-type="badge">테이블명</label>
-                <input type="text" id="tableName" class="kok-input-field" placeholder="테이블명을 입력해주세요" required>
-                <span class="kok-input-field-required-msg">테이블명은 필수 입력 항목입니다.</span>
-                <span class="kok-input-field-danger-msg">테이블명은 영문, 숫자만 입력 가능합니다.</span>
-                <span class="kok-input-field-success-msg">좋습니다!</span>
-            </article>
-
-            <!-- <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9 ]+$/"> -->
-            <article class="kok-input-group" data-layout="vertical">
-                <label class="kok-input-label">테이블 설명</label>
-                <input type="text" id="tableDescription" class="kok-input-field" placeholder="테이블 설명을 입력해주세요">
-                <span class="kok-input-field-danger-msg">테이블 설명은 영문, 숫자, 공백만 입력 가능합니다.</span>
-                <span class="kok-input-field-success-msg">좋습니다!</span>
-            </article>
-
-            <article class="card-layout">
-                <article class="table-container">
-                    <table class="kok-table">
-                        <colgroup>
-                            <col width="*">
-                            <col width="*">
-                            <col width="200">
-                            <col width="200">
-                            <col width="200">
-                            <col width="200">
-                            <col width="200">
-                            <col width="120">
-                            <col width="120">
-                            <col width="120">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>컬럼명</th>
-                                <th>코멘트</th>
-                                <th>타입</th>
-                                <th>길이</th>
-                                <th>디폴트 값</th>
-                                <th>PK 여부</th>
-                                <th>자동 증가 여부</th>
-                                <th>NULLABLE</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                        </tbody>
-                    </table>
-                </article>
-            </article>
+            <section id="schemaContainer">
+            </section>
 
             <button id="generateButton" class="primary">생성하기</button>
         </main>
@@ -182,15 +140,8 @@
         <script src="./scripts/kok-schema.js"></script>
 
         <script>
-            const schema = new Schema();
+            // const schema = new Schema();
             const PROJECT_INFO_LOCAL_STORAGE_KEY = 'vkdnjfpdlswj';
-
-            const kokTableDecorator = new KokTableDecorator('.kok-table');
-            const teamNameElem = document.querySelector("#teamName");
-            const projectNameElem = document.querySelector("#projectName");
-            const projectDescriptionElem = document.querySelector("#projectDescription");
-            const tableNameElem = document.querySelector("#tableName");
-            const tableDescriptionElem = document.querySelector("#tableDescription");
 
             new KokInputDecorator().init();
             
@@ -200,9 +151,60 @@
             new KokInputFilter("#tableName", { regexp: /[^a-zA-Z0-9]/g, required: true });
             // new KokInputFilter("#tableDescription", { regexp: /[^a-zA-Z0-9 ]/g });
 
-            window.onload = _ => {
-                readProjectInfo();
-            };
+            function saveProjectInfo() {
+                const data = {
+                    teamName: document.querySelector('#teamName').value,
+                    projectName: document.querySelector('#projectName').value,
+                    projectDescription: document.querySelector('#projectDescription').value,
+                    schemaJson: schema.toJSON()
+                };
+                console.log(data);
+                localStorage.setItem(PROJECT_INFO_LOCAL_STORAGE_KEY, JSON.stringify(data));
+            }
+
+            function loadProjectInfo() {
+                const savedData = localStorage.getItem(PROJECT_INFO_LOCAL_STORAGE_KEY);
+                if (!savedData) {
+                    return null;
+                }
+
+                try {
+                    const data = JSON.parse(savedData);
+                    
+                    document.querySelector('#teamName').value = data.teamName || '';
+                    document.querySelector('#projectName').value = data.projectName || '';
+                    document.querySelector('#projectDescription').value = data.projectDescription || '';
+
+                    const restoredSchema = new Schema({
+                        name: data.schemaJson.name,
+                        comment: data.schemaJson.comment
+                    });
+
+                    if (data.schemaJson.columns) {
+                        data.schemaJson.columns.forEach(colData => {
+                            restoredSchema.addColumn(colData);
+                        });
+                    }
+
+                    return restoredSchema;
+                } catch (e) {
+                    console.error("데이터 복원 중 오류 발생:", e);
+                    return null;
+                }
+            }
+
+            const savedSchema = loadProjectInfo();
+            let schema = savedSchema || new Schema();
+            let schemaComponent = new SchemaComponent(schema);
+            document.querySelector("#schemaContainer").appendChild(schemaComponent.element);
+
+
+            const kokTableDecorator = new KokTableDecorator('.kok-table');
+            const teamNameElem = document.querySelector("#teamName");
+            const projectNameElem = document.querySelector("#projectName");
+            const projectDescriptionElem = document.querySelector("#projectDescription");
+            const tableNameElem = document.querySelector("[name=tableName]");
+            const tableDescriptionElem = document.querySelector("[name=tableDescription]");
 
             // 파일 내용 읽기
             async function readFile(filePath) {
@@ -220,50 +222,50 @@
             }
 
             // generate 정보 읽기
-            function readProjectInfo() {
-                const localStorageItem = localStorage.getItem(PROJECT_INFO_LOCAL_STORAGE_KEY);
-                if (!localStorageItem) {
-                    return;
-                }
+            // function readProjectInfo() {
+            //     const localStorageItem = localStorage.getItem(PROJECT_INFO_LOCAL_STORAGE_KEY);
+            //     if (!localStorageItem) {
+            //         return;
+            //     }
 
-                const projectInfo = JSON.parse(localStorageItem);
-                teamNameElem.value = projectInfo.teamName;
-                projectNameElem.value = projectInfo.projectName;
-                projectDescriptionElem.value = projectInfo.projectDescription;
-                tableNameElem.value = projectInfo.tableName;
-                tableDescriptionElem.value = projectInfo.tableDescription;
+            //     const projectInfo = JSON.parse(localStorageItem);
+            //     teamNameElem.value = projectInfo.teamName;
+            //     projectNameElem.value = projectInfo.projectName;
+            //     projectDescriptionElem.value = projectInfo.projectDescription;
+            //     tableNameElem.value = projectInfo.tableName;
+            //     tableDescriptionElem.value = projectInfo.tableDescription;
 
-                [].concat(projectInfo.columns || []).forEach(col => {
-                    const table = document.querySelector('.kok-table');
+            //     [].concat(projectInfo.columns || []).forEach(col => {
+            //         const table = document.querySelector('.kok-table');
 
-                    const column = new Column(col.options);
-                    const columnComponent = new ColumnComponent(column);
+            //         const column = new Column(col);
+            //         const columnComponent = new ColumnComponent(column);
 
-                    const tbody = table.querySelector('tbody');
-                    tbody.appendChild(columnComponent.element);
+            //         const tbody = table.querySelector('tbody');
+            //         tbody.appendChild(columnComponent.element);
 
-                    schema.options.columns.push(column);
+            //         schema.columns.push(column);
                     
-                    kokTableDecorator.decorateRow(table, columnComponent.element);
-                    kokTableDecorator.reorderNumbers(table);
-                });
-            }
+            //         kokTableDecorator.decorateRow(table, columnComponent.element);
+            //         kokTableDecorator.reorderNumbers(table);
+            //     });
+            // }
 
             // generate 정보 저장
-            function saveProjectInfo() {
-                const teamName = teamNameElem.value;
-                const projectName = projectNameElem.value;
-                const projectDescription = projectDescriptionElem.value;
-                const tableName = tableNameElem.value;
-                const tableDescription = tableDescriptionElem.value;
+            // function saveProjectInfo() {
+            //     const teamName = teamNameElem.value;
+            //     const projectName = projectNameElem.value;
+            //     const projectDescription = projectDescriptionElem.value;
+            //     const tableName = tableNameElem.value;
+            //     const tableDescription = tableDescriptionElem.value;
 
-                const columns = schema.options.columns;
-                const infoJson = JSON.stringify({
-                    teamName, projectName, projectDescription, tableName, tableDescription, columns
-                });
+            //     const columns = schema.columns;
+            //     const infoJson = JSON.stringify({
+            //         teamName, projectName, projectDescription, tableName, tableDescription, columns
+            //     });
 
-                localStorage.setItem(PROJECT_INFO_LOCAL_STORAGE_KEY, infoJson);
-            }
+            //     localStorage.setItem(PROJECT_INFO_LOCAL_STORAGE_KEY, infoJson);
+            // }
 
             // 핸들바 템플릿을 이용하여 파일 내용 생성
             function createContentsByTemplate(template, data) {
@@ -275,8 +277,8 @@
                 const teamName = toCamelCase(teamNameElem.value).toLowerCase();
                 const projectName = toCamelCase(projectNameElem.value).toLowerCase();
                 const projectDescription = projectDescriptionElem.value;
-                const tableName = toCamelCase(tableNameElem.value).toLowerCase();
-                const tableDescription = tableDescriptionElem.value;
+                const tableName = toCamelCase(schema.name).toLowerCase();
+                const tableDescription = schema.comment;
 
                 // 필수 값 체크
                 if (teamName == '') {
@@ -290,27 +292,32 @@
                     return false;
                 }
 
-                if (schema.options.columns.length == 0) {
+                if (schema.columns.length == 0) {
                     tableNameElem.focus();
                     alert('컬럼을 작성해주세요.');
                     return false;
                 }
 
-                if (schema.options.columns.filter(c => c.options.isPK).length !== 1) {
+                if (schema.columns.filter(c => c.pk).length !== 1) {
                     tableNameElem.focus();
                     alert('PK 컬럼은 1개 작성해야합니다.');
                     return false;
                 }
 
                 const columnNameSet = new Set();
-                for (let i = 0; i < schema.options.columns.length; i++) {
-                    if (columnNameSet.has(toCamelCase(schema.options.columns[i].options.name))) {
-                        tableNameElem.focus();
+                for (let i = 0; i < schema.columns.length; i++) {
+                    if (schema.columns[i].name == '') {
+                        document.querySelectorAll('[name="name"]')[i].focus();
+                        alert('컬럼명을 작성해주세요.');
+                        return false;
+                    }
+                    if (columnNameSet.has(toCamelCase(schema.columns[i].name))) {
+                        document.querySelectorAll('[name="name"]')[i].focus();
                         alert('중복된 컬럼명이 존재합니다.');
                         return false;
                     }
 
-                    columnNameSet.add(toCamelCase(schema.options.columns[i].options.name));
+                    columnNameSet.add(toCamelCase(schema.columns[i].name));
                 }
 
 
@@ -332,51 +339,53 @@
                 data.tablePascalName = toPascalCase(tableNameElem.value);
                 data.tableDescription = tableDescriptionElem.value;
 
-                data.columns = schema.options.columns.map(c => {
-                    const newColumn = new Column({...c.options});
+                data.columns = schema.columns.map(c => {
+                    const newColumn = new Column({...c});
                     newColumn.isString = c.getJavaType() === 'String';
                     newColumn.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
                     newColumn.javaType = c.getJavaType();
-                    newColumn.fieldName = toCamelCase(c.options.name);
-                    newColumn.fieldPascalName = toPascalCase(c.options.name);
-                    newColumn.options.name = toSnakeCase(c.options.name).toUpperCase();
+                    newColumn.fieldName = toCamelCase(c.name);
+                    newColumn.fieldPascalName = toPascalCase(c.name);
+                    newColumn.name = toSnakeCase(c.name).toUpperCase();
 
                     return newColumn;
                 });
                 data.searchColumns = [...data.columns];
                 data.columns.forEach(c => {
                     if (c.isLocalDateTime) {
-                        console.log(c.options);
-                        const startDateColumn = new Column({...c.options});
-                        console.log(startDateColumn.options);
+                        console.log(c);
+                        const startDateColumn = new Column({...c});
+                        console.log(startDateColumn);
                         startDateColumn.isString = c.isString;
                         startDateColumn.isLocalDateTime = c.isLocalDateTime;
                         startDateColumn.javaType = c.javaType;
                         startDateColumn.fieldName = c.fieldName + 'Start';
                         startDateColumn.fieldPascalName = c.fieldPascalName + 'Start';
-                        startDateColumn.options.name += '_START';
-                        startDateColumn.options.comment = (c.options.comment || c.options.name) + ' 시작일';
+                        startDateColumn.name += '_START';
+                        startDateColumn.comment = (c.comment || c.name) + ' 시작일';
                         data.searchColumns.push(startDateColumn);
 
-                        const endDateColumn = new Column({...c.options});
+                        const endDateColumn = new Column({...c});
                         endDateColumn.isString = c.isString;
                         endDateColumn.isLocalDateTime = c.isLocalDateTime;
                         endDateColumn.javaType = c.javaType;
                         endDateColumn.fieldName = c.fieldName + 'End';
                         endDateColumn.fieldPascalName = c.fieldPascalName + 'End';
-                        endDateColumn.options.name += '_END';
-                        endDateColumn.options.comment = (c.options.comment || c.options.name) + ' 종료일';
+                        endDateColumn.name += '_END';
+                        endDateColumn.comment = (c.comment || c.name) + ' 종료일';
                         data.searchColumns.push(endDateColumn);
                     }
                 });
 
-                data.columnsWithoutAutoIncrement = data.columns.filter(c => !c.options.isAutoIncrement);
+                data.columnsWithoutAutoIncrement = data.columns.filter(c => !c.autoIncrement);
 
-                data.pkColumns = data.columns.filter(c => c.options.isPK);
+                data.pkColumns = data.columns.filter(c => c.pk);
                 data.isSinglePk = data.pkColumns.length === 1;
 
-                data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                data.importList = schema.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
                 data.pkColumnImportList = data.pkColumns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+
+                data.hasLogicalUseColumn = data.columns.filter(c => c.type === 'LOGICAL_USE').length > 0;
 
                 return data;
             }
@@ -425,14 +434,14 @@
                 // data.projectName = projectName;
                 // data.tableName = tableName;
                 // data.tablePascalName = tablePascalName;
-                // data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                // data.importList = schema.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
                 // data.tableComment = tableDescription;
                 // data.today = new Date().toISOString().split('T')[0];
-                // data.targetColumns = schema.options.columns.map(c => {
+                // data.targetColumns = schema.columns.map(c => {
                 //     c.isString = c.getJavaType() === 'String';
                 //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
                 //     c.javaType = c.getJavaType();
-                //     c.fieldName = toCamelCase(c.options.name);
+                //     c.fieldName = toCamelCase(c.name);
                 //     return c;
                 // });
 
@@ -443,16 +452,16 @@
                 // data.projectName = projectName;
                 // data.tableName = tableName;
                 // data.tablePascalName = tablePascalName;
-                // data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                // data.importList = schema.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
                 // data.tableComment = tableDescription;
                 // data.today = new Date().toISOString().split('T')[0];
                 // data.targetColumns = [];
                 
-                // let tempColumns = schema.options.columns.map(c => {
+                // let tempColumns = schema.columns.map(c => {
                 //     c.isString = c.getJavaType() === 'String';
                 //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
                 //     c.javaType = c.getJavaType();
-                //     c.fieldName = toCamelCase(c.options.name);
+                //     c.fieldName = toCamelCase(c.name);
 
                 //     data.targetColumns.push(c);
 
@@ -462,14 +471,14 @@
                 //     if (c.isLocalDateTime) {
                 //         let startDateColumn = {...c};
                 //         startDateColumn.fieldName += 'Start';
-                //         startDateColumn.options.name += 'Start';
-                //         startDateColumn.options.comment = (c.options.comment || c.options.name) + ' 시작일';
+                //         startDateColumn.name += 'Start';
+                //         startDateColumn.comment = (c.comment || c.name) + ' 시작일';
                 //         data.targetColumns.push(startDateColumn);
 
                 //         let endDateColumn = {...c};
                 //         endDateColumn.fieldName += 'End';
-                //         endDateColumn.options.name += 'End';
-                //         endDateColumn.options.comment = (c.options.comment || c.options.name) + ' 종료일';
+                //         endDateColumn.name += 'End';
+                //         endDateColumn.comment = (c.comment || c.name) + ' 종료일';
                 //         data.targetColumns.push(endDateColumn);
                 //     }
                 // });
@@ -483,14 +492,14 @@
                 // data.projectName = projectName;
                 // data.tableName = tableName;
                 // data.tablePascalName = tablePascalName;
-                // data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                // data.importList = schema.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
                 // data.tableComment = tableDescription;
                 // data.today = new Date().toISOString().split('T')[0];
-                // data.targetColumns = schema.options.columns.map(c => {
+                // data.targetColumns = schema.columns.map(c => {
                 //     c.isString = c.getJavaType() === 'String';
                 //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
                 //     c.javaType = c.getJavaType();
-                //     c.fieldName = toCamelCase(c.options.name);
+                //     c.fieldName = toCamelCase(c.name);
                 //     return c;
                 // });
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}Response.java`, createContentsByTemplate(RESPONSE_TEMPLATE, templateData));
@@ -502,14 +511,14 @@
                 // data.tablePascalName = tablePascalName;
                 // data.tableComment = tableDescription;
                 // data.today = new Date().toISOString().split('T')[0];
-                // data.targetColumns = schema.options.columns.map(c => {
+                // data.targetColumns = schema.columns.map(c => {
                 //     c.isString = c.getJavaType() === 'String';
                 //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
                 //     c.javaType = c.getJavaType();
-                //     c.fieldName = toCamelCase(c.options.name);
+                //     c.fieldName = toCamelCase(c.name);
                 //     return c;
                 // });
-                // data.pkColumns = data.targetColumns.filter(c => c.options.isPK);
+                // data.pkColumns = data.targetColumns.filter(c => c.pk);
                 // data.isSinglePk = data.pkColumns.length === 1;
                 // data.pkColumnimportList = data.pkColumns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
 
@@ -520,17 +529,17 @@
                 // data.projectName = projectName;
                 // data.tableName = tableName;
                 // data.tablePascalName = tablePascalName;
-                // data.importList = schema.options.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                // data.importList = schema.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
                 // data.tableComment = tableDescription;
                 // data.today = new Date().toISOString().split('T')[0];
-                // data.targetColumns = schema.options.columns.map(c => {
+                // data.targetColumns = schema.columns.map(c => {
                 //     c.isString = c.getJavaType() === 'String';
                 //     c.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
                 //     c.javaType = c.getJavaType();
-                //     c.fieldName = toCamelCase(c.options.name);
+                //     c.fieldName = toCamelCase(c.name);
                 //     return c;
                 // });
-                // data.pkColumns = data.targetColumns.filter(c => c.options.isPK);
+                // data.pkColumns = data.targetColumns.filter(c => c.pk);
                 // data.isSinglePk = data.pkColumns.length === 1;
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/service/${templateData.tablePascalName}Service.java`, createContentsByTemplate(SERVICE_TEMPLATE, templateData));
 
@@ -562,50 +571,49 @@
 
             generateButton.addEventListener('click', createSpringBootProject);
 
-            const table = document.querySelector('.kok-table');
+            // const table = document.querySelector('.kok-table');
 
-            table.addEventListener('add', e => {
-                const column = new Column();
-                if (schema.options.columns.length == 0) {
-                    column.options.name = 'ID';
-                    column.options.comment = '아이디';
-                    column.options.type = 'NUMERIC';
-                    column.options.isAutoIncrement = true;
-                    column.options.isPK = true;
-                }
-                const columnComponent = new ColumnComponent(column);
+            // table.addEventListener('add', e => {
+            //     const column = new Column();
+            //     if (schema.columns.length == 0) {
+            //         column.name = 'ID';
+            //         column.comment = '아이디';
+            //         column.type = 'NUMERIC';
+            //         column.autoIncrement = true;
+            //         column.pk = true;
+            //     }
+            //     const columnComponent = new ColumnComponent(column);
 
-                const tbody = table.querySelector('tbody');
-                tbody.appendChild(columnComponent.element);
+            //     const tbody = table.querySelector('tbody');
+            //     tbody.appendChild(columnComponent.element);
 
-                schema.options.columns.push(column);
+            //     schema.columns.push(column);
                 
-                kokTableDecorator.decorateRow(table, columnComponent.element);
-                kokTableDecorator.reorderNumbers(table);
-            });
+            //     kokTableDecorator.decorateRow(table, columnComponent.element);
+            //     kokTableDecorator.reorderNumbers(table);
+            // });
 
-            table.addEventListener('delete', e => {
-                console.log(e);
-                if (!e.detail || !e.detail.deletedRows) {
-                    return;
-                }
+            // table.addEventListener('delete', e => {
+            //     console.log(e);
+            //     if (!e.detail || !e.detail.deletedRows) {
+            //         return;
+            //     }
 
-                console.log(schema.options.columns);
-                e.detail.deletedRows.map(obj => obj.index).sort().reverse().forEach(index => {
-                    schema.options.columns.splice(index, 1);
-                });
-            });
+            //     e.detail.deletedRows.map(obj => obj.index).sort().reverse().forEach(index => {
+            //         schema.columns.splice(index, 1);
+            //     });
+            // });
 
-            table.addEventListener('swap', e => {
-                if (!e.detail || !e.detail.swapRows) {
-                    return;
-                }
+            // table.addEventListener('swap', e => {
+            //     if (!e.detail || !e.detail.swapRows) {
+            //         return;
+            //     }
 
-                const swapIndexes = e.detail.swapRows.map(obj => obj.index);
-                const temp = schema.options.columns[swapIndexes[0]];
-                schema.options.columns[swapIndexes[0]] = schema.options.columns[swapIndexes[1]];
-                schema.options.columns[swapIndexes[1]] = temp;
-            });
+            //     const swapIndexes = e.detail.swapRows.map(obj => obj.index);
+            //     const temp = schema.columns[swapIndexes[0]];
+            //     schema.columns[swapIndexes[0]] = schema.columns[swapIndexes[1]];
+            //     schema.columns[swapIndexes[1]] = temp;
+            // });
 
             document.addEventListener('input', e => {
                 saveProjectInfo();

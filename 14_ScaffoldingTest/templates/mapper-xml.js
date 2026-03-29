@@ -9,20 +9,20 @@ const MAPPER_XML_TEMPLATE =
           {{~#if isString}}
           
           <if test="{{fieldName}} != null and {{fieldName}} != ''">
-            AND {{options.name}} LIKE '%' || #{ {{~fieldName~}} } || '%'
+            AND {{name}} LIKE '%' || #{ {{~fieldName~}} } || '%'
           </if>
           {{else if isLocalDateTime}}
 
           <if test="{{fieldName}}Start != null">
-            AND {{options.name}} <![CDATA[>=]]> #{ {{~fieldName~}}Start}
+            AND {{name}} <![CDATA[>=]]> #{ {{~fieldName~}}Start}
           </if>
           <if test="{{fieldName}}End != null">
-            AND {{options.name}} <![CDATA[<=]]> #{ {{~fieldName~}}End}
+            AND {{name}} <![CDATA[<=]]> #{ {{~fieldName~}}End}
           </if>
           {{else}}
 
           <if test="{{fieldName}} != null">
-            AND {{options.name}} = #{ {{~fieldName~}} }
+            AND {{name}} = #{ {{~fieldName~}} }
           </if>
           {{/if~}}
         {{/each}}
@@ -34,7 +34,7 @@ const MAPPER_XML_TEMPLATE =
         INSERT INTO {{tableScreamingSnakeName}}
         (
             {{#each columnsWithoutAutoIncrement}}
-            {{#unless @first}},{{else}} {{/unless}} {{options.name}}
+            {{#unless @first}},{{else}} {{/unless}} {{name}}
             {{/each}}
         )
         VALUES
@@ -49,7 +49,7 @@ const MAPPER_XML_TEMPLATE =
         INSERT INTO {{tableScreamingSnakeName}}
         (
             {{#each columnsWithoutAutoIncrement}}
-            {{#unless @first}},{{else}} {{/unless}} {{options.name}}
+            {{#unless @first}},{{else}} {{/unless}} {{name}}
             {{/each}}
         )
         VALUES
@@ -63,14 +63,14 @@ const MAPPER_XML_TEMPLATE =
     </insert>
 
     <select id="findById" resultType="{{tablePascalName}}Response">
-        SELECT {{#each columns}}{{#unless @first}}             , {{/unless}}{{options.name}}
+        SELECT {{#each columns}}{{#unless @first}}             , {{/unless}}{{name}}
                {{/each}}
           FROM {{tableScreamingSnakeName}}
-         WHERE {{#each pkColumns}}{{options.name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
+         WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </select>
 
     <select id="findAll" parameterType="{{tablePascalName}}SearchRequest" resultType="{{tablePascalName}}Response">
-        SELECT {{#each columns}}{{#unless @first}}             , {{/unless}}{{options.name}}
+        SELECT {{#each columns}}{{#unless @first}}             , {{/unless}}{{name}}
                {{/each}}
           FROM {{tableScreamingSnakeName}}
         <include refid="whereConditions" />
@@ -80,7 +80,7 @@ const MAPPER_XML_TEMPLATE =
                   \${sort} 
           </when>
           <otherwise>
-                  {{#each pkColumns}}{{#unless @first}}                , {{/unless}}{{options.name}} DESC
+                  {{#each pkColumns}}{{#unless @first}}                , {{/unless}}{{name}} DESC
                   {{/each}}
           </otherwise>
         </choose>
@@ -95,82 +95,84 @@ const MAPPER_XML_TEMPLATE =
 
     <update id="update" parameterType="{{tablePascalName}}SaveRequest">
         UPDATE {{tableScreamingSnakeName}}
-           SET {{#each columns}}{{#unless @first}}             , {{/unless}}{{options.name}} = #{ {{~fieldName~}} }
+           SET {{#each columns}}{{#unless @first}}             , {{/unless}}{{name}} = #{ {{~fieldName~}} }
                {{/each}}
-         WHERE {{#each pkColumns}}{{options.name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
+         WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </update>
 
     <update id="updateBulk" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">
         UPDATE {{tableScreamingSnakeName}}
-           SET {{#each columns}}{{#unless @first}}             , {{/unless}}{{options.name}} = #{ {{~fieldName~}} }
+           SET {{#each columns}}{{#unless @first}}             , {{/unless}}{{name}} = #{ {{~fieldName~}} }
                {{/each}}
-         WHERE {{#each pkColumns}}{{options.name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
+         WHERE {{#each pkColumns}}{{name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
         </foreach>
     </update>
 
     <update id="patch" parameterType="{{tablePascalName}}SaveRequest">
         UPDATE {{tableScreamingSnakeName}}
-           SET {{pkColumns.[0].options.name}} = #{ {{~pkColumns.[0].fieldName~}} }
+           SET {{pkColumns.[0].name}} = #{ {{~pkColumns.[0].fieldName~}} }
           {{#each columns}}
           <if test="{{fieldName}} != null">
-             , {{options.name}} = #{ {{~fieldName~}} }
+             , {{name}} = #{ {{~fieldName~}} }
           </if>
           {{/each}}
-         WHERE {{#each pkColumns}}{{options.name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
+         WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </update>
 
     <update id="patchBulk" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">
         UPDATE {{tableScreamingSnakeName}}
-           SET {{pkColumns.[0].options.name}} = #{ {{~pkColumns.[0].fieldName~}} }
+           SET {{pkColumns.[0].name}} = #{ {{~pkColumns.[0].fieldName~}} }
           {{#each columns}}
           <if test="item.{{fieldName}} != null">
-             , {{options.name}} = #{item.{{fieldName~}} }
+             , {{name}} = #{item.{{fieldName~}} }
           </if>
           {{/each}}
-         WHERE {{#each pkColumns}}{{options.name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
+         WHERE {{#each pkColumns}}{{name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
         </foreach>
     </update>
+    {{#if hasLogicalUseColumn}}
 
     <update id="unuse">
         UPDATE {{tableScreamingSnakeName}} 
            SET UPD_DTM = CURRENT_TIMESTAMP
              , USE_YN = 'N'
-         WHERE {{#each pkColumns}}{{options.name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
+         WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </update>
 
     <update id="unuseBulk" parameterType="java.util.List">
         UPDATE {{tableScreamingSnakeName}} 
            SET UPD_DTM = CURRENT_TIMESTAMP
              , USE_YN = 'N'
-         WHERE {{#if isSinglePk}}{{pkColumns.[0].options.name}} IN
+         WHERE {{#if isSinglePk}}{{pkColumns.[0].name}} IN
         <foreach collection="list" item="id" open="(" separator="," close=")">
                #{id}
         </foreach>
         {{else}}
         <foreach collection="list" item="item" separator=" OR ">
-            ({{#each pkColumns}}{{options.name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}})
+            ({{#each pkColumns}}{{name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}})
         </foreach>
         {{/if}}
     </update>
+    {{/if}}
     
     <delete id="delete">
         DELETE
           FROM {{tableScreamingSnakeName}}
-         WHERE {{#each pkColumns}}{{options.name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
+         WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </delete>
     
     <delete id="deleteBulk" parameterType="java.util.List">
         DELETE
           FROM {{tableScreamingSnakeName}}
-         WHERE {{#if isSinglePk}}{{pkColumns.[0].options.name}} IN
+         WHERE {{#if isSinglePk}}{{pkColumns.[0].name}} IN
         <foreach collection="list" item="id" open="(" separator="," close=")">
                #{id}
         </foreach>
         {{else}}
         <foreach collection="list" item="item" separator=" OR ">
-            ({{#each pkColumns}}{{options.name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}})
+            ({{#each pkColumns}}{{name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}})
         </foreach>
         {{/if}}
     </delete>

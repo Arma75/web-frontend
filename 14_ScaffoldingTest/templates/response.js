@@ -22,9 +22,9 @@ import {{this}};
 public class {{tablePascalName}}Response {
 {{#each columns}}
     /**
-     * {{options.comment}}
+     * {{comment}}
      */
-    @Schema(description = "{{options.comment}}")
+    @Schema(description = "{{comment}}")
     {{#if isLocalDateTime}}
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     {{/if}}

@@ -80,7 +80,7 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
                 String column = tokens[0];
                 String direction = tokens[1];
 
-                List<String> allowedColumns = List.of({{#each columns}}"{{this.options.name}}"{{#unless @last}}, {{/unless}}{{/each}});
+                List<String> allowedColumns = List.of({{#each columns}}"{{this.name}}"{{#unless @last}}, {{/unless}}{{/each}});
                 if (!allowedColumns.contains(column.toUpperCase())) {
                     throw new IllegalArgumentException("Invalid sort parameter.");
                 }
@@ -94,7 +94,7 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
                 useSort.append(column + " " + direction);
             }
         } else {
-            useSort.append("{{pkColumns.[0].options.name}} DESC");
+            useSort.append("{{pkColumns.[0].name}} DESC");
         }
 
         {{tableName}}SearchRequest.setSort(useSort.toString());
@@ -109,7 +109,7 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
     public void downloadExcel({{tablePascalName}}SearchRequest {{tableName}}SearchRequest, HttpServletResponse response) {
         PageResponse<{{tablePascalName}}Response> pageResponse = findAll({{tableName}}SearchRequest);
         List<{{tablePascalName}}Response> {{tableName}}Responses = pageResponse.getData();
-        String[] headers = { {{#each columns}}"{{this.options.name}}"{{#unless @last}}, {{/unless}}{{/each}} };
+        String[] headers = { {{#each columns}}"{{this.name}}"{{#unless @last}}, {{/unless}}{{/each}} };
         
         ExcelUtil.download({{tableName}}Responses, "{{tablePascalName}}", headers, response);
     }
@@ -161,6 +161,7 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
         }
         return patchedCount;
     }
+    {{#if hasLogicalUseColumn}}
 
     @Transactional
     @Override
@@ -181,6 +182,7 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
         }
         return patchedCount;
     }
+    {{/if}}
 
     @Transactional
     @Override

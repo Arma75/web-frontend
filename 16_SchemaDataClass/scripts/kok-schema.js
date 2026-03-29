@@ -10,7 +10,7 @@ class Column {
         TIMESTAMP: { hasLength: false, hasPrecision: true },
         BOOLEAN: { hasLength: false, hasPrecision: false },
         LOGICAL_USE: { hasLength: true, defaultLength: 1, fixedLength: true, defaultAutoIncrement: false, fixedAutoIncrement: true, defaultName: 'USE_YN', defaultComment: '사용여부', defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'Y' },
-        // LOGICAL_DELETE: { hasLength: true, defaultLength: 1, fixedLength: true, defaultAutoIncrement: false, fixedAutoIncrement: true,defaultName: 'DEL_YN', defaultComment: '삭제여부', defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'N' },
+        LOGICAL_DELETE: { hasLength: true, defaultLength: 1, fixedLength: true, defaultAutoIncrement: false, fixedAutoIncrement: true,defaultName: 'DEL_YN', defaultComment: '삭제여부', defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'N' },
         
         // CHAR: { hasLength: true, hasPrecision: false },
         // VARCHAR: { hasLength: true, hasPrecision: false },
@@ -176,10 +176,6 @@ class Column {
     }
 
     getJavaTypeImport() {
-        if (this.autoIncrement) {
-            return null;
-        }
-
         const type = this.type.toUpperCase();
         if (Column.TYPE_TO_JAVA_MAP[type]) {
             return Column.TYPE_TO_JAVA_MAP[type].import;
@@ -460,7 +456,7 @@ class SchemaComponent {
     }
 
     _initEvents() {
-        this.element.querySelector('[name=tableName]').addEventListener('change', e => {
+        this.element.querySelector('[name=tableName]').addEventListener('input', e => {
             try {
                 this.schema.name = e.target.value;
             } catch (err) {
@@ -469,7 +465,7 @@ class SchemaComponent {
             }
         });
 
-        this.element.querySelector('[name=tableDescription]').addEventListener('change', (e) => {
+        this.element.querySelector('[name=tableDescription]').addEventListener('input', (e) => {
             try {
                 this.schema.comment = e.target.value;
             } catch (err) {
@@ -481,13 +477,6 @@ class SchemaComponent {
         this.table.addEventListener('add', (e) => {
             console.log(e);
             const column = this.schema.addColumn();
-            if (this.schema.columns.length == 1) {
-                column.name = 'ID';
-                column.comment = '아이디';
-                column.type = 'NUMERIC';
-                column.autoIncrement = true;
-                column.pk = true;
-            }
             console.log(this.schema)
             const colComp = new ColumnComponent(column);
             
