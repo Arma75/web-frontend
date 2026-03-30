@@ -1,0 +1,120 @@
+{
+    "id": "com.attickok.matmalnote",
+    "lang": "ko-KR",
+    "dir": "ltr",
+    "name": "📖 맞말노트",
+    "short_name": "맞말노트",
+    "description": "연애, 성취, 일상 고민에 대한 뼈 때리는 맞말을 드립니다. 팩폭 당하고 정신 차리고 싶을 때 클릭하세요.",
+    "start_url": "/index.html",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "categories": ["lifestyle", "entertainment"],
+    "background_color": "#1D1E20",
+    "theme_color": "#1D1E20",
+    "display_override": ["window-controls-overlay", "standalone"],
+    "icons": [
+        {
+            "src": "/assets/favicons/favicon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/favicons/favicon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/favicons/favicon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/favicons/favicon-app-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/assets/images/screenshot-mobile.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "맞말노트 모바일 화면"
+        },
+        {
+            "src": "/assets/images/screenshot-desktop.png",
+            "sizes": "1920x1080",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "맞말노트 데스크탑 화면"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "맞말노트",
+            "url": "/",
+            "icons": [
+                {
+                    "src": "/assets/favicons/favicon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ],
+    "share_target": {
+        "action": "/",
+        "method": "GET",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    },
+    "file_handlers": [
+        {
+            "action": "/",
+            "accept": {
+                "text/plain": [".txt"]
+            }
+        }
+    ],
+    "launch_handler": {
+        "client_mode": "focus-existing"
+    },
+    "protocol_handlers": [
+        {
+            "protocol": "web+matmal",
+            "url": "/?type=%s"
+        }
+    ],
+    "note_taking": {
+        "new_note_url": "/"
+    },
+    "widgets": [],
+    "edge_side_panel": {
+        "preferred_width": 440
+    },
+    "scope_extensions": [
+        {
+            "origin": "https://matmalnote.netlify.app"
+        },
+        {
+            "origin": "https://matmalnote.netlify.app/*"
+        }
+    ],
+    "iarc_rating_id": "12345678",
+    "related_applications": [
+        {
+            "platform": "play",
+            "url": "https://play.google.com/store/apps/details?id=com.attickok.matmalnote",
+            "id": "com.attickok.matmalnote"
+        }
+    ],
+    "prefer_related_applications": false
+}

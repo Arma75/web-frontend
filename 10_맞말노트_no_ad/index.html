@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>📖 맞말노트</title>
+
+        <!-- Meta Tags -->
+        <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
+        <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
+        <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
+        <meta name="title" content="📖 맞말노트"/> <!-- 제목 설정 -->
+        <meta name="description" content="연애, 성취, 일상 고민에 대한 뼈 때리는 맞말을 드립니다. 팩폭 당하고 정신 차리고 싶을 때 클릭하세요."/> <!-- 설명 설정 -->
+        <meta name="keywords" content="맞말노트, 팩폭, 고민해결, 조언, 연애고민, 인생조언, 답정너, 뼈때리는말"/> <!-- 키워드 설정 -->
+        <meta name="author" content="attickok"/> <!-- 작성자 설정 -->
+
+        <!-- 색상 모드 -->
+        <meta name="color-scheme" content="light only">
+        <meta name="supported-color-schemes" content="light">
+        <meta name="only-light-mode" content="true">
+
+        <!-- Open Graph Meta Tags(SNS 공유) -->
+        <meta property="og:type" content="website" /> <!-- 타입 설정 -->
+        <meta property="og:title" content="📖 맞말노트" /> <!-- 제목 설정 -->
+        <meta property="og:description" content="연애, 성취, 일상 고민에 대한 뼈 때리는 맞말을 드립니다. 팩폭 당하고 정신 차리고 싶을 때 클릭하세요." /> <!-- 설명 설정 -->
+        <meta property="og:image" content="./assets/images/thumbnail.png" /> <!-- 이미지 설정 -->
+        <meta property="og:url" content="https://matmal.netlify.app/" /> <!-- URL 설정 -->
+
+        <!-- Progressive Web App -->
+        <link rel="manifest" href="/manifest.json">
+
+        <!-- Favicon Links -->
+        <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicons/favicon-16x16.png"> <!-- 16x16 파비콘 -->
+        <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32x32.png"> <!-- 32x32 파비콘 -->
+        <link rel="icon" type="image/png" sizes="64x64" href="./assets/favicons/favicon-64x64.png"> <!-- 64x64 파비콘 -->
+        <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/favicon-180x180.png"> <!-- 애플 터치 아이콘 -->
+
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+
+        <!-- CSS Stylesheet -->
+        <link rel="stylesheet" href="./styles/main.css">
+        <style>
+            @media (prefers-color-scheme: light) {
+                :root {
+                    color-scheme: light only !important;
+                    forced-color-adjust: none;
+                }
+                html, body {
+                    filter: none !important;
+                    -webkit-filter: none !important;
+                }
+                
+                body {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: #1d1e20;
+                    color: #8a90a1;
+                    min-height: 100vh;
+                }
+                main {
+                    background-color: #222326;
+                    border: 1px solid #0e0f14;
+                    padding: 40px;
+                    border-radius: 24px;
+                    width: 440px;
+                    max-width: 100%;
+                    box-shadow: 0 2px 24px #0e0f14;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+                    align-items: center;
+                }
+                .main-page {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+                    align-items: center;
+                }
+                header {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 12px;
+                }
+                h1 {
+                    color: white;
+                    text-shadow: 0 0 12px white;
+                }
+                p {
+                    color: #8a90a1;
+                    text-align: center;
+                }
+
+                footer {
+                    color: #b5baca;
+                    font-weight: 600;
+                    padding: 20px;
+                }
+
+                nav {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 24px;
+                    width: 100%;
+                }
+
+                .mode-section {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .mode-buttons {
+                    display: flex;
+                    gap: 12px;
+                }
+                .mode-buttons > label {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .menu-item:nth-child(1) {
+                    background: #9b4655;
+                    box-shadow: 0 0 12px #ff7b92;
+                    border: 1px solid #ff7b92;
+                }
+                .menu-item:nth-child(2) {
+                    background: #9b7446;
+                    box-shadow: 0 0 12px #ffac49;
+                    border: 1px solid #ffac49;
+                }
+                .menu-item:nth-child(3) {
+                    background: #46699b;
+                    box-shadow: 0 0 12px #5c9ef9;
+                    border: 1px solid #5c9ef9;
+                }
+
+                .book-page {
+                    flex: 1;
+                    display: none;
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                .book {
+                    flex: 1;
+                    background: #9b4655;
+                    box-shadow: 0 0 12px #ff7b92;
+                    border: 1px solid #ff7b92;
+                    
+                    padding: 40px;
+                    border-radius: 0 24px 24px 0;
+                    width: 100%;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    font-size: 2rem;
+                    font-weight: 600;
+                    text-align: center;
+                    position: relative;
+                }
+
+                .page {
+                    font-size: 1.4rem;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    gap: 20px;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background-color: #fdfdfd;
+                    border: 1px solid #e8e6e6;
+                    box-shadow: inset 3px 0px 20px rgba(0,0,0,0.1);
+                    transition: transform 0.4s ease-in-out;
+                    padding: 32px;
+                    border-radius: 0 24px 24px 0;
+                }
+                .page.flipped {
+                    transform-origin: left;
+                    transform: rotateY(-170deg);
+                }
+                .page.cover {
+                    /* background-color: black; */
+                    color: white;
+                }
+                .page.cover > p {
+                    color: black;
+                }
+
+                @media screen and (max-width: 600px) {
+                    body {
+                        padding: 0;
+                        min-width: 100vw;
+                        min-height: 100vh;
+                    }
+                    .main-page {
+                        width: 100%;
+                        flex: 1;
+                        justify-content: space-between;
+                    }
+                    .book-page {
+                        padding: 20px;
+                    }
+                }
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    color-scheme: light only !important;
+                    forced-color-adjust: none;
+                }
+                html, body {
+                    filter: none !important;
+                    -webkit-filter: none !important;
+                }
+                
+                body {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: #1d1e20;
+                    color: #8a90a1;
+                    min-height: 100vh;
+                }
+                main {
+                    background-color: #222326;
+                    border: 1px solid #0e0f14;
+                    padding: 40px;
+                    border-radius: 24px;
+                    width: 440px;
+                    max-width: 100%;
+                    box-shadow: 0 2px 24px #0e0f14;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+                    align-items: center;
+                }
+                .main-page {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+                    align-items: center;
+                }
+                header {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 12px;
+                }
+                h1 {
+                    color: white;
+                    text-shadow: 0 0 12px white;
+                }
+                p {
+                    color: #8a90a1;
+                    text-align: center;
+                }
+
+                footer {
+                    color: #b5baca;
+                    font-weight: 600;
+                    padding: 20px;
+                }
+
+                nav {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 24px;
+                    width: 100%;
+                }
+
+                .mode-section {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .mode-buttons {
+                    display: flex;
+                    gap: 12px;
+                }
+                .mode-buttons > label {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .menu-item:nth-child(1) {
+                    background: #9b4655;
+                    box-shadow: 0 0 12px #ff7b92;
+                    border: 1px solid #ff7b92;
+                }
+                .menu-item:nth-child(2) {
+                    background: #9b7446;
+                    box-shadow: 0 0 12px #ffac49;
+                    border: 1px solid #ffac49;
+                }
+                .menu-item:nth-child(3) {
+                    background: #46699b;
+                    box-shadow: 0 0 12px #5c9ef9;
+                    border: 1px solid #5c9ef9;
+                }
+
+                .book-page {
+                    flex: 1;
+                    display: none;
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                .book {
+                    flex: 1;
+                    background: #9b4655;
+                    box-shadow: 0 0 12px #ff7b92;
+                    border: 1px solid #ff7b92;
+                    
+                    padding: 40px;
+                    border-radius: 0 24px 24px 0;
+                    width: 100%;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    font-size: 2rem;
+                    font-weight: 600;
+                    text-align: center;
+                    position: relative;
+                }
+
+                .page {
+                    font-size: 1.4rem;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    gap: 20px;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background-color: #fdfdfd;
+                    border: 1px solid #e8e6e6;
+                    box-shadow: inset 3px 0px 20px rgba(0,0,0,0.1);
+                    transition: transform 0.4s ease-in-out;
+                    padding: 32px;
+                    border-radius: 0 24px 24px 0;
+                }
+                .page.flipped {
+                    transform-origin: left;
+                    transform: rotateY(-170deg);
+                }
+                .page.cover {
+                    /* background-color: black; */
+                    color: white;
+                }
+                .page.cover > p {
+                    color: black;
+                }
+
+                @media screen and (max-width: 600px) {
+                    body {
+                        padding: 0;
+                        min-width: 100vw;
+                        min-height: 100vh;
+                    }
+                    .main-page {
+                        width: 100%;
+                        flex: 1;
+                        justify-content: space-between;
+                    }
+                    .book-page {
+                        padding: 20px;
+                    }
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <section class="main-page">
+            <main>
+                <header>
+                    <h1>📖 맞말노트</h1>
+                    <p>
+                        복잡하게 생각하지 마세요.<br>
+                        맞말로 당신의 고민을 해결해드립니다.
+                    </p>
+                </header>
+
+                <nav class="menu-list">
+                    <button class="menu-item">
+                        <span class="category-name">💙 연애</span>
+                    </button>
+
+                    <button class="menu-item">
+                        <span class="category-name">🎒 성취</span>
+                    </button>
+
+                    <button class="menu-item">
+                        <span class="category-name">😐 일상</span>
+                    </button>
+                </nav>
+
+                <section class="mode-section">
+                    <p class="mode-title">응답 모드 선택</p>
+                    <div class="mode-buttons">
+                        <label><input type="radio" value="hard" name="type" checked/>팩폭</label>
+                        <label><input type="radio" value="soft" name="type"/>우쭈쭈</label>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="footer-note">
+                팩폭을 당하고 정신을 차려보세요.
+            </footer>
+        </section>
+
+        <section class="book-page">
+            <article id="book" class="book">
+            </article>
+        </section>
+
+        <audio id="click-sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
+        <audio id="page-flip-sound" src="https://assets.mixkit.co/active_storage/sfx/1101/1101-preview.mp3" preload="auto"></audio>
+
+        <script src="./scripts/constants.js"></script>
+        <!-- <script src="./sw.js"></script> -->
+        <script>
+            window.onload = () => {
+                document.documentElement.style.setProperty('color-scheme', 'light');
+                document.body.style.backgroundColor = '#1d1e20'; // 본래 배경색 다시 지정
+            };
+            // if ('serviceWorker' in navigator) {
+            //     window.addEventListener('load', () => {
+            //     navigator.serviceWorker.register('/sw.js')
+            //         .then((reg) => console.log('서비스 워커 등록 성공!', reg))
+            //         .catch((err) => console.log('서비스 워커 등록 실패:', err));
+            //     });
+            // }
+            // 오디오 플레이
+            function playAudio(audioElement) {
+                let audio = null;
+                if (typeof audioElement === 'string') {
+                    audio = document.querySelector(audioElement);
+                } else {
+                    audio = audioElement;
+                }
+                audio.playbackRate = 4.0;
+                audio.currentTime = 0;
+                audio.play();
+            }
+
+            // 버튼과 인풋 필드에 효과음 등록
+            document.querySelectorAll("button, input").forEach(button => {
+                button.addEventListener("click", _ => {
+                    playAudio("#click-sound");
+                });
+            });
+
+            // 메뉴 버튼 클릭
+            document.querySelector(".menu-item:nth-child(1)").addEventListener("click", _ => {
+                initBook("love");
+                history.pushState({ page: "love" }, "맞말노트 - 연애", "#book");
+            });
+            document.querySelector(".menu-item:nth-child(2)").addEventListener("click", _ => {
+                initBook("archive");
+                history.pushState({ page: "archive" }, "맞말노트", "#book");
+            });
+            document.querySelector(".menu-item:nth-child(3)").addEventListener("click", _ => {
+                initBook("life");
+                history.pushState({ page: "life" }, "맞말노트", "#book");
+            });
+
+
+            const book = document.getElementById('book');
+            let isAnimating = false;
+            let opened = false;
+            let adviceList;
+
+            function initBook(menu) {
+                document.querySelector(".main-page").style.display = "none";
+                document.querySelector(".book-page").style.display = "flex";
+
+                book.innerHTML = "";
+
+                let type = document.querySelector("[name='type']:checked").value;
+                adviceList = ADVICE_LIST[menu][type];
+
+                [...adviceList].reverse().forEach((text, index) => {
+                    const page = document.createElement('div');
+                    page.className = 'page';
+                    page.style.zIndex = index + 1; // 낮은 인덱스가 아래로
+                    page.innerHTML = `<p>${text}</p>`;
+                    book.appendChild(page);
+                });
+
+                const cover = document.createElement('div');
+                cover.className = 'page cover';
+                if (menu === 'love') {
+                    cover.innerHTML = `<h1>💙 연애</h1>`;
+                } else if (menu === 'archive') {
+                    cover.innerHTML = `<h1>🎒 성취</h1>`;
+                } else {
+                    cover.innerHTML = `<h1>😐 일상</h1>`;
+                }
+                cover.innerHTML += `<p>질문을 생각하고<br>클릭해주세요</p>`;
+                cover.style.zIndex = 999;
+                book.appendChild(cover);
+
+                if (menu === 'love') {
+                    // document.querySelector(".book").style.background = "#9b4655";
+                    document.querySelector(".book").style.background = "#ff7b92";
+                    document.querySelector(".book").style.boxShadow = "0 0 12px #ff7b92";
+                    document.querySelector(".book").style.border = "1px solid #ff7b92";
+                    // document.querySelector(".page.cover").style.background = "#9b4655";
+                    document.querySelector(".page.cover").style.background = "#ff7b92";
+                    document.querySelector(".page.cover").style.boxShadow = "0 0 12px #ff7b92";
+                    document.querySelector(".page.cover").style.border = "1px solid #ff7b92";
+                } else if (menu === 'archive') {
+                    // document.querySelector(".book").style.background = "#9b7446";
+                    document.querySelector(".book").style.background = "#ffac49";
+                    document.querySelector(".book").style.boxShadow = "0 0 12px #ffac49";
+                    document.querySelector(".book").style.border = "1px solid #ffac49";
+                    // document.querySelector(".page.cover").style.background = "#9b7446";
+                    document.querySelector(".page.cover").style.background = "#ffac49";
+                    document.querySelector(".page.cover").style.boxShadow = "0 0 12px #ffac49";
+                    document.querySelector(".page.cover").style.border = "1px solid #ffac49";
+                } else {
+                    // document.querySelector(".book").style.background = "#46699b";
+                    document.querySelector(".book").style.background = "#5c9ef9";
+                    document.querySelector(".book").style.boxShadow = "0 0 12px #5c9ef9";
+                    document.querySelector(".book").style.border = "1px solid #5c9ef9";
+                    // document.querySelector(".page.cover").style.background = "#46699b";
+                    document.querySelector(".page.cover").style.background = "#5c9ef9";
+                    document.querySelector(".page.cover").style.boxShadow = "0 0 12px #5c9ef9";
+                    document.querySelector(".page.cover").style.border = "1px solid #5c9ef9";
+                }
+            }
+
+            async function openBook() {
+                if (isAnimating) {
+                    return;
+                }
+
+                isAnimating = true;
+
+                const pages = Array.from(document.querySelectorAll('.page')).reverse();
+                pages.forEach((page, index) => {
+                    page.classList.remove('flipped');
+                    page.style.zIndex = pages.length - index;
+                    if (page.classList.contains("cover")) {
+                        page.style.zIndex = 999;
+                    }
+                    page.style.visibility = 'visible';
+                });
+
+                const targetCount = Math.floor(Math.random() * (adviceList.length - 2)) + 1;
+                const totalSeconds = Math.max(2000, Math.min(8000, targetCount * 400));
+                const interval = totalSeconds / targetCount;
+
+                for (let i = 0; i <= targetCount; i++) {
+                    playAudio("#page-flip-sound");
+                    pages[i].style.transition = `transform ${interval}ms ease-in-out`;
+                    pages[i].classList.add('flipped');
+                    if (i > 4) {
+                        pages[i - 4].style.visibility = 'hidden';
+                    }
+                    await new Promise(resolve => setTimeout(resolve, interval / 2));
+                    pages[i].style.zIndex = i;
+                }
+
+                isAnimating = false;
+            }
+
+            book.addEventListener('click', _ => {
+                if (!isAnimating) {
+                    if (!opened) {
+                        openBook();
+                    } else {
+                        history.back();
+                    }
+                    opened = !opened;
+                }
+            });
+
+            function showMainPage() {
+                opened = false;
+                isAnimating = false;
+                document.querySelector(".main-page").style.display = "flex";
+                document.querySelector(".book-page").style.display = "none";
+            }
+
+            window.onload = () => {
+                history.replaceState({ page: "main" }, "맞말노트", window.location.pathname);
+            };
+            window.addEventListener('popstate', (event) => {
+                if (!event.state || event.state.page === "main") {
+                    showMainPage();
+                } else if (event.state) {
+                    initBook(event.state.page);
+                }
+            });
+        </script>
+    </body>
+</html>
