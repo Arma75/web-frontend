@@ -2,7 +2,7 @@
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target": {
         "namespace": "android_app",
-        "package_name": "com.attickok.matmalnote",
+        "package_name": "com.attickok.matmal-no-ad",
         "sha256_cert_fingerprints": ["0C:10:DC:DC:26:F1:BC:62:B3:C2:27:02:DB:02:A7:D7:44:F7:28:B5:06:20:31:7C:00:DF:61:47:8F:CB:AF:9C"]
       }
     }]

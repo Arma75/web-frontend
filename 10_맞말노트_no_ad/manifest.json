@@ -1,5 +1,5 @@
 {
-    "id": "com.attickok.matmalnote",
+    "id": "com.attickok.matmal-no-ad",
     "lang": "ko-KR",
     "dir": "ltr",
     "name": "📖 맞말노트",
@@ -102,18 +102,18 @@
     },
     "scope_extensions": [
         {
-            "origin": "https://matmalnote.netlify.app"
+            "origin": "https://matmal-no-ad.netlify.app/"
         },
         {
-            "origin": "https://matmalnote.netlify.app/*"
+            "origin": "https://matmal-no-ad.netlify.app//*"
         }
     ],
     "iarc_rating_id": "12345678",
     "related_applications": [
         {
             "platform": "play",
-            "url": "https://play.google.com/store/apps/details?id=com.attickok.matmalnote",
-            "id": "com.attickok.matmalnote"
+            "url": "https://play.google.com/store/apps/details?id=com.attickok.matmal-no-ad",
+            "id": "com.attickok.matmal-no-ad"
         }
     ],
     "prefer_related_applications": false
