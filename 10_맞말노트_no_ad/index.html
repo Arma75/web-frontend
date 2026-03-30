@@ -442,13 +442,13 @@
                 document.documentElement.style.setProperty('color-scheme', 'light');
                 document.body.style.backgroundColor = '#1d1e20'; // 본래 배경색 다시 지정
             };
-            // if ('serviceWorker' in navigator) {
-            //     window.addEventListener('load', () => {
-            //     navigator.serviceWorker.register('/sw.js')
-            //         .then((reg) => console.log('서비스 워커 등록 성공!', reg))
-            //         .catch((err) => console.log('서비스 워커 등록 실패:', err));
-            //     });
-            // }
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((reg) => console.log('서비스 워커 등록 성공!', reg))
+                    .catch((err) => console.log('서비스 워커 등록 실패:', err));
+                });
+            }
             // 오디오 플레이
             function playAudio(audioElement) {
                 let audio = null;
