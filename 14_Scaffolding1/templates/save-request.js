@@ -37,12 +37,12 @@ public class {{tablePascalName}}SaveRequest {
      */
     public void validate(boolean isPatch) {
         {{#each columns}}
-            {{#unless isAutoIncrement}}
-                {{#unless nullable}}
+            {{#unless autoIncrement}}
+                {{#unless nullable}}{{#unless hasDefaultValue}}
         if (!isPatch && ({{fieldName}} == null{{#if isString}} || {{fieldName}}.isBlank(){{/if}})) {
             throw new IllegalArgumentException("{{fieldName}} is required.");
         }
-                {{/unless}}
+                {{/unless}}{{/unless}}
 
                 {{#if length}}
                     {{#if isString}}

@@ -1,9 +1,9 @@
-const CACHE_NAME = 'matmal-note-v1';
+const CACHE_NAME = 'matmal-no-ad-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
-  '/main.css',
-  '/main.js',
+  '/styles/main.css',
+  '/scripts/constants.js',
   '/manifest.json',
   '/assets/favicons/favicon-192x192.png',
   '/assets/favicons/favicon-512x512.png'

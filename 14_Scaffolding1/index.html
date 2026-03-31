@@ -300,7 +300,15 @@
 
                 if (schema.columns.filter(c => c.pk).length !== 1) {
                     tableNameElem.focus();
-                    alert('PK 컬럼은 1개 작성해야합니다.');
+                    alert('PK 컬럼은 1개 사용해야합니다.');
+                    return false;
+                }
+
+                if (schema.columns.filter(c => c.type === 'LOGICAL_USE').length > 1 ||
+                    schema.columns.filter(c => c.type === 'CREATE_TIMESTAMP').length > 1 ||
+                    schema.columns.filter(c => c.type === 'UPDATE_TIMESTAMP').length > 1) {
+                    tableNameElem.focus();
+                    alert('논리적 타입은 각각 1개씩 사용해야합니다.');
                     return false;
                 }
 
@@ -341,21 +349,23 @@
 
                 data.columns = schema.columns.map(c => {
                     const newColumn = new Column({...c});
+                    newColumn.isCreateTimestamp = c.type === 'CREATE_TIMESTAMP';
+                    newColumn.isUpdateTimestamp = c.type === 'UPDATE_TIMESTAMP';
                     newColumn.isString = c.getJavaType() === 'String';
                     newColumn.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                    newColumn.dbType = Column.TYPES[c.type].dbType;
                     newColumn.javaType = c.getJavaType();
                     newColumn.fieldName = toCamelCase(c.name);
                     newColumn.fieldPascalName = toPascalCase(c.name);
                     newColumn.name = toSnakeCase(c.name).toUpperCase();
+                    newColumn.hasDefaultValue = c.defaultValue != null && c.defaultValue != '';
 
                     return newColumn;
                 });
                 data.searchColumns = [...data.columns];
                 data.columns.forEach(c => {
                     if (c.isLocalDateTime) {
-                        console.log(c);
                         const startDateColumn = new Column({...c});
-                        console.log(startDateColumn);
                         startDateColumn.isString = c.isString;
                         startDateColumn.isLocalDateTime = c.isLocalDateTime;
                         startDateColumn.javaType = c.javaType;
@@ -376,16 +386,23 @@
                         data.searchColumns.push(endDateColumn);
                     }
                 });
+                data.updateColumns = data.columns.filter(c => !c.isCreateTimestamp && !c.pk);
 
                 data.columnsWithoutAutoIncrement = data.columns.filter(c => !c.autoIncrement);
 
                 data.pkColumns = data.columns.filter(c => c.pk);
                 data.isSinglePk = data.pkColumns.length === 1;
 
-                data.importList = schema.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
-                data.pkColumnImportList = data.pkColumns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s);
+                data.importList = [...new Set(schema.columns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s))];
+                data.pkColumnImportList = [...new Set(data.pkColumns.reduce((a, b) => a.concat(b.getJavaTypeImport()), []).filter(s => s))];
 
                 data.hasLogicalUseColumn = data.columns.filter(c => c.type === 'LOGICAL_USE').length > 0;
+                data.hasCreateTimeStampColumn = data.columns.filter(c => c.type === 'CREATE_TIMESTAMP').length > 0;
+                data.hasUpdateTimeStampColumn = data.columns.filter(c => c.type === 'UPDATE_TIMESTAMP').length > 0;
+
+                data.logicalUseColumn = data.columns.filter(c => c.type === 'LOGICAL_USE')[0];
+                data.createTimeStampColumn = data.columns.filter(c => c.type === 'CREATE_TIMESTAMP')[0];
+                data.updateTimeStampColumn = data.columns.filter(c => c.type === 'UPDATE_TIMESTAMP')[0];
 
                 return data;
             }
@@ -553,7 +570,7 @@
 
                 // console.log(SCHEMA_TEMPLATE);
                 // console.log(APPLICATION_PROPERTIES_TEMPLATE);
-                zip.file(`${templateData.projectName}/src/main/resources/application-properties`, createContentsByTemplate(APPLICATION_PROPERTIES_TEMPLATE, templateData));
+                zip.file(`${templateData.projectName}/src/main/resources/application.properties`, createContentsByTemplate(APPLICATION_PROPERTIES_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/resources/schema.sql`, createContentsByTemplate(SCHEMA_TEMPLATE, templateData));
                 // console.log(createContentsByTemplate(MAPPER_XML_TEMPLATE, templateData));
                 // return;

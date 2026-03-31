@@ -40,7 +40,7 @@ const MAPPER_XML_TEMPLATE =
         VALUES
         (
             {{#each columnsWithoutAutoIncrement}}
-            {{#unless @first}},{{else}} {{/unless}} #{ {{~fieldName~}} }
+            {{#unless @first}},{{else}} {{/unless}} {{#if isCreateTimestamp}}CURRENT_TIMESTAMP{{else if isUpdateTimestamp}}CURRENT_TIMESTAMP{{else if hasDefaultValue}}{{#if isString}}COALESCE(#{ {{~fieldName~}} }, '{{defaultValue}}'){{else}}COALESCE(#{ {{~fieldName~}} }, {{defaultValue}}){{/if}}{{else}}#{ {{~fieldName~}} }{{/if}}
             {{/each}}
         )
     </insert>
@@ -56,7 +56,7 @@ const MAPPER_XML_TEMPLATE =
         <foreach collection="list" item="item" separator=",">
         (
             {{#each columnsWithoutAutoIncrement}}
-            {{#unless @first}},{{else}} {{/unless}} #{ {{~fieldName~}} }
+            {{#unless @first}},{{else}} {{/unless}} {{#if isCreateTimestamp}}CURRENT_TIMESTAMP{{else if isUpdateTimestamp}}CURRENT_TIMESTAMP{{else if hasDefaultValue}}{{#if isString}}COALESCE(#{ {{~fieldName~}} }, '{{defaultValue}}'){{else}}COALESCE(#{ {{~fieldName~}} }, {{defaultValue}}){{/if}}{{else}}#{ {{~fieldName~}} }{{/if}}
             {{/each}}
         )
         </foreach>
@@ -95,7 +95,7 @@ const MAPPER_XML_TEMPLATE =
 
     <update id="update" parameterType="{{tablePascalName}}SaveRequest">
         UPDATE {{tableScreamingSnakeName}}
-           SET {{#each columns}}{{#unless @first}}             , {{/unless}}{{name}} = #{ {{~fieldName~}} }
+           SET {{#each updateColumns}}{{#unless @first}}             , {{/unless}}{{#if isUpdateTimestamp}}{{name}} = CURRENT_TIMESTAMP{{else}}{{name}} = #{ {{~fieldName~}} }{{/if}}
                {{/each}}
          WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </update>
@@ -103,7 +103,7 @@ const MAPPER_XML_TEMPLATE =
     <update id="updateBulk" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">
         UPDATE {{tableScreamingSnakeName}}
-           SET {{#each columns}}{{#unless @first}}             , {{/unless}}{{name}} = #{ {{~fieldName~}} }
+           SET {{#each updateColumns}}{{#unless @first}}             , {{/unless}}{{#if isUpdateTimestamp}}{{name}} = CURRENT_TIMESTAMP{{else}}{{name}} = #{ {{~fieldName~}} }{{/if}}
                {{/each}}
          WHERE {{#each pkColumns}}{{name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
         </foreach>
@@ -111,24 +111,24 @@ const MAPPER_XML_TEMPLATE =
 
     <update id="patch" parameterType="{{tablePascalName}}SaveRequest">
         UPDATE {{tableScreamingSnakeName}}
-           SET {{pkColumns.[0].name}} = #{ {{~pkColumns.[0].fieldName~}} }
-          {{#each columns}}
-          <if test="{{fieldName}} != null">
-             , {{name}} = #{ {{~fieldName~}} }
+           SET {{#if hasUpdateTimeStampColumn}}{{updateTimeStampColumn.name}} = CURRENT_TIMESTAMP{{else}}{{pkColumns.[0].name}} = #{ {{~pkColumns.[0].fieldName~}} }{{/if}}
+          {{#each updateColumns~}}{{~#unless isUpdateTimestamp~}}
+          <if test="item.{{fieldName}} != null">
+             , {{name}} = #{item.{{fieldName~}} }
           </if>
-          {{/each}}
-         WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
+          {{~/unless~}}{{~/each}}
+         WHERE {{#each pkColumns}}{{name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </update>
 
     <update id="patchBulk" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">
         UPDATE {{tableScreamingSnakeName}}
-           SET {{pkColumns.[0].name}} = #{ {{~pkColumns.[0].fieldName~}} }
-          {{#each columns}}
+           SET {{#if hasUpdateTimeStampColumn}}{{updateTimeStampColumn.name}} = CURRENT_TIMESTAMP{{else}}{{pkColumns.[0].name}} = #{ {{~pkColumns.[0].fieldName~}} }{{/if}}
+          {{#each updateColumns~}}{{~#unless isUpdateTimestamp~}}
           <if test="item.{{fieldName}} != null">
              , {{name}} = #{item.{{fieldName~}} }
           </if>
-          {{/each}}
+          {{~/unless~}}{{~/each}}
          WHERE {{#each pkColumns}}{{name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
         </foreach>
     </update>
@@ -136,15 +136,15 @@ const MAPPER_XML_TEMPLATE =
 
     <update id="unuse">
         UPDATE {{tableScreamingSnakeName}} 
-           SET UPD_DTM = CURRENT_TIMESTAMP
-             , USE_YN = 'N'
+           SET {{logicalUseColumn.name}} = 'N'
+             , {{#if hasUpdateTimeStampColumn}}{{updateTimeStampColumn.name}} = CURRENT_TIMESTAMP{{/if}}
          WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </update>
 
     <update id="unuseBulk" parameterType="java.util.List">
         UPDATE {{tableScreamingSnakeName}} 
-           SET UPD_DTM = CURRENT_TIMESTAMP
-             , USE_YN = 'N'
+           SET {{logicalUseColumn.name}} = 'N'
+             , {{#if hasUpdateTimeStampColumn}}{{updateTimeStampColumn.name}} = CURRENT_TIMESTAMP{{/if}}
          WHERE {{#if isSinglePk}}{{pkColumns.[0].name}} IN
         <foreach collection="list" item="id" open="(" separator="," close=")">
                #{id}

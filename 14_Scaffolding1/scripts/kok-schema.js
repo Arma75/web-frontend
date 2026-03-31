@@ -1,15 +1,17 @@
 class Column {
     static TYPES = Object.freeze({
-        CHAR: { hasLength: true, hasPrecision: false },
-        VARCHAR: { hasLength: true, hasPrecision: false },
-        TEXT: { hasLength: false, hasPrecision: false },
-        INTEGER: { hasLength: false, hasPrecision: false },
-        NUMERIC: { hasLength: false, hasPrecision: true },
-        DATE: { hasLength: false, hasPrecision: false },
-        TIME: { hasLength: false, hasPrecision: true },
-        TIMESTAMP: { hasLength: false, hasPrecision: true },
-        BOOLEAN: { hasLength: false, hasPrecision: false },
-        LOGICAL_USE: { hasLength: true, defaultLength: 1, fixedLength: true, defaultAutoIncrement: false, fixedAutoIncrement: true, defaultName: 'USE_YN', defaultComment: '사용여부', defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'Y' },
+        CHAR: { dbType: 'CHAR', hasLength: true, hasPrecision: false },
+        VARCHAR: { dbType: 'VARCHAR', hasLength: true, hasPrecision: false },
+        TEXT: { dbType: 'TEXT', hasLength: false, hasPrecision: false },
+        INTEGER: { dbType: 'INTEGER', hasLength: false, hasPrecision: false },
+        NUMERIC: { dbType: 'NUMERIC', hasLength: false, hasPrecision: true },
+        DATE: { dbType: 'DATE', hasLength: false, hasPrecision: false },
+        TIME: { dbType: 'TIME', hasLength: false, hasPrecision: true },
+        TIMESTAMP: { dbType: 'TIMESTAMP', hasLength: false, hasPrecision: true },
+        BOOLEAN: { dbType: 'BOOLEAN', hasLength: false, hasPrecision: false },
+        LOGICAL_USE: { dbType: 'CHAR', hasLength: true, defaultLength: 1, fixedLength: true, defaultAutoIncrement: false, fixedAutoIncrement: true, defaultName: 'USE_YN', defaultComment: '사용여부', defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'Y' },
+        CREATE_TIMESTAMP: { dbType: 'TIMESTAMP', hasLength: false, hasPrecision: false, defaultLength: null, fixedAutoIncrement: true, defaultName: 'REG_DTM', defaultComment: '등록일시', defaultPk: false, fixedPk: true, defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'CURRENT_TIMESTAMP' },
+        UPDATE_TIMESTAMP: { dbType: 'TIMESTAMP', hasLength: false, hasPrecision: false, defaultLength: null, fixedAutoIncrement: true, defaultName: 'UPD_DTM', defaultComment: '수정일시', defaultPk: false, fixedPk: true, defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'CURRENT_TIMESTAMP' },
         // LOGICAL_DELETE: { hasLength: true, defaultLength: 1, fixedLength: true, defaultAutoIncrement: false, fixedAutoIncrement: true,defaultName: 'DEL_YN', defaultComment: '삭제여부', defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'N' },
         
         // CHAR: { hasLength: true, hasPrecision: false },
@@ -52,7 +54,8 @@ class Column {
         'TIMESTAMP': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime', 'org.springframework.format.annotation.DateTimeFormat'] },
         'BOOLEAN': { javaType: 'Boolean', import: null },
         'LOGICAL_USE': { javaType: 'String', import: null },
-        'LOGICAL_DELETE': { javaType: 'String', import: null },
+        'CREATE_TIMESTAMP': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime', 'org.springframework.format.annotation.DateTimeFormat'] },
+        'UPDATE_TIMESTAMP': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime', 'org.springframework.format.annotation.DateTimeFormat'] },
         // 'LOGICAL_USE': { javaType: 'Boolean', import: null },
         // 'CREATE_DATETIME': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime'] },
         // 'UPDATE_DATETIME': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime'] },
@@ -97,14 +100,17 @@ class Column {
                 if (prop === 'type') {
                     const typeMeta = Column.TYPES[value.toUpperCase()];
                     if (typeMeta) {
-                        if ((!this.name || typeMeta.fixedName) && typeMeta.defaultName) {
+                        if ((!this.name || typeMeta.fixedName) && typeMeta.defaultName !== undefined) {
                             this.name = typeMeta.defaultName;
                         }
-                        if ((!this.comment || typeMeta.fixedComment) && typeMeta.defaultComment) {
+                        if ((!this.comment || typeMeta.fixedComment) && typeMeta.defaultComment !== undefined) {
                             this.comment = typeMeta.defaultComment;
                         }
-                        if ((!this.length || typeMeta.fixedLength) && typeMeta.defaultLength) {
+                        if ((!this.length || typeMeta.fixedLength) && typeMeta.defaultLength !== undefined) {
                             this.length = typeMeta.defaultLength;
+                        }
+                        if ((!this.pk || typeMeta.fixedPk) && typeMeta.defaultPk !== undefined) {
+                            this.pk = typeMeta.defaultPk;
                         }
                         
                         if (typeMeta.defaultNullable !== undefined && typeMeta.defaultNullable !== null) {
@@ -294,6 +300,7 @@ class Schema {
 class ColumnComponent {
     constructor(column) {
         this.column = column;
+        this.column.type = this.column.type || 'VARCHAR';
         this.column.onChange = (key, value) => {
             this.render();
         }
@@ -357,7 +364,7 @@ class ColumnComponent {
             }
 
             const fixedKey = `fixed${name.charAt(0).toUpperCase() + name.slice(1)}`;
-            let isDisabled = this.column[fixedKey] === true;
+            let isDisabled = this.column[fixedKey] === true || typeMeta[fixedKey] === true;
             if (name === 'length' && !typeMeta.hasLength) {
                 isDisabled = true;
             }
