@@ -148,7 +148,7 @@
             new KokInputFilter("#teamName", { regexp: /[^a-zA-Z0-9]/g, required: true });
             new KokInputFilter("#projectName", { regexp: /[^a-zA-Z0-9]/g, required: true });
             // new KokInputFilter("#projectDescription", { regexp: /[^a-zA-Z0-9 ]/g });
-            new KokInputFilter("#tableName", { regexp: /[^a-zA-Z0-9]/g, required: true });
+            new KokInputFilter("#tableName", { regexp: /[^a-zA-Z0-9_]/g, required: true });
             // new KokInputFilter("#tableDescription", { regexp: /[^a-zA-Z0-9 ]/g });
 
             function saveProjectInfo() {

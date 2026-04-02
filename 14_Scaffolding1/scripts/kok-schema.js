@@ -400,7 +400,7 @@ class SchemaComponent {
         const container = document.createElement('article');
         container.className = 'schema-wrapper';
         container.innerHTML = `
-            <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9]+$/">
+            <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9_]+$/">
                 <label class="kok-input-label" data-required-text="필수" data-required-type="badge">테이블명</label>
                 <input type="text" name="tableName" class="kok-input-field" placeholder="테이블명을 입력해주세요" required>
                 <span class="kok-input-field-required-msg">테이블명은 필수 입력 항목입니다.</span>
@@ -462,7 +462,7 @@ class SchemaComponent {
             new KokInputDecorator().init();
         }
         if (typeof KokInputFilter !== 'undefined') {
-            new KokInputFilter(this.element.querySelector('[name=tableName]'), { regexp: /[^a-zA-Z0-9]/g, required: true });
+            new KokInputFilter(this.element.querySelector('[name=tableName]'), { regexp: /[^a-zA-Z0-9_]/g, required: true });
         }
     }
 
