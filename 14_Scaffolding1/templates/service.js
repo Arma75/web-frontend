@@ -16,33 +16,33 @@ import {{this}};
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface {{tablePascalName}}Service {
-    int create({{tablePascalName}}SaveRequest {{tableName}}SaveRequest);
+    int create({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest);
 
-    int createBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests);
+    int createBulk(List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests);
 
     int uploadExcel(MultipartFile file);
 
-    {{tablePascalName}}Response findById({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
+    {{tablePascalName}}Response findBy{{#each pkColumns}}{{this.fieldPascalName}}{{/each}}({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
 
-    PageResponse<{{tablePascalName}}Response> findAll({{tablePascalName}}SearchRequest {{tableName}}SearchRequest);
+    PageResponse<{{tablePascalName}}Response> findAll({{tablePascalName}}SearchRequest {{tableCamelName}}SearchRequest);
 
-    void downloadExcel({{tablePascalName}}SearchRequest {{tableName}}SearchRequest, HttpServletResponse response);
+    void downloadExcel({{tablePascalName}}SearchRequest {{tableCamelName}}SearchRequest, HttpServletResponse response);
 
-    int update({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableName}}SaveRequest);
+    int update({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest);
 
-    int updateBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests);
+    int updateBulk(List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests);
 
-    int patch({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableName}}SaveRequest);
+    int patch({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest);
 
-    int patchBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests);
+    int patchBulk(List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests);
     {{#if hasLogicalUseColumn}}
 
     int unuse({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
 
-    int unuseBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}});
+    int unuseBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests{{/if}});
     {{/if}}
 
     int delete({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
 
-    int deleteBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}});
+    int deleteBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests{{/if}});
 }`;

@@ -34,32 +34,32 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/{{tableName}}")
 public class {{tablePascalName}}Controller {
     private final Logger logger = LoggerFactory.getLogger({{tablePascalName}}Controller.class);
-    private final {{tablePascalName}}Service {{tableName}}Service;
+    private final {{tablePascalName}}Service {{tableCamelName}}Service;
 
-    public {{tablePascalName}}Controller({{tablePascalName}}Service {{tableName}}Service) {
-        this.{{tableName}}Service = {{tableName}}Service;
+    public {{tablePascalName}}Controller({{tablePascalName}}Service {{tableCamelName}}Service) {
+        this.{{tableCamelName}}Service = {{tableCamelName}}Service;
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody {{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
-        logger.info("[CREATE] {{tablePascalName}} create started. {{tableName}}SaveRequest: {}", {{tableName}}SaveRequest);
+    public ResponseEntity<Object> create(@RequestBody {{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
+        logger.info("[CREATE] {{tablePascalName}} create started. {{tableCamelName}}SaveRequest: {}", {{tableCamelName}}SaveRequest);
 
-        {{tableName}}SaveRequest.validate(false);
+        {{tableCamelName}}SaveRequest.validate(false);
 
-        {{tableName}}Service.create({{tableName}}SaveRequest);
+        {{tableCamelName}}Service.create({{tableCamelName}}SaveRequest);
 
         logger.info("[CREATE] {{tablePascalName}} created successfully.");
         return ResponseEntity.status(201).body("{{tablePascalName}} created successfully.");
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<Object> createBulk(@RequestBody List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests) {
-        logger.info("[CREATE_BULK] {{tablePascalName}} create started. {{tableName}}SaveRequests: {}", {{tableName}}SaveRequests);
-        for ({{tablePascalName}}SaveRequest {{tableName}}SaveRequest : {{tableName}}SaveRequests) {
-            {{tableName}}SaveRequest.validate(false);
+    public ResponseEntity<Object> createBulk(@RequestBody List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests) {
+        logger.info("[CREATE_BULK] {{tablePascalName}} create started. {{tableCamelName}}SaveRequests: {}", {{tableCamelName}}SaveRequests);
+        for ({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest : {{tableCamelName}}SaveRequests) {
+            {{tableCamelName}}SaveRequest.validate(false);
         }
 
-        {{tableName}}Service.createBulk({{tableName}}SaveRequests);
+        {{tableCamelName}}Service.createBulk({{tableCamelName}}SaveRequests);
         
         logger.info("[CREATE_BULK] {{tablePascalName}} created successfully.");
         return ResponseEntity.status(201).body("Create success");
@@ -68,129 +68,129 @@ public class {{tablePascalName}}Controller {
     @PostMapping(value = "/excel-update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> uploadExcel(@RequestPart("file") MultipartFile file) {
         logger.info("[EXCEL-UPLOAD] Excel file upload started. Filename: {}", file.getOriginalFilename());
-        {{tableName}}Service.uploadExcel(file);
+        {{tableCamelName}}Service.uploadExcel(file);
 
         logger.info("[EXCEL-UPLOAD] Excel file uploaded successfully.");
         return ResponseEntity.status(201).body("Create success");
     }
     
-    @GetMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}")
-    public ResponseEntity<{{tablePascalName}}Response> findById({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
-        logger.info("[FIND_BY_ID] {{tablePascalName}} search started. id: {}", id);
-        {{tablePascalName}}Response {{tableName}}Response = {{tableName}}Service.findById(id);
+    @GetMapping("/{ {{~#each pkColumns}}{{this.fieldName}}{{/each~}} }")
+    public ResponseEntity<{{tablePascalName}}Response> findBy{{#each pkColumns}}{{this.fieldPascalName}}{{/each}}({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
+        logger.info("[FIND_BY_ID] {{tablePascalName}} search started. {{#each pkColumns}}{{this.fieldName}}{{/each}}: {}", {{#each pkColumns}}{{this.fieldName}}{{/each}});
+        {{tablePascalName}}Response {{tableCamelName}}Response = {{tableCamelName}}Service.findBy{{#each pkColumns}}{{this.fieldPascalName}}{{/each}}({{#each pkColumns}}{{this.fieldName}}{{/each}});
 
         logger.info("[FIND_BY_ID] {{tablePascalName}} search complete successfully.");
-        return ResponseEntity.ok({{tableName}}Response);
+        return ResponseEntity.ok({{tableCamelName}}Response);
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<{{tablePascalName}}Response>> findAll({{tablePascalName}}SearchRequest {{tableName}}SearchRequest) {
-        logger.info("[FIND_ALL] {{tablePascalName}} search started. {{tableName}}SearchRequest: {}", {{tableName}}SearchRequest);
-        PageResponse<{{tablePascalName}}Response> pageResponse = {{tableName}}Service.findAll({{tableName}}SearchRequest);
+    public ResponseEntity<PageResponse<{{tablePascalName}}Response>> findAll({{tablePascalName}}SearchRequest {{tableCamelName}}SearchRequest) {
+        logger.info("[FIND_ALL] {{tablePascalName}} search started. {{tableCamelName}}SearchRequest: {}", {{tableCamelName}}SearchRequest);
+        PageResponse<{{tablePascalName}}Response> pageResponse = {{tableCamelName}}Service.findAll({{tableCamelName}}SearchRequest);
 
         logger.info("[FIND_ALL] {{tablePascalName}} search complete successfully.");
         return ResponseEntity.ok(pageResponse);
     }
 
     @GetMapping("/excel-download")
-    public void downloadExcel({{tablePascalName}}SearchRequest {{tableName}}SearchRequest, HttpServletResponse response) {
-        logger.info("[EXCEL_DOWNLOAD] Excel file download started. {{tableName}}SearchRequest: {}", {{tableName}}SearchRequest);
-        {{tableName}}Service.downloadExcel({{tableName}}SearchRequest, response);
+    public void downloadExcel({{tablePascalName}}SearchRequest {{tableCamelName}}SearchRequest, HttpServletResponse response) {
+        logger.info("[EXCEL_DOWNLOAD] Excel file download started. {{tableCamelName}}SearchRequest: {}", {{tableCamelName}}SearchRequest);
+        {{tableCamelName}}Service.downloadExcel({{tableCamelName}}SearchRequest, response);
         logger.info("[EXCEL_DOWNLOAD] Excel file downloaded successfully.");
     }
 
-    @PutMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}")
-    public ResponseEntity<?> update({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
-        logger.info("[UPLOAD] {{tablePascalName}} upload started. id: {}, {{tableName}}SaveRequest: {}", id, {{tableName}}SaveRequest);
+    @PutMapping("/{ {{~#each pkColumns}}{{this.fieldName}}{{/each~}} }")
+    public ResponseEntity<?> update({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
+        logger.info("[UPLOAD] {{tablePascalName}} upload started. {{#each pkColumns}}{{this.fieldName}}{{/each}}: {}, {{tableCamelName}}SaveRequest: {}", {{#each pkColumns}}{{this.fieldName}}{{/each}}, {{tableCamelName}}SaveRequest);
 
-        {{tableName}}SaveRequest.validate(false);
+        {{tableCamelName}}SaveRequest.validate(false);
 
-        {{tableName}}Service.update(id, {{tableName}}SaveRequest);
+        {{tableCamelName}}Service.update({{#each pkColumns}}{{this.fieldName}}{{/each}}, {{tableCamelName}}SaveRequest);
 
         logger.info("[UPLOAD] {{tablePascalName}} uploaded successfully.");
         return ResponseEntity.status(200).body("Update success");
     }
 
     @PutMapping("/bulk")
-    public ResponseEntity<?> updateBulk(@RequestBody List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests) {
-        logger.info("[UPLOAD_BULK] {{tablePascalName}} upload started. {{tableName}}SaveRequests: {}", {{tableName}}SaveRequests);
-        for ({{tablePascalName}}SaveRequest {{tableName}}SaveRequest : {{tableName}}SaveRequests) {
-            {{tableName}}SaveRequest.validate(false);
+    public ResponseEntity<?> updateBulk(@RequestBody List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests) {
+        logger.info("[UPLOAD_BULK] {{tablePascalName}} upload started. {{tableCamelName}}SaveRequests: {}", {{tableCamelName}}SaveRequests);
+        for ({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest : {{tableCamelName}}SaveRequests) {
+            {{tableCamelName}}SaveRequest.validate(false);
         }
         
-        {{tableName}}Service.updateBulk({{tableName}}SaveRequests);
+        {{tableCamelName}}Service.updateBulk({{tableCamelName}}SaveRequests);
 
         logger.info("[UPLOAD_BULK] {{tablePascalName}} uploaded successfully.");
         return ResponseEntity.status(200).body("Update success");
     }
 
-    @PatchMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}")
-    public ResponseEntity<?> patch({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableName}}SaveRequest) {
-        logger.info("[PATCH] {{tablePascalName}} patch started. id: {}, {{tableName}}SaveRequest: {}", id, {{tableName}}SaveRequest);
-        {{tableName}}SaveRequest.validate(true);
+    @PatchMapping("/{ {{~#each pkColumns}}{{this.fieldName}}{{/each~}} }")
+    public ResponseEntity<?> patch({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
+        logger.info("[PATCH] {{tablePascalName}} patch started. {{#each pkColumns}}{{this.fieldName}}{{/each}}: {}, {{tableCamelName}}SaveRequest: {}", {{#each pkColumns}}{{this.fieldName}}{{/each}}, {{tableCamelName}}SaveRequest);
+        {{tableCamelName}}SaveRequest.validate(true);
         
-        {{tableName}}Service.patch(id, {{tableName}}SaveRequest);
+        {{tableCamelName}}Service.patch({{#each pkColumns}}{{this.fieldName}}{{/each}}, {{tableCamelName}}SaveRequest);
         
         logger.info("[PATCH] {{tablePascalName}} patched successfully.");
         return ResponseEntity.status(200).body("Patch success");
     }
 
     @PatchMapping("/bulk")
-    public ResponseEntity<?> patchBulk(@RequestBody List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests) {
-        logger.info("[PATCH_BULK] {{tablePascalName}} patch started. {{tableName}}SaveRequests: {}", {{tableName}}SaveRequests);
-        for ({{tablePascalName}}SaveRequest {{tableName}}SaveRequest : {{tableName}}SaveRequests) {
-            {{tableName}}SaveRequest.validate(true);
+    public ResponseEntity<?> patchBulk(@RequestBody List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests) {
+        logger.info("[PATCH_BULK] {{tablePascalName}} patch started. {{tableCamelName}}SaveRequests: {}", {{tableCamelName}}SaveRequests);
+        for ({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest : {{tableCamelName}}SaveRequests) {
+            {{tableCamelName}}SaveRequest.validate(true);
         }
 
-        {{tableName}}Service.patchBulk({{tableName}}SaveRequests);
+        {{tableCamelName}}Service.patchBulk({{tableCamelName}}SaveRequests);
 
         logger.info("[PATCH_BULK] {{tablePascalName}} patched successfully.");
         return ResponseEntity.status(200).body("Patch success");
     }
     {{#if hasLogicalUseColumn}}
 
-    @PatchMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}/unuse")
+    @PatchMapping("/{ {{~#each pkColumns}}{{this.fieldName}}{{/each~}} }/unuse")
     public ResponseEntity<?> unuse({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
-        logger.info("[UNUSE] {{tablePascalName}} unuse started. id: {}", id);
+        logger.info("[UNUSE] {{tablePascalName}} unuse started. {{#each pkColumns}}{{this.fieldName}}{{/each}}: {}", {{#each pkColumns}}{{this.fieldName}}{{/each}});
 
-        {{tableName}}Service.unuse(id);
+        {{tableCamelName}}Service.unuse({{#each pkColumns}}{{this.fieldName}}{{/each}});
         
         logger.info("[UNUSE] {{tablePascalName}} unused successfully.");
         return ResponseEntity.status(200).body("Unuse success");
     }
 
     @PatchMapping("/bulk/unuse")
-    public ResponseEntity<?> unuseBulk(@RequestBody {{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}}) {
-        logger.info("[UNUSE_BULK] {{tablePascalName}} unuse started. ids: {}", ids);
-        if (ids == null || ids.isEmpty()) {
-            throw new IllegalArgumentException("The 'ids' is required.");
+    public ResponseEntity<?> unuseBulk(@RequestBody {{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests{{/if}}) {
+        logger.info("[UNUSE_BULK] {{tablePascalName}} unuse started. {{#each pkColumns}}{{this.fieldName}}{{/each}}s: {}", {{#each pkColumns}}{{this.fieldName}}{{/each}}s);
+        if ({{#each pkColumns}}{{this.fieldName}}{{/each}}s == null || {{#each pkColumns}}{{this.fieldName}}{{/each}}s.isEmpty()) {
+            throw new IllegalArgumentException("The '{{#each pkColumns}}{{this.fieldName}}{{/each}}s' is required.");
         }
 
-        {{tableName}}Service.unuseBulk(ids);
+        {{tableCamelName}}Service.unuseBulk({{#each pkColumns}}{{this.fieldName}}{{/each}}s);
         
         logger.info("[UNUSE_BULK] {{tablePascalName}} unused successfully.");
         return ResponseEntity.status(200).body("Unuse success");
     }
     {{/if}}
 
-    @DeleteMapping("{{#each pkColumns}}/{{this.fieldName}}{{/each}}")
+    @DeleteMapping("/{ {{~#each pkColumns}}{{this.fieldName}}{{/each~}} }")
     public ResponseEntity<?> delete({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}}) {
-        logger.info("[DELETE] {{tablePascalName}} delete started. id: {}", id);
+        logger.info("[DELETE] {{tablePascalName}} delete started. {{#each pkColumns}}{{this.fieldName}}{{/each}}: {}", {{#each pkColumns}}{{this.fieldName}}{{/each}});
 
-        {{tableName}}Service.delete(id);
+        {{tableCamelName}}Service.delete({{#each pkColumns}}{{this.fieldName}}{{/each}});
         
         logger.info("[DELETE] {{tablePascalName}} deleted successfully.");
         return ResponseEntity.status(200).body("Delete success");
     }
 
     @DeleteMapping("/bulk")
-    public ResponseEntity<?> deleteBulk(@RequestBody {{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}}) {
-        logger.info("[DELETE_BULK] {{tablePascalName}} delete started. ids: {}", ids);
-        if (ids == null || ids.isEmpty()) {
-            throw new IllegalArgumentException("The 'ids' is required.");
+    public ResponseEntity<?> deleteBulk(@RequestBody {{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests{{/if}}) {
+        logger.info("[DELETE_BULK] {{tablePascalName}} delete started. {{#each pkColumns}}{{this.fieldName}}{{/each}}s: {}", {{#each pkColumns}}{{this.fieldName}}{{/each}}s);
+        if ({{#each pkColumns}}{{this.fieldName}}{{/each}}s == null || {{#each pkColumns}}{{this.fieldName}}{{/each}}s.isEmpty()) {
+            throw new IllegalArgumentException("The '{{#each pkColumns}}{{this.fieldName}}{{/each}}s' is required.");
         }
 
-        {{tableName}}Service.deleteBulk(ids);
+        {{tableCamelName}}Service.deleteBulk({{#each pkColumns}}{{this.fieldName}}{{/each}}s);
         
         logger.info("[DELETE_BULK] {{tablePascalName}} deleted successfully.");
         return ResponseEntity.status(200).body("Delete success");

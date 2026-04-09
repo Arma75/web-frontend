@@ -14,31 +14,31 @@ import {{this}};
 
 @Mapper
 public interface {{tablePascalName}}Mapper {
-    int create({{tablePascalName}}SaveRequest {{tableName}}SaveRequest);
+    int create({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest);
 
-    int createBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests);
+    int createBulk(List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests);
 
-    {{tablePascalName}}Response findById({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
+    {{tablePascalName}}Response findBy{{#each pkColumns}}{{this.fieldPascalName}}{{/each}}({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
 
-    List<{{tablePascalName}}Response> findAll({{tablePascalName}}SearchRequest {{tableName}}SearchRequest);
+    List<{{tablePascalName}}Response> findAll({{tablePascalName}}SearchRequest {{tableCamelName}}SearchRequest);
 
-    long countAll({{tablePascalName}}SearchRequest {{tableName}}SearchRequest);
+    long countAll({{tablePascalName}}SearchRequest {{tableCamelName}}SearchRequest);
 
-    int update({{tablePascalName}}SaveRequest {{tableName}}SaveRequest);
+    int update({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest);
 
-    int updateBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests);
+    int updateBulk(List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests);
 
-    int patch({{tablePascalName}}SaveRequest {{tableName}}SaveRequest);
+    int patch({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest);
 
-    int patchBulk(List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests);
+    int patchBulk(List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests);
     {{#if hasLogicalUseColumn}}
 
     int unuse({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
 
-    int unuseBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}});
+    int unuseBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests{{/if}});
     {{/if}}
 
     int delete({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}{{#unless @last}}, {{/unless}}{{/each}});
 
-    int deleteBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableName}}SaveRequests{{/if}});
+    int deleteBulk({{#if isSinglePk}}List<{{pkColumns.[0].javaType}}> {{pkColumns.[0].fieldName}}s{{else}}List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests{{/if}});
 }`;

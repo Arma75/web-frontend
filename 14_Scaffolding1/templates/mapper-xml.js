@@ -62,7 +62,7 @@ const MAPPER_XML_TEMPLATE =
         </foreach>
     </insert>
 
-    <select id="findById" resultType="{{tablePascalName}}Response">
+    <select id="findBy{{#each pkColumns}}{{this.fieldPascalName}}{{/each}}" parameterType="{{#each pkColumns}}{{javaType}}{{/each}}" resultType="{{tablePascalName}}Response">
         SELECT {{#each columns}}{{#unless @first}}             , {{/unless}}{{name}}
                {{/each}}
           FROM {{tableScreamingSnakeName}}
@@ -134,7 +134,7 @@ const MAPPER_XML_TEMPLATE =
     </update>
     {{#if hasLogicalUseColumn}}
 
-    <update id="unuse">
+    <update id="unuse" parameterType="{{#each pkColumns}}{{javaType}}{{/each}}">
         UPDATE {{tableScreamingSnakeName}} 
            SET {{logicalUseColumn.name}} = 'N'
              , {{#if hasUpdateTimeStampColumn}}{{updateTimeStampColumn.name}} = CURRENT_TIMESTAMP{{/if}}
@@ -157,7 +157,7 @@ const MAPPER_XML_TEMPLATE =
     </update>
     {{/if}}
     
-    <delete id="delete">
+    <delete id="delete" parameterType="{{#each pkColumns}}{{javaType}}{{/each}}">
         DELETE
           FROM {{tableScreamingSnakeName}}
          WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
