@@ -10,7 +10,7 @@ import {{this}};
 {{/each}}
 
 /**
- * {{tableDescription}}
+ * {{tableDescription}} 저장 정보
  * 
  * @author system
  * @since {{today}}
@@ -20,7 +20,7 @@ import {{this}};
 @AllArgsConstructor
 @Schema(description = "{{tableDescription}} 저장 정보")
 public class {{tablePascalName}}SaveRequest {
-{{#each columns}}
+{{#each requestColumns}}
     /**
      * {{comment}}
      */
@@ -29,6 +29,9 @@ public class {{tablePascalName}}SaveRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     {{/if}}
     private {{javaType}} {{fieldName}};
+    {{#unless @last}}
+    
+    {{/unless}}
 {{/each}}
 
     /**
@@ -36,14 +39,15 @@ public class {{tablePascalName}}SaveRequest {
      * @param isPatch 패치 요청 여부 (true일 경우 필수값 검증 제외)
      */
     public void validate(boolean isPatch) {
-        {{#each columns}}
+        {{#each requestColumns}}
             {{#unless autoIncrement}}
-                {{#unless nullable}}{{#unless hasDefaultValue}}
+                {{#unless nullable}}
+                    {{#unless hasDefaultValue}}
         if (!isPatch && ({{fieldName}} == null{{#if isString}} || {{fieldName}}.isBlank(){{/if}})) {
             throw new IllegalArgumentException("{{fieldName}} is required.");
         }
-                {{/unless}}{{/unless}}
-
+                    {{/unless}}
+                {{/unless}}
                 {{#if length}}
                     {{#if isString}}
         if ({{fieldName}} != null && {{fieldName}}.length() > {{length}}) {
@@ -51,6 +55,9 @@ public class {{tablePascalName}}SaveRequest {
         }
                     {{/if}}
                 {{/if}}
+            {{/unless}}
+            {{#unless @last}}
+
             {{/unless}}
         {{/each}}
     }

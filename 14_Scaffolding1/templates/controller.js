@@ -65,7 +65,7 @@ public class {{tablePascalName}}Controller {
         return ResponseEntity.status(201).body("Create success");
     }
 
-    @PostMapping(value = "/excel-update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/excel-upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> uploadExcel(@RequestPart("file") MultipartFile file) {
         logger.info("[EXCEL-UPLOAD] Excel file upload started. Filename: {}", file.getOriginalFilename());
         {{tableCamelName}}Service.uploadExcel(file);
@@ -102,7 +102,9 @@ public class {{tablePascalName}}Controller {
     @PutMapping("/{ {{~#each pkColumns}}{{this.fieldName}}{{/each~}} }")
     public ResponseEntity<?> update({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
         logger.info("[UPLOAD] {{tablePascalName}} upload started. {{#each pkColumns}}{{this.fieldName}}{{/each}}: {}, {{tableCamelName}}SaveRequest: {}", {{#each pkColumns}}{{this.fieldName}}{{/each}}, {{tableCamelName}}SaveRequest);
-
+        {{#each pkColumns}}
+        {{../tableCamelName}}SaveRequest.set{{this.fieldPascalName}}({{this.fieldName}});
+        {{/each}}
         {{tableCamelName}}SaveRequest.validate(false);
 
         {{tableCamelName}}Service.update({{#each pkColumns}}{{this.fieldName}}{{/each}}, {{tableCamelName}}SaveRequest);
@@ -127,6 +129,9 @@ public class {{tablePascalName}}Controller {
     @PatchMapping("/{ {{~#each pkColumns}}{{this.fieldName}}{{/each~}} }")
     public ResponseEntity<?> patch({{#each pkColumns}}@PathVariable("{{this.fieldName}}") {{this.javaType}} {{this.fieldName}}, {{/each}}@RequestBody {{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
         logger.info("[PATCH] {{tablePascalName}} patch started. {{#each pkColumns}}{{this.fieldName}}{{/each}}: {}, {{tableCamelName}}SaveRequest: {}", {{#each pkColumns}}{{this.fieldName}}{{/each}}, {{tableCamelName}}SaveRequest);
+        {{#each pkColumns}}
+        {{../tableCamelName}}SaveRequest.set{{this.fieldPascalName}}({{this.fieldName}});
+        {{/each}}
         {{tableCamelName}}SaveRequest.validate(true);
         
         {{tableCamelName}}Service.patch({{#each pkColumns}}{{this.fieldName}}{{/each}}, {{tableCamelName}}SaveRequest);

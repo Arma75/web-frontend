@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -141,9 +143,19 @@ public class ExcelUtil {
                 }
             }
 
+            CellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(org.apache.poi.ss.usermodel.IndexedColors.GREY_25_PERCENT.getIndex());
+            headerStyle.setFillPattern(org.apache.poi.ss.usermodel.FillPatternType.SOLID_FOREGROUND);
+            
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+
             Row headerRow = sheet.createRow(0);
             for (int i = 0; i < headers.length; i++) {
-                headerRow.createCell(i).setCellValue(headers[i]);
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
             }
 
             int rowIdx = 1;
@@ -162,13 +174,24 @@ public class ExcelUtil {
                     }
 
                     Object value = getter.invoke(dto);
+                    Cell cell = row.createCell(j);
 
                     if (value == null) {
-                        row.createCell(j).setCellValue("");
+                        cell.setCellValue("");
                     } else {
-                        row.createCell(j).setCellValue(value.toString());
+                        if (value instanceof LocalDateTime) {
+                            cell.setCellValue(((LocalDateTime) value).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                        } else if (value instanceof LocalDate) {
+                            cell.setCellValue(((LocalDate) value).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                        } else {
+                            cell.setCellValue(value.toString());
+                        }
                     }
                 }
+            }
+            
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
             }
 
             String fileName = fileNamePrefix + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
@@ -180,5 +203,4 @@ public class ExcelUtil {
             throw new RuntimeException("Excel download error: " + e.getMessage());
         }
     }
-}
-`;
+}`;

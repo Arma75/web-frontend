@@ -13,7 +13,7 @@ import {{this}};
 {{/each}}
 
 /**
- * {{tableDescription}}
+ * {{tableDescription}} 조회 정보
  * 
  * @author system
  * @since {{today}}
@@ -34,5 +34,8 @@ public class {{tablePascalName}}SearchRequest extends PageRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     {{/if}}
     private {{javaType}} {{fieldName}};
+    {{#unless @last}}
+    
+    {{/unless}}
 {{/each}}
 }`;

@@ -10,7 +10,7 @@ import {{this}};
 {{/each}}
 
 /**
- * {{tableDescription}}
+ * {{tableDescription}} 응답 정보
  * 
  * @author system
  * @since {{today}}
@@ -29,5 +29,8 @@ public class {{tablePascalName}}Response {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     {{/if}}
     private {{javaType}} {{fieldName}};
+    {{#unless @last}}
+    
+    {{/unless}}
 {{/each}}
 }`;

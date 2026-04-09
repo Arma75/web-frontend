@@ -125,8 +125,6 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
     @Transactional
     @Override
     public int update({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
-        {{tableCamelName}}SaveRequest.set{{#each pkColumns}}{{this.fieldPascalName}}{{/each}}({{#each pkColumns}}{{this.fieldName}}{{/each}});
-
         int updatedCount = {{tableCamelName}}Mapper.update({{tableCamelName}}SaveRequest);
         if (updatedCount < 1) {
             throw new RuntimeException("Failed to update {{tableCamelName}} record.");
@@ -149,10 +147,6 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
     @Transactional
     @Override
     public int patch({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
-        {{#each pkColumns}}
-        {{../tableCamelName}}SaveRequest.set{{this.fieldPascalName}}({{this.fieldName}});
-        {{/each}}
-
         int patchedCount = {{tableCamelName}}Mapper.patch({{tableCamelName}}SaveRequest);
         if (patchedCount < 1) {
             throw new RuntimeException("Failed to patch {{tableCamelName}} record.");
