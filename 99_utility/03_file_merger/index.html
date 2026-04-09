@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <h3>모든 파일 합치기</h3>
+  <input type="file" id="folderInput" webkitdirectory mozdirectory directory>
+  <button id="copyButton">Copy</button>
+  <button id="downloadButton">Download</button>
+  <pre id="output" style="background: #f4f4f4; padding: 10px;"></pre>
+
+  <script>
+    const folderInput = document.getElementById('folderInput');
+    const output = document.getElementById('output');
+    const copyButton = document.getElementById('copyButton');
+    const downloadButton = document.getElementById('downloadButton');
+
+    copyButton.addEventListener('click', () => {
+        const textToCopy = output.textContent;
+        if (!textToCopy) {
+            alert('복사할 내용이 없습니다. 폴더를 먼저 선택해 주세요!');
+            return;
+        }
+
+        navigator.clipboard.writeText(textToCopy)
+                 .catch(err => {
+                     alert('복사 중 오류가 발생했습니다.');
+                 });
+    });
+    downloadButton.addEventListener('click', () => {
+        const textToDownload = output.textContent;
+        if (!textToDownload) {
+            alert('다운로드할 내용이 없습니다. 폴더를 먼저 선택해 주시기 바로!');
+            return;
+        }
+
+        const blob = new Blob([textToDownload], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'merge-file.txt';
+        link.click();
+        URL.revokeObjectURL(url);
+    });
+    folderInput.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) {
+            return;
+        }
+
+        let combinedContent = '';
+        
+        // 파일 필터링
+        const textFiles = files.filter(file => {
+            // 스킵할 폴더 설정
+            const skipList = ['.git', 'node_modules', '.DS_Store'];
+            const isSkipDir = skipList.some(skip => file.webkitRelativePath.includes(skip));
+            
+            // 허용할 파일 확장자 설정
+            const allowedExts = ['.js', '.html', '.scss', '.css', '.md', '.txt', '.json', '.java', '.sql', '.xml', '.yml', '.properties'];
+            const isAllowedExt = allowedExts.some(ext => file.name.endsWith(ext));
+
+            return !isSkipDir && isAllowedExt;
+        });
+
+        textFiles.sort((a, b) => {
+            return a.webkitRelativePath.localeCompare(b.webkitRelativePath, undefined, {
+                sensitivity: 'base',
+                numeric: true
+            });
+        });
+
+        for (const file of textFiles) {
+            const content = await file.text();
+            combinedContent += `\n${'='.repeat(50)}\n`;
+            combinedContent += `// FILE: ${file.webkitRelativePath}\n`;
+            combinedContent += `${'='.repeat(50)}\n\n`;
+            combinedContent += content + '\n';
+        }
+
+        output.textContent = combinedContent;
+    });
+  </script>
+</body>
+</html>

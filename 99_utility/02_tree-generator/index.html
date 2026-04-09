@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <h3>폴더 구조 텍스트 변환기</h3>
+  <input type="file" id="folderInput" webkitdirectory mozdirectory directory>
+  <button id="copyButton">Copy</button>
+  <button id="downloadButton">Download</button>
+  <pre id="output" style="background: #f4f4f4; padding: 10px;"></pre>
+
+  <script>
+    const folderInput = document.getElementById('folderInput');
+    const output = document.getElementById('output');
+    const copyButton = document.getElementById('copyButton');
+    const downloadButton = document.getElementById('downloadButton');
+
+    copyButton.addEventListener('click', () => {
+        const textToCopy = output.textContent;
+        if (!textToCopy) {
+            alert('복사할 내용이 없습니다. 폴더를 먼저 선택해 주세요!');
+            return;
+        }
+
+        navigator.clipboard.writeText(textToCopy)
+                 .catch(err => {
+                     alert('복사 중 오류가 발생했습니다.');
+                 });
+    });
+    downloadButton.addEventListener('click', () => {
+        const textToDownload = output.textContent;
+        if (!textToDownload) {
+            alert('다운로드할 내용이 없습니다. 폴더를 먼저 선택해 주시기 바로!');
+            return;
+        }
+
+        const blob = new Blob([textToDownload], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'tree.txt';
+        link.click();
+        URL.revokeObjectURL(url);
+    });
+    folderInput.addEventListener('change', e => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) {
+            return;
+        }
+
+        const tree = buildTree(files);
+        const treeText = formatTree(tree);
+        
+        output.textContent = treeText;
+    });
+
+    function buildTree(files) {
+        const root = {};
+        files.forEach(file => {
+            const parts = file.webkitRelativePath.split('/');
+            let current = root;
+            parts.forEach(part => {
+                if (!current[part]) {
+                    current[part] = {};
+                }
+                current = current[part];
+            });
+        });
+        return root;
+    }
+
+    function formatTree(obj, prefix = '') {
+        let result = '';
+        const keys = Object.keys(obj).sort((a, b) => {
+            return a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true });
+        });
+
+        keys.forEach((key, index) => {
+            const isLast = index === keys.length - 1;
+            const connector = isLast ? '└── ' : '├── ';
+            
+            result += prefix + connector + key + '\n';
+            
+            if (Object.keys(obj[key]).length > 0) {
+                const newPrefix = prefix + (isLast ? '    ' : '│   ');
+                result += formatTree(obj[key], newPrefix);
+            }
+        });
+        return result;
+    }
+  </script>
+</body>
+</html>
