@@ -40,4 +40,7 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // Spring AOP
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }`;
