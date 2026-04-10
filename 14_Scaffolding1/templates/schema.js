@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS {{tableScreamingSnakeName}};
 
 CREATE TABLE {{tableScreamingSnakeName}} (
 {{#each columns}}
-    {{name}} {{#if autoIncrement}}SERIAL{{else}}{{dbType}}{{#if isString}}({{length}}){{/if}}{{/if}}{{#unless nullable}} NOT NULL{{/unless}}{{#if defaultValue}} DEFAULT {{#if isString}}'{{defaultValue}}'{{else}}{{defaultValue}}{{/if}}{{/if}},
+    {{name}} {{#if autoIncrement}}SERIAL{{else}}{{dbType}}{{#if isString}}({{length}}){{/if}}{{/if}}{{#unless nullable}} NOT NULL{{/unless}}{{#if unique}} UNIQUE{{/if}}{{#if defaultValue}} DEFAULT {{#if isString}}'{{defaultValue}}'{{else}}{{defaultValue}}{{/if}}{{/if}},
 {{/each}}
     {{#if pkColumns.length}}
     PRIMARY KEY ({{#each pkColumns}}{{name}}{{#unless @last}}, {{/unless}}{{/each}})

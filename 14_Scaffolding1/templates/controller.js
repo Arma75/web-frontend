@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.attickok.ulmus.common.dto.PageResponse;
-import com.attickok.ulmus.users.dto.UsersResponse;
-import com.attickok.ulmus.users.dto.UsersSaveRequest;
-import com.attickok.ulmus.users.dto.UsersSearchRequest;
-import com.attickok.ulmus.users.service.UsersService;
+import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}Response;
+import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}SaveRequest;
+import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}SearchRequest;
+import com.{{teamName}}.{{projectName}}.{{tableName}}.service.{{tablePascalName}}Service;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,8 +33,6 @@ import jakarta.servlet.http.HttpServletResponse;
 {{#each pkColumnImportList}}
 import {{this}};
 {{/each}}
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/{{tableName}}")
