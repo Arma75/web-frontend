@@ -348,6 +348,7 @@
                 data.updateColumns = data.columns.filter(c => !c.isCreateTimestamp && !c.pk);
                 data.requestColumns = data.columns.filter(c => !c.isCreateTimestamp && !c.isUpdateTimestamp);
                 data.searchColumns = data.searchColumns.filter(c => !c.isCreateTimestamp && !c.isUpdateTimestamp && !c.pk);
+                data.findAllConditionColumns = data.columns.filter(c => !c.pk);
 
                 data.columnsWithoutAutoIncrement = data.columns.filter(c => !c.autoIncrement);
 
@@ -394,7 +395,7 @@
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/utils/ExcelUtil.java`, createContentsByTemplate(EXCEL_UTIL_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/exception/GlobalExceptionHandler.java`, createContentsByTemplate(GLOBAL_EXCEPTION_HANDLER_TEMPLATE, templateData));
 
-                console.log(createContentsByTemplate(SAVE_REQUEST_TEMPLATE, templateData));
+                console.log(createContentsByTemplate(MAPPER_XML_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}SaveRequest.java`, createContentsByTemplate(SAVE_REQUEST_TEMPLATE, templateData));
 
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}SearchRequest.java`, createContentsByTemplate(SEARCH_REQUEST_TEMPLATE, templateData));
@@ -418,7 +419,7 @@
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(content);
                 link.download = `${templateData.projectName}.zip`;
-                link.click();
+                // link.click();
             }
 
             generateButton.addEventListener('click', createSpringBootProject);

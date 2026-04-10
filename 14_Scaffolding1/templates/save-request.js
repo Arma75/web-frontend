@@ -55,9 +55,9 @@ public class {{tablePascalName}}SaveRequest {
         }
                     {{/if}}
                 {{/if}}
-            {{/unless}}
-            {{#unless @last}}
+                {{#unless @last}}
 
+                {{/unless}}
             {{/unless}}
         {{/each}}
     }

@@ -53,4 +53,4 @@ springdoc.api-docs.version=openapi_3_0
 springdoc.api-docs.path=/api-docs
 springdoc.swagger-ui.path=/swagger-ui.html
 # API 목록을 알파벳 순으로 정렬하여 가독성을 높입니다.
-springdoc.swagger-ui.operations-sorter=alpha`;
+springdoc.swagger-ui.operations-sorter=method`;

@@ -5,14 +5,12 @@ const MAPPER_XML_TEMPLATE =
 <mapper namespace="com.{{teamName}}.{{projectName}}.{{tableName}}.mapper.{{tablePascalName}}Mapper">
     <sql id="whereConditions">
         <where>
-        {{#each columns~}}
+        {{#each findAllConditionColumns~}}
           {{~#if isString}}
-          
           <if test="{{fieldName}} != null and {{fieldName}} != ''">
             AND {{name}} LIKE '%' || #{ {{~fieldName~}} } || '%'
           </if>
           {{else if isLocalDateTime}}
-
           <if test="{{fieldName}}Start != null">
             AND {{name}} <![CDATA[>=]]> #{ {{~fieldName~}}Start}
           </if>
@@ -20,11 +18,13 @@ const MAPPER_XML_TEMPLATE =
             AND {{name}} <![CDATA[<=]]> #{ {{~fieldName~}}End}
           </if>
           {{else}}
-
           <if test="{{fieldName}} != null">
             AND {{name}} = #{ {{~fieldName~}} }
           </if>
           {{/if~}}
+            {{#unless @last}}
+
+            {{/unless}}
         {{/each}}
 
         </where>
@@ -103,7 +103,7 @@ const MAPPER_XML_TEMPLATE =
     <update id="updateBulk" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">
         UPDATE {{tableScreamingSnakeName}}
-           SET {{#each updateColumns}}{{#unless @first}}             , {{/unless}}{{#if isUpdateTimestamp}}{{name}} = CURRENT_TIMESTAMP{{else}}{{name}} = #{ {{~fieldName~}} }{{/if}}
+           SET {{#each updateColumns}}{{#unless @first}}             , {{/unless}}{{#if isUpdateTimestamp}}{{name}} = CURRENT_TIMESTAMP{{else}}{{name}} = #{item. {{~fieldName~}} }{{/if}}
                {{/each}}
          WHERE {{#each pkColumns}}{{name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
         </foreach>
@@ -113,11 +113,11 @@ const MAPPER_XML_TEMPLATE =
         UPDATE {{tableScreamingSnakeName}}
            SET {{#if hasUpdateTimeStampColumn}}{{updateTimeStampColumn.name}} = CURRENT_TIMESTAMP{{else}}{{pkColumns.[0].name}} = #{ {{~pkColumns.[0].fieldName~}} }{{/if}}
           {{#each updateColumns~}}{{~#unless isUpdateTimestamp~}}
-          <if test="item.{{fieldName}} != null">
-             , {{name}} = #{item.{{fieldName~}} }
+          <if test="{{fieldName}} != null">
+             , {{name}} = #{ {{~fieldName~}} }
           </if>
           {{~/unless~}}{{~/each}}
-         WHERE {{#each pkColumns}}{{name}} = #{item.{{fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
+         WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </update>
 
     <update id="patchBulk" parameterType="java.util.List">
