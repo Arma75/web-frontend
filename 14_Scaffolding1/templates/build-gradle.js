@@ -43,7 +43,7 @@ dependencies {
 
     // Spring AOP
     implementation 'org.springframework.boot:spring-boot-starter-aop'
-    {{#if hasEncryptColumn}}
+    {{#if hasBcryptColumn}}
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'

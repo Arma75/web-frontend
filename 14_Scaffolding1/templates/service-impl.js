@@ -16,6 +16,9 @@ import com.{{teamName}}.{{projectName}}.{{tableName}}.mapper.{{tablePascalName}}
 {{#each pkColumnImportList}}
 import {{this}};
 {{/each}}
+{{#if hasBcryptColumn}}
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+{{/if}}
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -23,14 +26,24 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Service {
     private final {{tablePascalName}}Mapper {{tableCamelName}}Mapper;
+    {{#if hasBcryptColumn}}
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    {{/if}}
 
-    public {{tablePascalName}}ServiceImpl({{tablePascalName}}Mapper {{tableCamelName}}Mapper) {
+    public {{tablePascalName}}ServiceImpl({{tablePascalName}}Mapper {{tableCamelName}}Mapper{{#if hasBcryptColumn}}, BCryptPasswordEncoder bCryptPasswordEncoder{{/if}}) {
         this.{{tableCamelName}}Mapper = {{tableCamelName}}Mapper;
+        {{#if hasBcryptColumn}}
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        {{/if}}
     }
 
     @Transactional
     @Override
     public int create({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
+        {{#if hasBcryptColumn}}
+        encodeBcryptFields({{tableCamelName}}SaveRequest);
+
+        {{/if}}
         int createdCount = {{tableCamelName}}Mapper.create({{tableCamelName}}SaveRequest);
         if (createdCount < 1) {
             throw new RuntimeException("Failed to create {{tablePascalName}} record.");
@@ -42,6 +55,14 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
     @Transactional
     @Override
     public int createBulk(List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests) {
+        {{#if hasBcryptColumn}}
+        if ({{tableCamelName}}SaveRequests != null) {
+            for ({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest : {{tableCamelName}}SaveRequests) {
+                encodeBcryptFields({{tableCamelName}}SaveRequest);
+            }
+        }
+
+        {{/if}}
         int createdCount = {{tableCamelName}}Mapper.createBulk({{tableCamelName}}SaveRequests);
         if (createdCount < 1) {
             throw new RuntimeException("Failed to create {{tablePascalName}} record.");
@@ -103,7 +124,13 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
                 useSort.append(column + " " + direction);
             }
         } else {
+            {{#if hasSortColumn}}
+            {{#each sortColumns}}
+            useSort.append("{{this.name}} ASC");
+            {{/each}}
+            {{else}}
             useSort.append("{{pkColumns.[0].name}} DESC");
+            {{/if}}
         }
 
         {{tableCamelName}}SearchRequest.setSort(useSort.toString());
@@ -125,6 +152,10 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
     @Transactional
     @Override
     public int update({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
+        {{#if hasBcryptColumn}}
+        encodeBcryptFields({{tableCamelName}}SaveRequest);
+        
+        {{/if}}
         int updatedCount = {{tableCamelName}}Mapper.update({{tableCamelName}}SaveRequest);
         if (updatedCount < 1) {
             throw new RuntimeException("Failed to update {{tableCamelName}} record.");
@@ -136,6 +167,14 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
     @Transactional
     @Override
     public int updateBulk(List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests) {
+        {{#if hasBcryptColumn}}
+        if ({{tableCamelName}}SaveRequests != null) {
+            for ({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest : {{tableCamelName}}SaveRequests) {
+                encodeBcryptFields({{tableCamelName}}SaveRequest);
+            }
+        }
+
+        {{/if}}
         int updatedCount = {{tableCamelName}}Mapper.updateBulk({{tableCamelName}}SaveRequests);
         if (updatedCount < 1) {
             throw new RuntimeException("Failed to update {{tableCamelName}} record.");
@@ -147,6 +186,10 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
     @Transactional
     @Override
     public int patch({{#each pkColumns}}{{this.javaType}} {{this.fieldName}}, {{/each}}{{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
+        {{#if hasBcryptColumn}}
+        encodeBcryptFields({{tableCamelName}}SaveRequest);
+        
+        {{/if}}
         int patchedCount = {{tableCamelName}}Mapper.patch({{tableCamelName}}SaveRequest);
         if (patchedCount < 1) {
             throw new RuntimeException("Failed to patch {{tableCamelName}} record.");
@@ -157,6 +200,14 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
     @Transactional
     @Override
     public int patchBulk(List<{{tablePascalName}}SaveRequest> {{tableCamelName}}SaveRequests) {
+        {{#if hasBcryptColumn}}
+        if ({{tableCamelName}}SaveRequests != null) {
+            for ({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest : {{tableCamelName}}SaveRequests) {
+                encodeBcryptFields({{tableCamelName}}SaveRequest);
+            }
+        }
+
+        {{/if}}
         int patchedCount = {{tableCamelName}}Mapper.patchBulk({{tableCamelName}}SaveRequests);
         if (patchedCount < 1) {
             throw new RuntimeException("Failed to patch {{tableCamelName}} record.");
@@ -205,4 +256,21 @@ public class {{tablePascalName}}ServiceImpl implements {{tablePascalName}}Servic
         }
         return deletedCount;
     }
+    {{#if hasBcryptColumn}}
+
+    private void encodeBcryptFields({{tablePascalName}}SaveRequest {{tableCamelName}}SaveRequest) {
+        if ({{tableCamelName}}SaveRequest == null) {
+            return;
+        }
+        
+        {{#each bcryptColumns}}
+        if ({{../tableCamelName}}SaveRequest.get{{this.fieldPascalName}}() != null && !{{../tableCamelName}}SaveRequest.get{{this.fieldPascalName}}().isBlank()) {
+            {{../tableCamelName}}SaveRequest.set{{this.fieldPascalName}}(bCryptPasswordEncoder.encode({{../tableCamelName}}SaveRequest.get{{this.fieldPascalName}}()));
+        }
+        {{#unless @last}}
+        
+        {{/unless}}
+        {{/each}}
+    }
+    {{/if}}
 }`;

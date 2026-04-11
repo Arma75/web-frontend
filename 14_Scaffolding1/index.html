@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="ko">
     <head>
-        <title>프로젝트명</title>
+        <title>Spring-gen</title>
 
         <!-- Meta Tags -->
         <meta charset="UTF-8"/> <!-- 문자 인코딩 설정 -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- 반응형 웹 설정 -->
         <meta name="format-detection" content="telephone=no"/> <!-- 전화번호 자동 감지 비활성화 -->
         <meta name="robots" content="index, follow"/> <!-- 검색 엔진 크롤링 설정 -->
-        <meta name="title" content="프로젝트명"/> <!-- 제목 설정 -->
-        <meta name="description" content="프로젝트설명"/> <!-- 설명 설정 -->
+        <meta name="title" content="Spring-gen"/> <!-- 제목 설정 -->
+        <meta name="description" content="Mybatis CRUD 생성기"/> <!-- 설명 설정 -->
         <meta name="keywords" content="키워드"/> <!-- 키워드 설정 -->
         <meta name="author" content="attickok"/> <!-- 작성자 설정 -->
 
         <!-- Open Graph Meta Tags(SNS 공유) -->
         <meta property="og:type" content="website" /> <!-- 타입 설정 -->
-        <meta property="og:title" content="프로젝트명" /> <!-- 제목 설정 -->
-        <meta property="og:description" content="프로젝트설명" /> <!-- 설명 설정 -->
+        <meta property="og:title" content="Spring-gen" /> <!-- 제목 설정 -->
+        <meta property="og:description" content="Mybatis CRUD 생성기" /> <!-- 설명 설정 -->
         <meta property="og:image" content="./assets/images/thumbnail.png" /> <!-- 이미지 설정 -->
         <meta property="og:url" content="project_url" /> <!-- URL 설정 -->
 
@@ -86,10 +86,10 @@
             </article>
 
             <article class="kok-input-group" data-layout="vertical" data-regexp="/^[a-zA-Z0-9]+$/">
-                <label class="kok-input-label" data-required-text="필수" data-required-type="badge">프로젝트명</label>
-                <input type="text" id="projectName" class="kok-input-field" placeholder="프로젝트명을 입력해주세요" required>
-                <span class="kok-input-field-required-msg">프로젝트명은 필수 입력 항목입니다.</span>
-                <span class="kok-input-field-danger-msg">프로젝트명은 영문, 숫자만 입력 가능합니다.</span>
+                <label class="kok-input-label" data-required-text="필수" data-required-type="badge">Spring-gen</label>
+                <input type="text" id="projectName" class="kok-input-field" placeholder="Spring-gen을 입력해주세요" required>
+                <span class="kok-input-field-required-msg">Spring-gen은 필수 입력 항목입니다.</span>
+                <span class="kok-input-field-danger-msg">Spring-gen은 영문, 숫자만 입력 가능합니다.</span>
                 <span class="kok-input-field-success-msg">좋습니다!</span>
             </article>
 
@@ -135,6 +135,7 @@
         <script src="./templates/mapper-xml.js"></script>
         <script src="./templates/logging-aop.js"></script>
         <script src="./templates/error-reponse.js"></script>
+        <script src="./templates/security-config.js"></script>
 
         <script src="./scripts/case-converter.js"></script>
         <script src="./scripts/kok-table-decorator.js"></script>
@@ -309,7 +310,7 @@
                     newColumn.isUpdateTimestamp = c.type === 'UPDATE_TIMESTAMP';
                     newColumn.isString = c.getJavaType() === 'String';
                     newColumn.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
-                    newColumn.isEncrypt = c.type === 'BCRYPT_VARCHAR';
+                    newColumn.isBcrypt = c.type === 'BCRYPT_VARCHAR';
                     newColumn.isSort = c.type === 'LOGICAL_SORT';
                     newColumn.dbType = Column.TYPES[c.type].dbType;
                     newColumn.javaType = c.getJavaType();
@@ -349,12 +350,13 @@
                         data.searchColumns.push(endDateColumn);
                     }
                 });
-                data.encryptColumns = data.columns.filter(c => c.isEncrypt);
+                data.bcryptColumns = data.columns.filter(c => c.isBcrypt);
                 data.sortColumns = data.columns.filter(c => c.isSort); 
                 data.updateColumns = data.columns.filter(c => !c.isCreateTimestamp && !c.pk);
                 data.requestColumns = data.columns.filter(c => !c.isCreateTimestamp && !c.isUpdateTimestamp);
                 data.searchColumns = data.searchColumns.filter(c => !c.isCreateTimestamp && !c.isUpdateTimestamp && !c.pk);
-                data.findAllConditionColumns = data.columns.filter(c => !c.pk);
+                data.findAllConditionColumns = data.columns.filter(c => !c.pk && !c.isBcrypt);
+                data.selectColumns = data.columns.filter(c => !c.isBcrypt);
 
                 data.columnsWithoutAutoIncrement = data.columns.filter(c => !c.autoIncrement);
 
@@ -368,7 +370,7 @@
                 data.hasLogicalUseColumn = data.columns.filter(c => c.type === 'LOGICAL_USE').length > 0;
                 data.hasCreateTimeStampColumn = data.columns.filter(c => c.type === 'CREATE_TIMESTAMP').length > 0;
                 data.hasUpdateTimeStampColumn = data.columns.filter(c => c.type === 'UPDATE_TIMESTAMP').length > 0;
-                data.hasEncryptColumn = data.columns.filter(c => c.type === 'BCRYPT_VARCHAR').length > 0;
+                data.hasBcryptColumn = data.columns.filter(c => c.type === 'BCRYPT_VARCHAR').length > 0;
                 data.hasSortColumn = data.columns.filter(c => c.type === 'LOGICAL_SORT').length > 0;
 
                 data.logicalUseColumn = data.columns.filter(c => c.type === 'LOGICAL_USE')[0];
@@ -407,7 +409,6 @@
 
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/aop/ApiLoggingAspect.java`, createContentsByTemplate(LOGGING_AOP_TEMPLATE, templateData));
 
-                // console.log(createContentsByTemplate(SCHEMA_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}SaveRequest.java`, createContentsByTemplate(SAVE_REQUEST_TEMPLATE, templateData));
 
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}SearchRequest.java`, createContentsByTemplate(SEARCH_REQUEST_TEMPLATE, templateData));
@@ -427,11 +428,16 @@
                 zip.file(`${templateData.projectName}/src/main/resources/schema.sql`, createContentsByTemplate(SCHEMA_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/resources/mapper/${templateData.tableName}/${templateData.tablePascalName}Mapper.xml`, createContentsByTemplate(MAPPER_XML_TEMPLATE, templateData));
 
+                if (templateData.hasBcryptColumn) {
+                    zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/config/SecurityConfig.java`, createContentsByTemplate(SECURITY_CONFIG_TEMPLATE, templateData));
+                }
+
                 const content = await zip.generateAsync({ type: "blob" });
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(content);
                 link.download = `${templateData.projectName}.zip`;
                 link.click();
+                // console.log(createContentsByTemplate(MAPPER_XML_TEMPLATE, templateData));
             }
 
             generateButton.addEventListener('click', createSpringBootProject);

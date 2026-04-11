@@ -63,14 +63,14 @@ const MAPPER_XML_TEMPLATE =
     </insert>
 
     <select id="findBy{{#each pkColumns}}{{this.fieldPascalName}}{{/each}}" parameterType="{{#each pkColumns}}{{javaType}}{{/each}}" resultType="{{tablePascalName}}Response">
-        SELECT {{#each columns}}{{#unless @first}}             , {{/unless}}{{name}}
+        SELECT {{#each selectColumns}}{{#unless @first}}             , {{/unless}}{{name}}
                {{/each}}
           FROM {{tableScreamingSnakeName}}
          WHERE {{#each pkColumns}}{{name}} = #{ {{~fieldName~}} }{{#unless @last}} AND {{/unless}}{{/each}}
     </select>
 
     <select id="findAll" parameterType="{{tablePascalName}}SearchRequest" resultType="{{tablePascalName}}Response">
-        SELECT {{#each columns}}{{#unless @first}}             , {{/unless}}{{name}}
+        SELECT {{#each selectColumns}}{{#unless @first}}             , {{/unless}}{{name}}
                {{/each}}
           FROM {{tableScreamingSnakeName}}
         <include refid="whereConditions" />
