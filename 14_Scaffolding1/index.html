@@ -134,6 +134,7 @@
         <script src="./templates/schema.js"></script>
         <script src="./templates/mapper-xml.js"></script>
         <script src="./templates/logging-aop.js"></script>
+        <script src="./templates/error-reponse.js"></script>
 
         <script src="./scripts/case-converter.js"></script>
         <script src="./scripts/kok-table-decorator.js"></script>
@@ -308,12 +309,15 @@
                     newColumn.isUpdateTimestamp = c.type === 'UPDATE_TIMESTAMP';
                     newColumn.isString = c.getJavaType() === 'String';
                     newColumn.isLocalDateTime = c.getJavaType() === 'LocalDateTime';
+                    newColumn.isEncrypt = c.type === 'BCRYPT_VARCHAR';
+                    newColumn.isSort = c.type === 'LOGICAL_SORT';
                     newColumn.dbType = Column.TYPES[c.type].dbType;
                     newColumn.javaType = c.getJavaType();
                     newColumn.fieldName = toCamelCase(c.name);
                     newColumn.fieldPascalName = toPascalCase(c.name);
                     newColumn.name = toSnakeCase(c.name).toUpperCase();
                     newColumn.hasDefaultValue = c.defaultValue != null && c.defaultValue != '';
+                    newColumn.hasLength = c.length > 0;
 
                     return newColumn;
                 });
@@ -345,6 +349,8 @@
                         data.searchColumns.push(endDateColumn);
                     }
                 });
+                data.encryptColumns = data.columns.filter(c => c.isEncrypt);
+                data.sortColumns = data.columns.filter(c => c.isSort); 
                 data.updateColumns = data.columns.filter(c => !c.isCreateTimestamp && !c.pk);
                 data.requestColumns = data.columns.filter(c => !c.isCreateTimestamp && !c.isUpdateTimestamp);
                 data.searchColumns = data.searchColumns.filter(c => !c.isCreateTimestamp && !c.isUpdateTimestamp && !c.pk);
@@ -362,6 +368,8 @@
                 data.hasLogicalUseColumn = data.columns.filter(c => c.type === 'LOGICAL_USE').length > 0;
                 data.hasCreateTimeStampColumn = data.columns.filter(c => c.type === 'CREATE_TIMESTAMP').length > 0;
                 data.hasUpdateTimeStampColumn = data.columns.filter(c => c.type === 'UPDATE_TIMESTAMP').length > 0;
+                data.hasEncryptColumn = data.columns.filter(c => c.type === 'BCRYPT_VARCHAR').length > 0;
+                data.hasSortColumn = data.columns.filter(c => c.type === 'LOGICAL_SORT').length > 0;
 
                 data.logicalUseColumn = data.columns.filter(c => c.type === 'LOGICAL_USE')[0];
                 data.createTimeStampColumn = data.columns.filter(c => c.type === 'CREATE_TIMESTAMP')[0];
@@ -391,14 +399,15 @@
                 zip.file(`${templateData.projectName}/build.gradle`, createContentsByTemplate(BUILD_GRADLE_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/settings.gradle`, createContentsByTemplate(SETTINGS_GRADLE_TEMPLATE, templateData));
 
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/dto/ErrorResponse.java`, createContentsByTemplate(ERROR_RESPONSE_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/dto/PageRequest.java`, createContentsByTemplate(PAGE_REQUEST_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/dto/PageResponse.java`, createContentsByTemplate(PAGE_RESPONSE_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/utils/ExcelUtil.java`, createContentsByTemplate(EXCEL_UTIL_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/exception/GlobalExceptionHandler.java`, createContentsByTemplate(GLOBAL_EXCEPTION_HANDLER_TEMPLATE, templateData));
 
-                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/aop/ApiLoggingAspect.java`, createContentsByTemplate(LOGGING_AOP_TEMPLATE, templateData));
+                zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/common/aop/ApiLoggingAspect.java`, createContentsByTemplate(LOGGING_AOP_TEMPLATE, templateData));
 
-                // console.log(createContentsByTemplate(SAVE_REQUEST_TEMPLATE, templateData));
+                // console.log(createContentsByTemplate(SCHEMA_TEMPLATE, templateData));
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}SaveRequest.java`, createContentsByTemplate(SAVE_REQUEST_TEMPLATE, templateData));
 
                 zip.file(`${templateData.projectName}/src/main/java/com/${templateData.teamName}/${templateData.projectName}/${templateData.tableName}/dto/${templateData.tablePascalName}SearchRequest.java`, createContentsByTemplate(SEARCH_REQUEST_TEMPLATE, templateData));

@@ -27,11 +27,11 @@ mybatis.configuration.map-underscore-to-camel-case=true
 
 # XML에서 DTO 클래스를 참조할 때 패키지 경로를 생략하고 클래스명만 쓸 수 있게 해줍니다.
 # 미설정 시 XML의 resultType 등에 모든 패키지 경로(com.xxx...)를 다 적어야 해서 오타 확률이 높아집니다.
-mybatis.type-aliases-package=com.{{teamName}}.{{projectName}}.{{tableName}}.dto
+mybatis.type-aliases-package=com.{{teamName}}.{{projectName}}
 
 # [Logging]
 # 실행되는 SQL 쿼리와 파라미터를 콘솔에 출력합니다.
-logging.level.com.{{teamName}}.{{projectName}}.{{tableName}}.mapper=DEBUG
+logging.level.com.{{teamName}}.{{projectName}}=DEBUG
 
 # [JSON Formatting (Jackson)]
 # 응답 데이터 중 null인 필드는 JSON 결과에서 아예 제외합니다.

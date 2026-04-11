@@ -1,5 +1,5 @@
 const LOGGING_AOP_TEMPLATE =
-`package com.{{teamName}}.{{projectName}}.aop;
+`package com.{{teamName}}.{{projectName}}.common.aop;
 
 import java.util.HashMap;
 import java.util.Map;

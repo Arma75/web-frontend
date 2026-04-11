@@ -2,6 +2,7 @@ class Column {
     static TYPES = Object.freeze({
         CHAR: { dbType: 'CHAR', hasLength: true, hasPrecision: false },
         VARCHAR: { dbType: 'VARCHAR', hasLength: true, hasPrecision: false },
+        BCRYPT_VARCHAR: { dbType: 'VARCHAR', hasLength: true, defaultLength: 100, fixedLength: true, defaultName: 'PASSWORD', defaultComment: '패스워드', defaultPk: false, defaultUnique: false, defaultNullable: false, defaultAutoIncrement: false, fixedAutoIncrement: true },
         TEXT: { dbType: 'TEXT', hasLength: false, hasPrecision: false },
         INTEGER: { dbType: 'INTEGER', hasLength: false, hasPrecision: false },
         NUMERIC: { dbType: 'NUMERIC', hasLength: false, hasPrecision: true },
@@ -12,6 +13,7 @@ class Column {
         LOGICAL_USE: { dbType: 'CHAR', hasLength: true, defaultLength: 1, fixedLength: true, defaultAutoIncrement: false, fixedAutoIncrement: true, defaultName: 'USE_YN', defaultComment: '사용여부', defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'Y' },
         CREATE_TIMESTAMP: { dbType: 'TIMESTAMP', hasLength: false, hasPrecision: false, defaultLength: null, fixedAutoIncrement: true, defaultName: 'REG_DTM', defaultComment: '등록일시', defaultPk: false, fixedPk: true, defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'CURRENT_TIMESTAMP' },
         UPDATE_TIMESTAMP: { dbType: 'TIMESTAMP', hasLength: false, hasPrecision: false, defaultLength: null, fixedAutoIncrement: true, defaultName: 'UPD_DTM', defaultComment: '수정일시', defaultPk: false, fixedPk: true, defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'CURRENT_TIMESTAMP' },
+        LOGICAL_SORT: { dbType: 'INTEGER', hasLength: false, defaultAutoIncrement: false, fixedAutoIncrement: true, defaultName: 'SORT_NO', defaultComment: '정렬순서', defaultPk: false, fixedPk: true, defaultUnique: false, fixedUnique: true, defaultNullable: false, fixedNullable: true, defaultDefaultValue: '1' },
         // LOGICAL_DELETE: { hasLength: true, defaultLength: 1, fixedLength: true, defaultAutoIncrement: false, fixedAutoIncrement: true,defaultName: 'DEL_YN', defaultComment: '삭제여부', defaultNullable: false, fixedNullable: true, defaultDefaultValue: 'N' },
         
         // CHAR: { hasLength: true, hasPrecision: false },
@@ -46,6 +48,7 @@ class Column {
     static TYPE_TO_JAVA_MAP = Object.freeze({
         'CHAR': { javaType: 'String', import: null },
         'VARCHAR': { javaType: 'String', import: null },
+        'BCRYPT_VARCHAR': { javaType: 'String', import: null },
         'TEXT': { javaType: 'String', import: null },
         'INTEGER': { javaType: 'Integer', import: null },
         'NUMERIC': { javaType: 'BigDecimal', import: 'java.math.BigDecimal' },
@@ -56,6 +59,7 @@ class Column {
         'LOGICAL_USE': { javaType: 'String', import: null },
         'CREATE_TIMESTAMP': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime', 'org.springframework.format.annotation.DateTimeFormat'] },
         'UPDATE_TIMESTAMP': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime', 'org.springframework.format.annotation.DateTimeFormat'] },
+        'LOGICAL_SORT': { javaType: 'Integer', import: null },
         // 'LOGICAL_USE': { javaType: 'Boolean', import: null },
         // 'CREATE_DATETIME': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime'] },
         // 'UPDATE_DATETIME': { javaType: 'LocalDateTime', import: ['java.time.LocalDateTime'] },
