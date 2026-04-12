@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MasterSeed Admin | Icon Pack Applied</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232563eb'/><circle cx='50' cy='50' r='25' fill='white'/><path d='M50 35 L65 50 L50 65 L35 50 Z' fill='%232563eb'/></svg>">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Arma75/kok-input-decorator@main/kok-input-decorator.css">
+    <style>
+        :root { --primary: #2563eb; --sidebar: #1e293b; --border: #e2e8f0; --text-muted: #94a3b8; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; background: #f8fafc; color: #1e293b; }
+
+        /* 🚀 업그레이드된 로고 디자인 */
+        .logo-area { 
+            padding: 35px 30px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            border-bottom: 1px solid #1e293b;
+        }
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: white;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* 1단: 네비게이션 */
+        .nav-sidebar { width: 260px; background: var(--sidebar); color: var(--text-muted); display: flex; flex-direction: column; flex-shrink: 0; }
+        .logo { padding: 30px; color: white; font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #334155; }
+        .nav-section-label { padding: 25px 30px 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; font-weight: 700; }
+        .nav-item { padding: 14px 30px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.3s; font-size: 14px; }
+        .nav-item i { width: 18px; height: 18px; }
+        .nav-item:hover { background: #334155; color: white; }
+        .nav-item.active { background: #334155; color: white; border-left: 4px solid var(--primary); }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .top-bar { height: 65px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 35px; justify-content: space-between; }
+
+        /* 2단 & 3단 레이아웃 */
+        .content-body { display: flex; flex: 1; overflow: hidden; }
+
+        /* 2단: 리스트 섹션 */
+        .middle-section { width: 340px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        .section-header { padding: 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .list-item { padding: 20px 25px; border-bottom: 1px solid #f8fafc; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .list-item:hover { background: #f8fafc; }
+        .list-item.active { background: #eff6ff; border-right: 4px solid var(--primary); }
+        .list-item strong { display: block; font-size: 14px; color: #1e293b; margin-bottom: 4px; }
+        .list-item span { font-size: 12px; color: var(--text-muted); }
+
+        /* 3단: 상세 테이블 */
+        .detail-section { flex: 1; background: white; padding: 45px; overflow-y: auto; }
+        .detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 15px 12px; border-bottom: 2px solid #f1f5f9; color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .data-table td { padding: 18px 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+        /* 공통 버튼 & 배지 */
+        .btn { padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; border: 1px solid var(--border); background: white; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn i { width: 16px; height: 16px; }
+        .btn-primary { background: var(--primary); color: white; border: none; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .badge { padding: 4px 10px; background: #ecfdf5; color: #059669; border-radius: 20px; font-size: 11px; font-weight: 700; }
+
+        /* 모달 */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.6); z-index:100; justify-content:center; align-items:center; backdrop-filter: blur(4px); }
+        .modal-content { background:white; padding:40px; border-radius:16px; width:440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+    </style>
+</head>
+<body>
+
+    <aside class="nav-sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i data-lucide="component" style="width:20px; height:20px;"></i>
+            </div>
+            <div class="logo-text">MasterSeed</div>
+        </div>
+        <div class="nav-section-label">Management</div>
+        <div class="nav-item active" onclick="app.switchMode('GROUP')">
+            <i data-lucide="layers"></i> <span>그룹 코드 관리</span>
+        </div>
+        <div class="nav-item" onclick="app.switchMode('CODE')">
+            <i data-lucide="list-tree"></i> <span>상세 코드 관리</span>
+        </div>
+        
+        <div class="nav-section-label">Settings</div>
+        <div class="nav-item">
+            <i data-lucide="key"></i> <span>API Key 발급</span>
+        </div>
+        <div class="nav-item">
+            <i data-lucide="settings"></i> <span>시스템 설정</span>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="top-bar">
+            <div id="breadcrumb" style="color: #64748b; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="home" style="width:16px;"></i> <span>SYS</span> <i data-lucide="chevron-right" style="width:14px;"></i> <span id="current-path">Groups</span>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span class="badge"><i data-lucide="zap" style="width:12px; display:inline-block; vertical-align:middle; margin-right:4px;"></i> Public API Live</span>
+                <button class="btn"><i data-lucide="file-text"></i> API Docs</button>
+            </div>
+        </header>
+
+        <div class="content-body">
+            <section class="middle-section">
+                <div class="section-header">
+                    <strong id="middle-label" style="font-size: 16px;">Categories</strong>
+                    <button class="btn" style="padding: 6px;" onclick="app.addItem('PARENT')"><i data-lucide="plus"></i></button>
+                </div>
+                <div id="parent-list" style="overflow-y: auto;">
+                    </div>
+            </section>
+
+            <section class="detail-section">
+                <div class="detail-header">
+                    <div>
+                        <h2 id="detail-title" style="margin:0; font-size: 26px; font-weight: 800;">그룹 목록</h2>
+                        <p id="detail-desc" style="color:#94a3b8; margin:8px 0 0; font-size: 15px;">선택된 부모 범주에 포함된 하위 데이터를 편집합니다.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="app.addItem('CHILD')">
+                        <i data-lucide="plus-circle"></i> 데이터 추가
+                    </button>
+                </div>
+                
+                <div style="background: white; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+                    <table class="data-table">
+                        <thead id="table-head"></thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title" style="margin-top:0; font-size: 20px;">데이터 추가</h3>
+            <div id="modal-fields" style="margin-top: 25px;"></div>
+            <div style="margin-top:35px; display:flex; gap:12px;">
+                <button class="btn btn-primary" style="flex:1; justify-content: center;" onclick="app.saveItem()">저장하기</button>
+                <button class="btn" style="flex:1; justify-content: center;" onclick="app.closeModal()">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lucide 아이콘 초기화
+        const refreshIcons = () => lucide.createIcons();
+
+        const app = {
+            mode: 'GROUP',
+            selectedParent: null,
+            db: {
+                categories: [{ id: 'SYS', name: '시스템 Domain' }, { id: 'USER', name: '사용자 Domain' }],
+                groups: [
+                    { pid: 'SYS', id: 'ERR_CD', name: '표준 에러 코드', attr: 'System-wide', status: 'Active' },
+                    { pid: 'USER', id: 'USR_STAT', name: '회원 상태 구분', attr: 'Status-base', status: 'Active' }
+                ],
+                codes: [
+                    { pid: 'ERR_CD', id: 'E001', name: '중복 아이디', attr: '400', status: 'Active' },
+                    { pid: 'ERR_CD', id: 'E002', name: '인증 만료', attr: '401', status: 'Active' }
+                ]
+            },
+
+            switchMode(mode) {
+                this.mode = mode;
+                document.querySelectorAll('.nav-item').forEach((el, i) => el.classList.toggle('active', (mode === 'GROUP' ? i===0 : i===1)));
+                document.getElementById('middle-label').innerText = mode === 'GROUP' ? 'Categories' : 'Groups';
+                this.renderParents();
+                refreshIcons();
+                this.selectParent(document.querySelectorAll('.list-item')[0].querySelector('strong').innerText);
+            },
+
+            renderParents() {
+                const list = document.getElementById('parent-list');
+                const data = this.mode === 'GROUP' ? this.db.categories : this.db.groups;
+                list.innerHTML = data.map(item => `
+                    <div class="list-item ${this.selectedParent === item.id ? 'active' : ''}" onclick="app.selectParent('${item.id}')">
+                        <div>
+                            <strong>${item.id}</strong>
+                            <span>${item.name}</span>
+                        </div>
+                        <i data-lucide="chevron-right" style="width:16px; color:#cbd5e1;"></i>
+                    </div>
+                `).join('');
+                if(!this.selectedParent && data.length > 0) this.selectParent(data[0].id);
+                refreshIcons();
+            },
+
+            selectParent(id) {
+                this.selectedParent = id;
+                this.renderParents();
+                document.getElementById('current-path').innerText = id;
+                document.getElementById('detail-title').innerText = `${id} 상세 관리`;
+                this.renderTable();
+            },
+
+            renderTable() {
+                const head = document.getElementById('table-head');
+                const body = document.getElementById('table-body');
+                const data = (this.mode === 'GROUP' ? this.db.groups : this.db.codes).filter(i => i.pid === this.selectedParent);
+
+                head.innerHTML = `<tr><th>ID</th><th>NAME</th><th>ATTRIBUTE</th><th>STATUS</th><th>ACTIONS</th></tr>`;
+                body.innerHTML = data.map(i => `
+                    <tr>
+                        <td><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px;">${i.id}</code></td>
+                        <td style="font-weight:600;">${i.name}</td>
+                        <td><span style="color:#64748b;">${i.attr}</span></td>
+                        <td><span class="badge" style="background:#f0fdf4; color:#16a34a;">${i.status}</span></td>
+                        <td>
+                            <button class="btn" style="padding:4px;" onclick="app.deleteItem('${i.id}')"><i data-lucide="trash-2" style="width:14px; color:#ef4444;"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+                refreshIcons();
+            },
+
+            addItem(target) {
+                document.getElementById('modal').style.display = 'flex';
+                document.getElementById('modal-title').innerText = target === 'PARENT' ? '상위 범주 추가' : '하위 데이터 추가';
+                document.getElementById('modal-fields').innerHTML = `
+                    <article class="kok-input-group" data-layout="vertical">
+                        <label class="kok-input-label">식별 ID (Unique)</label>
+                        <input type="text" id="new-id" class="kok-input-field" placeholder="예: NEW_CD">
+                    </article>
+                    <article class="kok-input-group" data-layout="vertical" style="margin-top:20px;">
+                        <label class="kok-input-label">표시 이름</label>
+                        <input type="text" id="new-name" class="kok-input-field" placeholder="표시될 명칭">
+                    </article>
+                `;
+                this.addTmp = target;
+                refreshIcons();
+            },
+
+            saveItem() {
+                const id = document.getElementById('new-id').value;
+                const name = document.getElementById('new-name').value;
+                if(!id || !name) return alert('모든 필드를 입력해주세요.');
+
+                if(this.addTmp === 'PARENT') {
+                    const targetDb = this.mode === 'GROUP' ? this.db.categories : this.db.groups;
+                    targetDb.push({ id, name, pid: 'SYS' });
+                } else {
+                    const targetDb = this.mode === 'GROUP' ? this.db.groups : this.db.codes;
+                    targetDb.push({ pid: this.selectedParent, id, name, attr: 'New Data', status: 'Active' });
+                }
+                this.closeModal();
+                this.renderParents();
+                this.renderTable();
+            },
+
+            deleteItem(id) {
+                if(!confirm('정말 삭제하시겠습니까?')) return;
+                const targetDb = this.mode === 'GROUP' ? this.db.groups : this.db.codes;
+                const idx = targetDb.findIndex(i => i.id === id);
+                if(idx > -1) targetDb.splice(idx, 1);
+                this.renderTable();
+            },
+
+            closeModal() { document.getElementById('modal').style.display = 'none'; }
+        };
+
+        window.onload = () => app.switchMode('GROUP');
+    </script>
+</body>
+</html>

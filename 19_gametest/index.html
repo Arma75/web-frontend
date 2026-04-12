@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>High-Detail Procedural RPG</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #050505; font-family: 'Segoe UI', sans-serif; color: #eee; user-select: none; }
+        
+        /* 커스터마이징 화면 구성 */
+        #setup-screen { position: absolute; width: 100%; height: 100%; display: flex; background: #111; z-index: 100; }
+        #menu-panel { width: 350px; background: #1a1a1a; padding: 40px; border-right: 1px solid #333; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+        #view-panel { flex: 1; position: relative; background: radial-gradient(circle, #222 0%, #050505 100%); }
+        
+        .section-title { color: #ff4444; font-size: 0.8em; letter-spacing: 3px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 0.85em; color: #aaa; }
+        
+        /* 커스텀 UI 스타일 */
+        input[type="color"] { border: 1px solid #444; width: 100%; height: 35px; cursor: pointer; background: #222; padding: 2px; border-radius: 4px; }
+        select, input[type="range"] { background: #222; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 4px; width: 100%; font-size: 0.9em; }
+        
+        .start-btn { 
+            margin-top: auto; padding: 18px; background: linear-gradient(135deg, #8b0000 0%, #ff1111 100%); 
+            color: white; border: none; cursor: pointer; font-weight: bold; font-size: 1.1em; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(255,0,0,0.3); transition: all 0.2s;
+        }
+        .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,0,0,0.5); }
+
+        /* 인게임 UI */
+        #in-game-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+        #hud { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; }
+        .orb { width: 130px; height: 130px; border-radius: 50%; border: 5px solid #2a2a2a; position: relative; overflow: hidden; background: #050505; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+        .fill { position: absolute; bottom: 0; width: 100%; transition: height 0.3s; }
+        #hp-fill { background: radial-gradient(circle at 30% 30%, #ff5555, #600); height: 100%; box-shadow: 0 0 15px rgba(255,0,0,0.6); }
+        #exp-fill { background: radial-gradient(circle at 30% 30%, #55ccff, #004466); height: 5%; box-shadow: 0 0 15px rgba(0,200,255,0.6); }
+    </style>
+</head>
+<body>
+
+    <div id="setup-screen">
+        <div id="menu-panel">
+            <h1 style="text-align:center; color:white; margin-bottom:30px; letter-spacing:1px;">성역의 전사 생성</h1>
+            
+            <div class="section-title">외형 (Appearance)</div>
+            <div class="control-group">
+                <label>얼굴 형태</label>
+                <select id="face-type" onchange="updatePreview()">
+                    <option value="standard">일반형</option>
+                    <option value="strong">각진형</option>
+                    <option value="slim">슬림형</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>헤어 스타일</label>
+                <select id="hair-style" onchange="updatePreview()">
+                    <option value="short">숏컷 (Brown)</option>
+                    <option value="long">긴머리 (Black)</option>
+                    <option value="mohawk">모히칸 (Red)</option>
+                    <option value="ponytail">포니테일</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>피부톤</label>
+                <input type="color" id="skin-color" value="#ffdbac" onchange="updatePreview()">
+            </div>
+
+            <div class="section-title">장비 (Equipment)</div>
+            <div class="control-group">
+                <label>상의 색상</label>
+                <input type="color" id="shirt-color" value="#333333" onchange="updatePreview()">
+            </div>
+            <div class="control-group">
+                <label>하의 색상</label>
+                <input type="color" id="pants-color" value="#222222" onchange="updatePreview()">
+            </div>
+            <div class="control-group">
+                <label>무기</label>
+                <select id="weapon-type" onchange="updatePreview()">
+                    <option value="sword">강철 검</option>
+                    <option value="axe">전투 도끼</option>
+                </select>
+            </div>
+
+            <button class="start-btn" onclick="startGame()">모험 시작</button>
+        </div>
+        <div id="view-panel">
+            </div>
+    </div>
+
+    <div id="in-game-ui">
+        <div id="hud">
+            <div class="orb"><div id="hp-fill" class="fill"></div></div>
+            <div class="orb"><div id="exp-fill" class="fill"></div></div>
+        </div>
+    </div>
+
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+
+        window.updatePreview = () => {
+            if(previewPlayer) previewScene.remove(previewPlayer);
+            previewPlayer = createDetailedHumanoid(getCustomConfig());
+            previewPlayer.position.y = 0;
+            previewScene.add(previewPlayer);
+        }
+
+        let scene, camera, renderer, clock;
+        let previewScene, previewCamera, previewRenderer, previewPlayer; // 프리뷰용
+        let player, ground, torch, dungeon;
+        let monsters = [];
+        let keys = {};
+        let isAttacking = false;
+        let isGameRunning = false;
+
+        // 초기 실행: 프리뷰 화면 구성
+        initPreview();
+
+        // ---------------------------------------------------------
+        // PART 1: 디테일한 인체 모델 생성 (Procedural Humanoid)
+        // ---------------------------------------------------------
+        function createDetailedHumanoid(config) {
+            const group = new THREE.Group();
+            
+            // 머티리얼 설정
+            const skinMat = new THREE.MeshStandardMaterial({ color: config.skinColor, roughness: 0.6 });
+            const shirtMat = new THREE.MeshStandardMaterial({ color: config.shirtColor, roughness: 0.8 });
+            const pantsMat = new THREE.MeshStandardMaterial({ color: config.pantsColor, roughness: 0.8 });
+            const metalMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.9, roughness: 0.2 });
+
+            // [1] 몸통 (Torso) - 근육질의 흉부 표현
+            const torsoGeometry = new THREE.CylinderGeometry(0.28, 0.18, 0.65, 10);
+            const torso = new THREE.Mesh(torsoGeometry, shirtMat);
+            torso.position.y = 1.25;
+            torso.scale.set(1.2, 1, 0.8); // 약간 납작하게
+            group.add(torso);
+
+            // [2] 머리 (Head) & 얼굴 형태
+            let headGeo;
+            if(config.faceType === 'strong') headGeo = new THREE.BoxGeometry(0.28, 0.3, 0.28);
+            else if(config.faceType === 'slim') headGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.3, 8);
+            else headGeo = new THREE.SphereGeometry(0.16, 16, 12); // standard
+
+            const head = new THREE.Mesh(headGeo, skinMat);
+            head.position.y = 1.7;
+            group.add(head);
+
+            // [3] 헤어 스타일
+            let hairMat = new THREE.MeshStandardMaterial({color: 0x221100}); // Default Brown
+            let hairGeo;
+            if(config.hairStyle === 'short') { hairGeo = new THREE.SphereGeometry(0.17, 16, 6, 0, Math.PI*2, 0, Math.PI/2); }
+            else if(config.hairStyle === 'long') { hairGeo = new THREE.CylinderGeometry(0.17, 0.15, 0.4, 12); hairMat.color.set(0x050505); }
+            else if(config.hairStyle === 'mohawk') { hairGeo = new THREE.BoxGeometry(0.06, 0.25, 0.35); hairMat.color.set(0x880000); }
+            else if(config.hairStyle === 'ponytail') {
+                hairGeo = new THREE.Group();
+                const base = new THREE.Mesh(new THREE.SphereGeometry(0.17, 16, 6, 0, Math.PI*2, 0, Math.PI/2), hairMat);
+                const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.02, 0.5), hairMat);
+                tail.position.set(0, -0.2, -0.2); tail.rotation.x = -0.5;
+                hairGeo.add(base, tail);
+            }
+            if(hairGeo) {
+                const hair = hairGeo instanceof THREE.Group ? hairGeo : new THREE.Mesh(hairGeo, hairMat);
+                hair.position.y = config.hairStyle === 'long' ? 1.6 : 1.75;
+                if(config.hairStyle === 'mohawk') hair.position.z = 0.05;
+                group.add(hair);
+            }
+
+            // [4] 다리 (Legs) - 근육 볼륨감 표현
+            function createLeg(isLeft) {
+                const legGroup = new THREE.Group();
+                // 허벅지 (Thigh)
+                const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.08, 0.45, 8), pantsMat);
+                thigh.position.y = -0.225; group.add(thigh);
+                // 종아리 (Calf)
+                const calf = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.06, 0.45, 8), pantsMat);
+                calf.position.y = -0.675; thigh.add(calf);
+                // 발 (Foot)
+                const foot = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.08, 0.25), skinMat);
+                foot.position.set(0, -0.25, 0.05); calf.add(foot);
+                
+                legGroup.add(thigh);
+                legGroup.position.set(isLeft ? -0.14 : 0.14, 0.9, 0);
+                return legGroup;
+            }
+            group.leftLeg = createLeg(true); group.add(group.leftLeg);
+            group.rightLeg = createLeg(false); group.add(group.rightLeg);
+
+            // [5] 팔 (Arms) - 관절 구조
+            function createArm(isLeft) {
+                const armGroup = new THREE.Group();
+                // 상완 (Upper Arm / Bicep)
+                const upperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.35, 8), skinMat);
+                upperArm.position.y = -0.175;
+                // 전완 (Forearm)
+                const foreArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.35, 8), skinMat);
+                foreArm.position.y = -0.35; upperArm.add(foreArm);
+                // 손 (Hand)
+                const hand = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), skinMat);
+                hand.position.y = -0.2; foreArm.add(hand);
+
+                armGroup.add(upperArm);
+                armGroup.position.set(isLeft ? -0.38 : 0.38, 1.45, 0);
+                if(isLeft) armGroup.rotation.z = 0.1; else armGroup.rotation.z = -0.1;
+                return armGroup;
+            }
+            group.leftArm = createArm(true); group.add(group.leftArm);
+            group.rightArm = createArm(false); group.add(group.rightArm);
+
+            // [6] 무기 (Weapon)
+            const weaponType = config.weaponType;
+            let weapon;
+            if(weaponType === 'sword') {
+                weapon = new THREE.Group();
+                const blade = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.0, 0.12), metalMat);
+                blade.position.y = 0.5;
+                const guard = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.03, 0.05), metalMat);
+                const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.25), hairMat);
+                handle.position.y = -0.125;
+                weapon.add(blade, guard, handle);
+            } else { // axe
+                weapon = new THREE.Group();
+                const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.9), hairMat);
+                const blade = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.03, 3), metalMat); // 삼각형 대용
+                blade.rotation.z = Math.PI/2; blade.position.set(0.1, 0.35, 0);
+                weapon.add(handle, blade);
+            }
+            weapon.position.set(0, -0.4, 0.3); // 손 위치에 맞춤
+            weapon.rotation.x = Math.PI / 2;
+            group.rightArm.children[0].children[0].children[0].add(weapon); // Right Hand에 추가
+
+            group.traverse(n => { if(n.isMesh) n.castShadow = true; });
+            return group;
+        }
+
+        window.updatePreview = () => {
+            if(previewPlayer) previewScene.remove(previewPlayer);
+            previewPlayer = createDetailedHumanoid(getCustomConfig());
+            previewPlayer.position.y = 0;
+            previewScene.add(previewPlayer);
+        }
+
+        // ---------------------------------------------------------
+        // PART 2: 커스터마이징 프리뷰 로직
+        // ---------------------------------------------------------
+        function initPreview() {
+            const container = document.getElementById('view-panel');
+            previewScene = new THREE.Scene();
+            previewCamera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+            previewCamera.position.set(0, 1.3, 3);
+            previewCamera.lookAt(0, 1.1, 0);
+
+            previewRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            previewRenderer.setSize(container.clientWidth, container.clientHeight);
+            previewRenderer.shadowMap.enabled = true;
+            container.appendChild(previewRenderer.domElement);
+
+            // 조명 (프리뷰용은 밝게)
+            previewScene.add(new THREE.AmbientLight(0xffffff, 0.8));
+            const light = new THREE.DirectionalLight(0xffffff, 1.0);
+            light.position.set(2, 4, 3);
+            light.castShadow = true;
+            previewScene.add(light);
+
+            updatePreview(); // 최초 1회 생성
+            animatePreview();
+        }
+
+        function getCustomConfig() {
+            return {
+                faceType: document.getElementById('face-type').value,
+                hairStyle: document.getElementById('hair-style').value,
+                skinColor: document.getElementById('skin-color').value,
+                shirtColor: document.getElementById('shirt-color').value,
+                pantsColor: document.getElementById('pants-color').value,
+                weaponType: document.getElementById('weapon-type').value,
+            };
+        }
+
+        function animatePreview() {
+            if(isGameRunning) return;
+            requestAnimationFrame(animatePreview);
+            if(previewPlayer) previewPlayer.rotation.y += 0.005; // 천천히 회전
+            previewRenderer.render(previewScene, previewCamera);
+        }
+
+        // window resize 대응
+        window.addEventListener('resize', () => {
+            if(!isGameRunning) {
+                const container = document.getElementById('view-panel');
+                previewCamera.aspect = container.clientWidth / container.clientHeight;
+                previewCamera.updateProjectionMatrix();
+                previewRenderer.setSize(container.clientWidth, container.clientHeight);
+            } else {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
+
+        // ---------------------------------------------------------
+        // PART 3: 인게임 로직
+        // ---------------------------------------------------------
+        window.startGame = () => {
+            isGameRunning = true;
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('in-game-ui').style.display = 'block';
+            
+            initGameWorld();
+        }
+
+        function initGameWorld() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+            scene.fog = new THREE.Fog(0x0a0a0a, 5, 35); // 분위기 있는 안개
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            document.body.appendChild(renderer.domElement);
+
+            clock = new THREE.Clock();
+
+            // [1] 밝고 디테일한 배경 (Dungeon Structure)
+            // 전역 조명을 밝혀 배경이 보이게 함
+            scene.add(new THREE.AmbientLight(0xffffff, 0.4)); // 기본 밝기 확보
+
+            // 바닥 (석판 느낌)
+            const floorGeo = new THREE.PlaneGeometry(100, 100, 20, 20);
+            const floorMat = new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 1.0, wireframe: false });
+            // 텍스처 대용으로 그리드 패턴 적용
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            // 벽 & 기둥 배치 (어두운 미로 분위기)
+            dungeon = new THREE.Group();
+            const wallMat = new THREE.MeshStandardMaterial({color: 0x222222, roughness: 1.0});
+            for(let i=0; i<30; i++) {
+                const wall = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 0.5), wallMat);
+                wall.position.set(Math.random()*60-30, 1.5, Math.random()*60-30);
+                wall.rotation.y = Math.random() < 0.5 ? 0 : Math.PI/2;
+                wall.castShadow = true; wall.receiveShadow = true;
+                dungeon.add(wall);
+
+                const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 3, 8), wallMat);
+                pillar.position.set(wall.position.x + (Math.random()-0.5)*2, 1.5, wall.position.z + (Math.random()-0.5)*2);
+                pillar.castShadow = true; pillar.receiveShadow = true;
+                dungeon.add(pillar);
+            }
+            scene.add(dungeon);
+
+            // [2] 플레이어 생성
+            player = createDetailedHumanoid(getCustomConfig());
+            player.position.y = 0;
+            scene.add(player);
+
+            // 횃불 조명 (캐릭터 추적)
+            torch = new THREE.PointLight(0xff7700, 30, 20); // 따뜻하고 강한 불빛
+            torch.castShadow = true;
+            torch.shadow.mapSize.width = 1024; torch.shadow.mapSize.height = 1024;
+            scene.add(torch);
+
+            // [3] 컨트롤 및 몬스터
+            window.addEventListener('keydown', e => keys[e.code] = true);
+            window.addEventListener('keyup', e => keys[e.code] = false);
+            window.addEventListener('mousedown', performAttack);
+
+            for(let i=0; i<15; i++) spawnMonster();
+
+            animateGame();
+        }
+
+        function spawnMonster() {
+            const m = new THREE.Group();
+            // 몬스터는 좀 더 괴물같이
+            const body = new THREE.Mesh(new THREE.DodecahedronGeometry(0.5), new THREE.MeshStandardMaterial({color: 0x440000}));
+            body.position.y = 0.7;
+            m.add(body);
+            // 빛나는 눈
+            const eyeGeo = new THREE.SphereGeometry(0.05);
+            const eyeMat = new THREE.MeshBasicMaterial({color: 0xff0000});
+            const e1 = new THREE.Mesh(eyeGeo, eyeMat); e1.position.set(0.15, 0.9, 0.4);
+            const e2 = new THREE.Mesh(eyeGeo, eyeMat); e2.position.set(-0.15, 0.9, 0.4);
+            m.add(e1, e2);
+            
+            m.position.set(Math.random()*50-25, 0, Math.random()*50-25);
+            m.userData = { hp: 100 };
+            m.lookAt(0, 0, 0);
+            scene.add(m);
+            monsters.push(m);
+        }
+
+        function performAttack() {
+            if(isAttacking) return;
+            isAttacking = true;
+            
+            // 역동적인 공격 애니메이션 (팔 휘두르기 + 몸 회전)
+            const startArmRot = player.rightArm.rotation.x;
+            const startBodyRot = player.rotation.y;
+            
+            let t = 0;
+            const ani = setInterval(() => {
+                t += 0.2;
+                player.rightArm.rotation.x = -Math.sin(t * 3) * 1.8; // 크게 휘두름
+                player.rotation.y += Math.sin(t * 3) * 0.1; // 몸 회전 반동
+
+                if(t > 1.2) {
+                    clearInterval(ani);
+                    player.rightArm.rotation.x = startArmRot;
+                    // player.rotation.y = startBodyRot; // 회전은 유지
+                    isAttacking = false;
+                }
+            }, 20);
+
+            // 타격 판정
+            monsters.forEach((m, idx) => {
+                if(player.position.distanceTo(m.position) < 2.5) {
+                    m.userData.hp -= 40;
+                    m.position.y += 0.3; // 피격 반동
+                    setTimeout(() => m.position.y = 0, 100);
+                    if(m.userData.hp <= 0) {
+                        scene.remove(m);
+                        monsters.splice(idx, 1);
+                        updateExp();
+                        spawnMonster();
+                    }
+                }
+            });
+        }
+
+        function updateExp() {
+            const expFill = document.getElementById('exp-fill');
+            let current = parseInt(expFill.style.height) || 5;
+            expFill.style.height = (current + 10) + '%';
+        }
+
+        function animateGame() {
+            requestAnimationFrame(animateGame);
+            const delta = clock.getElapsedTime();
+            const time = clock.getDelta();
+
+            // 플레이어 컨트롤 & 애니메이션
+            let moving = false;
+            const speed = 0.15;
+            if(keys['KeyW']) { player.translateZ(speed); moving = true; }
+            if(keys['KeyS']) { player.translateZ(-speed); moving = true; }
+            if(keys['KeyA']) player.rotation.y += 0.05;
+            if(keys['KeyD']) player.rotation.y -= 0.05;
+
+            if(moving) {
+                // [보행 애니메이션] 다리 교차 + 팔 흔들기 + 몸통 반동(수학적 구현)
+                const walkSpeed = 12;
+                player.leftLeg.rotation.x = Math.sin(delta * walkSpeed) * 0.6;
+                player.rightLeg.rotation.x = -Math.sin(delta * walkSpeed) * 0.6;
+                player.leftArm.rotation.x = -Math.sin(delta * walkSpeed) * 0.4; // 다리와 반대로 흔듦
+                // player.rightArm은 무기 때문에 고정 혹은 공격 시에만 움직임
+
+                // 몸통 반동 (위아래 + 좌우 흔들림)
+                player.position.y = Math.abs(Math.cos(delta * walkSpeed)) * 0.08; 
+                player.rotation.z = Math.sin(delta * walkSpeed * 0.5) * 0.02;
+            } else if(!isAttacking) {
+                // 대기 상태 모션 (숨쉬기)
+                player.leftLeg.rotation.x = 0; player.rightLeg.rotation.x = 0;
+                player.leftArm.rotation.x = 0;
+                player.position.y = Math.sin(delta * 2) * 0.02; // 아주 미세하게 위아래로
+            }
+
+            // 카메라 3인칭 추적
+            const camOffset = new THREE.Vector3(0, 4.5, -7).applyQuaternion(player.quaternion);
+            camera.position.lerp(player.position.clone().add(camOffset), 0.08);
+            camera.lookAt(player.position.clone().add(new THREE.Vector3(0, 1.2, 0)));
+
+            // 횃불 조명 추적
+            torch.position.copy(player.position).add(new THREE.Vector3(0, 2.5, 0));
+
+            // 몬스터 AI (플레이어 추적)
+            monsters.forEach(m => {
+                if(m.position.distanceTo(player.position) < 15 && m.position.distanceTo(player.position) > 1) {
+                    m.lookAt(player.position.x, 0, player.position.z);
+                    m.translateZ(0.05);
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
