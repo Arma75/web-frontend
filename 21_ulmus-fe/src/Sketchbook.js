@@ -81,6 +81,9 @@ function Sketchbook() {
   });
   // [추가] 드래그 앤 드롭 상태 관리
   const [draggedIdx, setDraggedIdx] = useState(null);
+  
+  const [sqlPreview, setSqlPreview] = useState('');
+  const [isSqlModalOpen, setIsSqlModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -99,6 +102,26 @@ function Sketchbook() {
     };
     fetchDetail();
   }, [id]);
+
+  // [추가] SQL 생성 API 호출 함수
+  const generateSql = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const schemaData = { nodes, edges }; // 현재 상태의 데이터
+      
+      const res = await axios.post(
+        'http://localhost:8080/api/blueprints/codes/schema-sql', 
+        schemaData, // JSON 데이터 전송
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      setSqlPreview(res.data); // 서버에서 온 String SQL 저장
+      setIsSqlModalOpen(true); // 미리보기 모달 열기
+    } catch (e) {
+      console.error("SQL Generation Error:", e);
+      alert("SQL 생성 중 오류가 발생했습니다.");
+    }
+  };
 
   // [추가] 컬럼 삭제 함수
   const deleteColumn = (index) => {
@@ -320,10 +343,54 @@ function Sketchbook() {
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#d1d1d1" /><Controls />
         </ReactFlow>
         <div style={styles.actionGroup} onMouseDown={(e) => e.stopPropagation()}>
+          {/* [추가] SQL 미리보기 버튼 */}
+          <button onClick={generateSql} style={{...styles.fab, backgroundColor: '#10b981', marginBottom: '8px'}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px', verticalAlign: 'middle'}}>
+              <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" />
+            </svg>
+            Generate SQL
+          </button>
+          
           {nodes.some(n => n.selected) && <button onClick={deleteSelectedNodes} style={styles.delBtn}>Delete Selected ({nodes.filter(n => n.selected).length})</button>}
           <button onClick={() => setIsModalOpen(true)} style={styles.fab}>+ Add Table</button>
         </div>
       </div>
+
+      {isSqlModalOpen && (
+        <div style={styles.overlay}>
+          <div style={{...styles.modal, width: '800px'}}>
+            <div style={styles.modalHeader}>
+              <h3 style={{margin:0}}>Schema SQL Preview</h3>
+              <button onClick={() => setIsSqlModalOpen(false)} style={styles.closeX}>✕</button>
+            </div>
+            <div style={{...styles.modalBody, backgroundColor: '#1e293b'}}>
+              <pre style={{
+                color: '#f8fafc', 
+                padding: '20px', 
+                overflow: 'auto', 
+                fontSize: '13px', 
+                lineHeight: '1.6',
+                margin: 0,
+                fontFamily: 'monospace'
+              }}>
+                {sqlPreview}
+              </pre>
+            </div>
+            <div style={styles.footer}>
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(sqlPreview);
+                  alert("클립보드에 복사되었습니다!");
+                }} 
+                style={{...styles.confirmBtn, backgroundColor: '#10b981'}}
+              >
+                Copy to Clipboard
+              </button>
+              <button onClick={() => setIsSqlModalOpen(false)} style={styles.cancelBtn}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isModalOpen && (
         <div style={styles.overlay}>

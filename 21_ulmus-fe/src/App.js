@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Sketchbook from './Sketchbook';
+import AiChat from './components/chat/AiChat';
 
 function App() {
   return (
@@ -10,6 +11,9 @@ function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/project/:id" element={<Sketchbook />} />
       </Routes>
+      
+      {/* 🚀 모든 화면 위로 뜨는 글로벌 AI 채팅창 */}
+      <AiChat />
     </Router>
   );
 }
