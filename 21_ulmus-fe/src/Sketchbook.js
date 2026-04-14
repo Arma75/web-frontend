@@ -1,30 +1,107 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import ReactFlow, { 
   addEdge, Background, Controls, applyNodeChanges, applyEdgeChanges, 
-  Handle, Position, BackgroundVariant 
+  Handle, Position, BackgroundVariant, MarkerType
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getBezierPath, EdgeLabelRenderer } from 'reactflow';
+
+const RelationEdge = ({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  style = {},
+  markerEnd,
+  data,
+}) => {
+  // 선의 경로를 계산
+  const [edgePath, labelX, labelY] = getBezierPath({
+    sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition,
+  });
+
+  return (
+    <>
+      <path id={id} style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            pointerEvents: 'all', // 중요: 여기서 이벤트를 잡아야 함
+          }}
+          className="nodrag nopan"
+        >
+          <select
+            value={data?.relationType || '1:1'}
+            onChange={(e) => {
+               // 이 부분은 Sketchbook 컴포넌트의 setEdges를 호출하도록 설계해야 합니다.
+               // 혹은 전역 이벤트를 활용합니다.
+               window.dispatchEvent(new CustomEvent('edge-type-change', { 
+                 detail: { id, type: e.target.value } 
+               }));
+            }}
+            style={{ fontSize: '10px', borderRadius: '4px', border: '1px solid #3b82f6' }}
+          >
+            <option value="1:1">1:1</option>
+            <option value="N:1">N:1</option>
+          </select>
+        </div>
+      </EdgeLabelRenderer>
+    </>
+  );
+};
+
+// ReactFlow에 등록할 edgeTypes
+const edgeTypes = {
+  relation: RelationEdge,
+};
+
+// --- [엣지 라벨용 콤보박스 컴포넌트] ---
+const EdgeLabelSelect = ({ edgeId, currentType, setEdges }) => (
+  <select
+    value={currentType}
+    // 클릭 시 엣지가 선택되거나 드래그되는 이벤트 전파 방지
+    onClick={(e) => e.stopPropagation()} 
+    onChange={(e) => {
+      const nextType = e.target.value;
+      setEdges((eds) =>
+        eds.map((edge) =>
+          edge.id === edgeId 
+            ? { 
+                ...edge, 
+                data: { ...edge.data, relationType: nextType }, 
+                // 변경된 값으로 자기 자신(label)을 다시 업데이트
+                label: <EdgeLabelSelect edgeId={edgeId} currentType={nextType} setEdges={setEdges} /> 
+              } 
+            : edge
+        )
+      );
+    }}
+    style={{
+      fontSize: '10px',
+      padding: '2px',
+      borderRadius: '4px',
+      border: '1px solid #3b82f6',
+      backgroundColor: '#fff',
+      cursor: 'pointer',
+      zIndex: 1001,
+      position: 'relative'
+    }}
+  >
+    <option value="1:1">1:1</option>
+    <option value="N:1">N:1</option>
+  </select>
+);
 
 // --- [커스텀 노드 디자인] ---
 const TableNode = ({ data }) => (
   <div style={styles.nodeContainer}>
-    {/* 상단 핸들 (Target & Source 겸용을 위해 2개를 겹치거나 타입을 유연하게 설정) */}
-    <Handle type="target" position={Position.Top} id="t" style={styles.handleStyle} />
-    <Handle type="source" position={Position.Top} id="t-s" style={{ ...styles.handleStyle, opacity: 0 }} />
-
-    {/* 하단 핸들 */}
-    <Handle type="target" position={Position.Bottom} id="b" style={styles.handleStyle} />
-    <Handle type="source" position={Position.Bottom} id="b-s" style={{ ...styles.handleStyle, opacity: 0 }} />
-
-    {/* 좌측 핸들 */}
-    <Handle type="target" position={Position.Left} id="l" style={styles.handleStyle} />
-    <Handle type="source" position={Position.Left} id="l-s" style={{ ...styles.handleStyle, opacity: 0 }} />
-
-    {/* 우측 핸들 */}
-    <Handle type="target" position={Position.Right} id="r" style={styles.handleStyle} />
-    <Handle type="source" position={Position.Right} id="r-s" style={{ ...styles.handleStyle, opacity: 0 }} />
     <div style={styles.nodeHeader}>
       <div>{data.label}</div>
       {data.tableComment && (
@@ -36,16 +113,30 @@ const TableNode = ({ data }) => (
     {/* <div style={styles.nodeHeader}>{data.label}</div> */}
     <div style={styles.nodeBody}>
       {data.columns?.map((col, i) => (
-        <div key={i} style={styles.nodeRow}>
+        <div key={i} style={{...styles.nodeRow, position: 'relative'}}>
+          {/* 왼쪽 핸들: 타겟 (부모 역할을 하는 컬럼) */}
+          <Handle
+            type="target"
+            position={Position.Left}
+            id={`t-${i}`} // 컬럼 인덱스나 고유 ID를 부여
+            style={{ top: '50%', transform: 'translateY(-50%)' }}
+          />
           <span style={{...styles.nodeColName, fontWeight: col.isPk ? 'bold' : 'normal'}}>
             {col.isPk ? '🔑 ' : ''}{col.name}
           </span>
           <span style={styles.nodeColType}>
-            {col.type.toLowerCase()}
+            {col.type.toUpperCase()}
             {/* 길이 혹은 정밀도가 있다면 표시 */}
             {['VARCHAR', 'CHAR'].includes(col.type) && col.length ? `(${col.length})` : ''}
             {['NUMERIC', 'DECIMAL'].includes(col.type) && col.precision ? `(${col.precision}${col.scale ? `,${col.scale}` : ''})` : ''}
           </span>
+          {/* 오른쪽 핸들: 소스 (자식 역할을 하는 컬럼) */}
+          <Handle
+            type="source"
+            position={Position.Right}
+            id={`s-${i}`} // 컬럼 인덱스나 고유 ID를 부여
+            style={{ top: '50%', transform: 'translateY(-50%)' }}
+          />
         </div>
       ))}
     </div>
@@ -86,6 +177,21 @@ function Sketchbook() {
   const [isSqlModalOpen, setIsSqlModalOpen] = useState(false);
 
   useEffect(() => {
+    const handleTypeChange = (e) => {
+      const { id, type } = e.detail;
+      setEdges((eds) => {
+        const nextEdges = eds.map((edge) => 
+          edge.id === id ? { ...edge, data: { ...edge.data, relationType: type } } : edge
+        );
+        saveToServer(nodes, nextEdges); // 변경 시에도 저장
+        return nextEdges;
+      });
+    };
+    window.addEventListener('edge-type-change', handleTypeChange);
+    return () => window.removeEventListener('edge-type-change', handleTypeChange);
+  }, [nodes, setEdges]);
+
+  useEffect(() => {
     const fetchDetail = async () => {
       try {
         const token = localStorage.getItem('accessToken');
@@ -108,6 +214,8 @@ function Sketchbook() {
     try {
       const token = localStorage.getItem('accessToken');
       const schemaData = { nodes, edges }; // 현재 상태의 데이터
+      console.log("Schema Data:", schemaData);
+      return;
       
       const res = await axios.post(
         'http://localhost:8080/api/blueprints/codes/schema-sql', 
@@ -187,9 +295,18 @@ function Sketchbook() {
       return nextEdges;
     });
   }, [nodes]);
+
   const onConnect = useCallback((params) => {
     setEdges((eds) => {
-      const nextEdges = addEdge(params, eds);
+      const edgeId = `e-${params.source}-${params.target}-${Date.now()}`;
+      
+      const nextEdges = addEdge({
+          ...params,
+          id: edgeId,
+          type: 'relation', // 우리가 만든 커스텀 엣지 타입
+          markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, color: '#000' },
+          data: { relationType: '1:1' },
+        }, eds);
       saveToServer(nodes, nextEdges);
       return nextEdges;
     });
@@ -339,7 +456,7 @@ function Sketchbook() {
       </header>
 
       <div style={{ flex: 1, position: 'relative' }}>
-        <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} onNodeDoubleClick={onNodeDoubleClickHandler} onNodeDragStop={onNodeDragStop} nodeTypes={nodeTypes} fitView connectionMode="loose" proOptions={{ hideAttribution: true }} isValidConnection={isValidConnection}>
+        <ReactFlow nodes={nodes} edges={edges} edgeTypes={edgeTypes} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} onNodeDoubleClick={onNodeDoubleClickHandler} onNodeDragStop={onNodeDragStop} nodeTypes={nodeTypes} fitView connectionMode="loose" proOptions={{ hideAttribution: true }} isValidConnection={isValidConnection}>
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#d1d1d1" /><Controls />
         </ReactFlow>
         <div style={styles.actionGroup} onMouseDown={(e) => e.stopPropagation()}>
@@ -536,10 +653,10 @@ const styles = {
   backBtn: { width: '36px', height: '36px', border: 'none', borderRadius: '8px', background: '#f1f5f9', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color:'#64748b' },
   headerTitle: { margin: 0, fontSize: '1.1rem', fontWeight: '800', color:'#1e293b' },
   headerSub: { margin: 0, fontSize: '0.8rem', color: '#94a3b8' },
-  actionGroup: { position: 'absolute', right: '32px', bottom: '32px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '16px', zIndex: 1000 },
+  actionGroup: { position: 'absolute', right: '32px', bottom: '96px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '16px', zIndex: 1000 },
   fab: { padding: '12px 28px', backgroundColor: '#3b82f6', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 10px 15px -3px rgba(59,130,246,0.3)' },
   delBtn: { padding: '12px 28px', backgroundColor: '#ef4444', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold' },
-  nodeContainer: { background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', minWidth: '180px', overflow: 'hidden', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' },
+  nodeContainer: { background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', minWidth: '180px', overflow: 'hidden', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', zIndex: 1 },
   nodeHeader: { background: '#3b82f6', color: '#fff', padding: '10px', fontWeight: 'bold', fontSize: '13px', textAlign: 'center' },
   nodeBody: { padding: '10px' },
   nodeRow: { display: 'flex', justifyContent: 'space-between', fontSize: '11px', borderBottom: '1px solid #f1f5f9', padding: '6px 0' },
