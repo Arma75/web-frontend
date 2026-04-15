@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import ReactFlow, { 
   addEdge, Background, Controls, applyNodeChanges, applyEdgeChanges, 
   Handle, Position, BackgroundVariant, MarkerType
@@ -8,59 +8,201 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getBezierPath, EdgeLabelRenderer } from 'reactflow';
 
+// App.js 또는 스케치북 메인 컴포넌트 상단
+const EdgeMarkers = () => (
+  <svg style={{ position: 'absolute', width: 0, height: 0, visibility: 'hidden' }}>
+    <defs>
+      {/* Mandatory One (|) */}
+      <marker id="one" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+        <path d="M 10 0 L 10 12" stroke="#333" strokeWidth="2" />
+      </marker>
+
+      {/* Mandatory Many (|<) */}
+      <marker id="many" markerWidth="15" markerHeight="15" refX="0" refY="7.5" orient="auto">
+        <path d="M 0 0 L 10 7.5 L 0 15" fill="none" stroke="#000" strokeWidth="2" />
+        <path d="M 10 0 L 10 15" stroke="#000" strokeWidth="2" />
+      </marker>
+
+      {/* Optional One (O|) */}
+      <marker id="optional-one" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+        <circle cx="4" cy="6" r="3" fill="white" stroke="#333" strokeWidth="2" />
+        <path d="M 10 0 L 10 12" stroke="#333" strokeWidth="2" />
+      </marker>
+
+      {/* Optional Many (O<) */}
+      <marker id="optional-many" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+        <circle cx="3" cy="6" r="3" fill="white" stroke="#333" strokeWidth="2" />
+        <path d="M 7 0 L 14 6 L 7 12" fill="none" stroke="#333" strokeWidth="2" />
+      </marker>
+    </defs>
+  </svg>
+);
+
 const RelationEdge = ({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition,
-  targetPosition,
-  style = {},
-  markerEnd,
-  data,
+  id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition,
+  style = {}, selected, setMenuConfig, markerEnd, markerStart
 }) => {
-  // 선의 경로를 계산
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath] = getBezierPath({
     sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition,
   });
 
+  const getRotation = (pos) => {
+    switch (pos) {
+      case Position.Left: return 180;
+      case Position.Right: return 0;
+      case Position.Top: return 270;
+      case Position.Bottom: return 90;
+      default: return 0;
+    }
+  };
+
+  // 마커 모양을 결정하는 함수
+  const renderMarker = (type, color) => {
+    console.log(type, color);
+    const match = type.match(/#([^']+)/) || type.match(/#([^")]+)/);
+    type = match? match[1] : type;
+    
+    const stroke = color || '#000';
+    switch (type) {
+      case 'many':
+        return (
+          <g fill="none" stroke={stroke} strokeWidth="2">
+            <path d="M -12 -7 L 0 0 L -12 7" />
+            <path d="M 0 -7 L 0 7" />
+          </g>
+        );
+      case 'optMany':
+        return (
+          <g fill="none" stroke={stroke} strokeWidth="2">
+            <circle cx="-16" cy="0" r="3" fill="white" />
+            <path d="M -10 -7 L 0 0 L -10 7" />
+          </g>
+        );
+      case 'optOne':
+        return (
+          <g fill="none" stroke={stroke} strokeWidth="2">
+            <circle cx="-8" cy="0" r="3" fill="white" />
+            <path d="M 0 -7 L 0 7" />
+          </g>
+        );
+      default: // 'one' 포함
+        return <path d="M 0 -7 L 0 7" stroke={stroke} strokeWidth="2" />;
+    }
+  };
+
+  const onMarkerClick = (evt, side) => {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    setMenuConfig({
+      x: evt.clientX,
+      y: evt.clientY,
+      edgeId: id,
+      markerSide: side,
+    });
+  };
+
+  const color = selected ? '#3b82f6' : '#000';
+
   return (
     <>
-      <path id={id} style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
-      <EdgeLabelRenderer>
-        <div
-          style={{
-            position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            pointerEvents: 'all', // 중요: 여기서 이벤트를 잡아야 함
-          }}
-          className="nodrag nopan"
-        >
-          <select
-            value={data?.relationType || '1:1'}
-            onChange={(e) => {
-               // 이 부분은 Sketchbook 컴포넌트의 setEdges를 호출하도록 설계해야 합니다.
-               // 혹은 전역 이벤트를 활용합니다.
-               window.dispatchEvent(new CustomEvent('edge-type-change', { 
-                 detail: { id, type: e.target.value } 
-               }));
-            }}
-            style={{ fontSize: '10px', borderRadius: '4px', border: '1px solid #3b82f6' }}
-          >
-            <option value="1:1">1:1</option>
-            <option value="N:1">N:1</option>
-          </select>
-        </div>
-      </EdgeLabelRenderer>
+      <path id={id} style={{ ...style, strokeWidth: 3, stroke: color }} className="react-flow__edge-path" d={edgePath} />
+      
+      {/* 2. 클릭 감지용 넓은 선 - 마커 클릭을 방해하지 않도록 마커보다 먼저 선언하거나 z-index 조정 */}
+      <path d={edgePath} fill="none" strokeOpacity={0} strokeWidth={15} style={{ cursor: 'pointer' }} />
+      
+      {/* Target 마커 */}
+      <g transform={`translate(${targetX}, ${targetY}) rotate(${getRotation(targetPosition)})`}>
+        {/* 실제 그림보다 넓은 영역을 잡고 여기에 onClick을 겁니다 */}
+        <rect 
+          x="-20" y="-15" width="40" height="30" 
+          fill="transparent" 
+          style={{ cursor: 'pointer', pointerEvents: 'all' }} 
+          onClick={(e) => onMarkerClick(e, 'target')} 
+        />
+        <rect x="-20" y="-10" width="25" height="20" fill="transparent" />
+        {renderMarker(markerEnd, color)}
+      </g>
+
+      {/* Source 마커 */}
+      <g transform={`translate(${sourceX}, ${sourceY}) rotate(${getRotation(sourcePosition)})`}>
+        <rect 
+          x="-20" y="-15" width="40" height="30" 
+          fill="transparent" 
+          style={{ cursor: 'pointer', pointerEvents: 'all' }} 
+          onClick={(e) => onMarkerClick(e, 'source')} 
+        />
+        <rect x="-20" y="-10" width="25" height="20" fill="transparent" />
+        {renderMarker(markerStart, color)}
+      </g>
+
+      <path d={edgePath} fill="none" strokeOpacity={0} strokeWidth={20} style={{ cursor: 'pointer' }} />
     </>
   );
 };
 
-// ReactFlow에 등록할 edgeTypes
-const edgeTypes = {
-  relation: RelationEdge,
+const RadialMenu = ({ config, onClose, onSelect }) => {
+  if (!config) return null;
+
+  const options = [
+    { id: 'one', path: <path d="M 10 2 L 10 18" stroke="#333" strokeWidth="2" /> },
+    { id: 'many', path: <g fill="none" stroke="#333" strokeWidth="2"><path d="M 2 5 L 12 10 L 2 15" /><path d="M 12 2 L 12 18" /></g> },
+    { id: 'optOne', path: <g fill="none" stroke="#333" strokeWidth="2"><circle cx="6" cy="10" r="3" fill="white" /><path d="M 12 2 L 12 18" /></g> },
+    { id: 'optMany', path: <g fill="none" stroke="#333" strokeWidth="2"><circle cx="4" cy="10" r="3" fill="white" /><path d="M 10 5 L 18 10 L 10 15" /></g> },
+  ];
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 10000 }} onClick={onClose}>
+      <style>{`
+        @keyframes radialReveal {
+          from { transform: translate(-50%, -50%) scale(0) rotate(-180deg); opacity: 0; }
+          to { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+        }
+      `}</style>
+      <div style={{ position: 'absolute', left: config.x, top: config.y }}>
+        {options.map((opt, i) => {
+          const angle = (i * 360) / options.length;
+          const radius = 70;
+          const x = Math.cos((angle * Math.PI) / 180) * radius;
+          const y = Math.sin((angle * Math.PI) / 180) * radius;
+
+          return (
+            <button
+              key={opt.id}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(config.edgeId, config.markerSide, opt.id);
+              }}
+              style={{
+                position: 'absolute',
+                left: x,
+                top: y,
+                width: '45px',
+                height: '45px',
+                borderRadius: '50%',
+                border: '2px solid #3b82f6',
+                background: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                animation: `radialReveal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards`,
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20">{opt.path}</svg>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
+
+// ReactFlow에 등록할 edgeTypes
+// const edgeTypes = {
+//   relation: RelationEdge,
+// };
 
 // --- [엣지 라벨용 콤보박스 컴포넌트] ---
 const EdgeLabelSelect = ({ edgeId, currentType, setEdges }) => (
@@ -116,10 +258,12 @@ const TableNode = ({ data }) => (
         <div key={i} style={{...styles.nodeRow, position: 'relative'}}>
           {/* 왼쪽 핸들: 타겟 (부모 역할을 하는 컬럼) */}
           <Handle
-            type="target"
+            type="source"
             position={Position.Left}
             id={`t-${i}`} // 컬럼 인덱스나 고유 ID를 부여
-            style={{ top: '50%', transform: 'translateY(-50%)' }}
+            style={{ left: '-14px', width: '8px', height: '8px', top: '50%', transform: 'translateY(-50%)' }}
+            isConnectableStart={true}
+            isConnectableEnd={true}
           />
           <span style={{...styles.nodeColName, fontWeight: col.isPk ? 'bold' : 'normal'}}>
             {col.isPk ? '🔑 ' : ''}{col.name}
@@ -135,7 +279,9 @@ const TableNode = ({ data }) => (
             type="source"
             position={Position.Right}
             id={`s-${i}`} // 컬럼 인덱스나 고유 ID를 부여
-            style={{ top: '50%', transform: 'translateY(-50%)' }}
+            style={{ right: '-14px', width: '8px', height: '8px', top: '50%', transform: 'translateY(-50%)' }}
+            isConnectableStart={true}
+            isConnectableEnd={true}
           />
         </div>
       ))}
@@ -175,6 +321,42 @@ function Sketchbook() {
   
   const [sqlPreview, setSqlPreview] = useState('');
   const [isSqlModalOpen, setIsSqlModalOpen] = useState(false);
+  const [menuConfig, setMenuConfig] = useState(null); // { x, y, edgeId, type(source/target) }
+
+  const edgeTypes = useMemo(() => ({
+    relation: (props) => (
+      <RelationEdge 
+        {...props} 
+        setMenuConfig={setMenuConfig} // 여기서 함수를 주입합니다.
+        onTypeChange={handleTypeChange} // 추가
+      />
+    ),
+  }), []);
+
+  // Sketchbook 함수 내부
+  const handleTypeChange = useCallback((edgeId, side, newType) => {
+    setEdges((eds) => {
+      const nextEdges = eds.map((edge) => {
+        if (edge.id === edgeId) {
+          const isTarget = side === 'target';
+
+          return {
+            ...edge,
+            [isTarget ? 'markerEnd' : 'markerStart']: newType,
+            data: {
+              ...edge.data,
+              [isTarget ? 'markerEndType' : 'markerStartType']: newType
+            }
+          };
+        }
+        return edge;
+      });
+      // 서버 저장 로직 실행
+      saveToServer(nodes, nextEdges);
+      return nextEdges;
+    });
+    setMenuConfig(null); // 메뉴 닫기
+  }, [nodes, setEdges]);
 
   useEffect(() => {
     const handleTypeChange = (e) => {
@@ -186,6 +368,8 @@ function Sketchbook() {
         saveToServer(nodes, nextEdges); // 변경 시에도 저장
         return nextEdges;
       });
+      
+      setMenuConfig(null); // 메뉴 닫기
     };
     window.addEventListener('edge-type-change', handleTypeChange);
     return () => window.removeEventListener('edge-type-change', handleTypeChange);
@@ -213,9 +397,21 @@ function Sketchbook() {
   const generateSql = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const schemaData = { nodes, edges }; // 현재 상태의 데이터
-      console.log("Schema Data:", schemaData);
-      return;
+      const schemaData = { nodes, edges,
+        "options": {
+          "includeDropQuery": true,          // DROP TABLE 포함 여부
+          "useIfExistsInDrop": true,      // DROP 시 IF EXISTS 포함 여부
+          "useIfNotExistsInCreate": true,   // CREATE 시 IF NOT EXISTS 포함 여부
+          "includeCommentQuery": true,      // COMMENT ON 쿼리 포함 여부
+          "includeFileHeaderComments": true,    // 파일 상단 메타데이터 주석 여부
+          "includeDescriptionComments": true, // 각 쿼리 설명 주석 여부
+          "useQuotedIdentifiers": false, // 따옴표 사용 여부
+          
+          // 케이스 변환 옵션 (Enum 형태 권장)
+          "tableNameCase": "SCREAMING_SNAKE",   // SNAKE, PASCAL, CAMEL 등
+          "columnNameCase": "SCREAMING_SNAKE"
+        }
+       }; // 현재 상태의 데이터
       
       const res = await axios.post(
         'http://localhost:8080/api/blueprints/codes/schema-sql', 
@@ -304,8 +500,11 @@ function Sketchbook() {
           ...params,
           id: edgeId,
           type: 'relation', // 우리가 만든 커스텀 엣지 타입
-          markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, color: '#000' },
+          // markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, color: '#000' },
+          markerEnd: 'many',  // <marker id="many"> 를 가리킴
+          markerStart: 'one', // <marker id="one"> 를 가리킴
           data: { relationType: '1:1' },
+          style: { stroke: '#000', strokeWidth: 2 }
         }, eds);
       saveToServer(nodes, nextEdges);
       return nextEdges;
@@ -458,7 +657,18 @@ function Sketchbook() {
       <div style={{ flex: 1, position: 'relative' }}>
         <ReactFlow nodes={nodes} edges={edges} edgeTypes={edgeTypes} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} onNodeDoubleClick={onNodeDoubleClickHandler} onNodeDragStop={onNodeDragStop} nodeTypes={nodeTypes} fitView connectionMode="loose" proOptions={{ hideAttribution: true }} isValidConnection={isValidConnection}>
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#d1d1d1" /><Controls />
+          <EdgeMarkers /> 
         </ReactFlow>
+
+        {/* 이 부분이 ReactFlow 바깥, relative 부모 안쪽에 있어야 합니다 */}
+        {menuConfig && (
+          <RadialMenu 
+            config={menuConfig} 
+            onClose={() => setMenuConfig(null)} 
+            onSelect={handleTypeChange} 
+          />
+        )}
+
         <div style={styles.actionGroup} onMouseDown={(e) => e.stopPropagation()}>
           {/* [추가] SQL 미리보기 버튼 */}
           <button onClick={generateSql} style={{...styles.fab, backgroundColor: '#10b981', marginBottom: '8px'}}>
@@ -656,8 +866,8 @@ const styles = {
   actionGroup: { position: 'absolute', right: '32px', bottom: '96px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '16px', zIndex: 1000 },
   fab: { padding: '12px 28px', backgroundColor: '#3b82f6', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 10px 15px -3px rgba(59,130,246,0.3)' },
   delBtn: { padding: '12px 28px', backgroundColor: '#ef4444', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold' },
-  nodeContainer: { background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', minWidth: '180px', overflow: 'hidden', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', zIndex: 1 },
-  nodeHeader: { background: '#3b82f6', color: '#fff', padding: '10px', fontWeight: 'bold', fontSize: '13px', textAlign: 'center' },
+  nodeContainer: { background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', minWidth: '180px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', zIndex: 1 },
+  nodeHeader: { borderRadius: '12px 12px 0 0', background: '#3b82f6', color: '#fff', padding: '10px', fontWeight: 'bold', fontSize: '13px', textAlign: 'center' },
   nodeBody: { padding: '10px' },
   nodeRow: { display: 'flex', justifyContent: 'space-between', fontSize: '11px', borderBottom: '1px solid #f1f5f9', padding: '6px 0' },
   nodeColType: { color: '#10b981', fontWeight: '600' },
