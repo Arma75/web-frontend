@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.attickok.ulmus.common.dto.PageResponse;
+import com.{{teamName}}.{{projectName}}.common.dto.PageResponse;
 import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}Response;
 import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}SaveRequest;
 import com.{{teamName}}.{{projectName}}.{{tableName}}.dto.{{tablePascalName}}SearchRequest;
