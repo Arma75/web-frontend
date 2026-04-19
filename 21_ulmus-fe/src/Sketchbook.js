@@ -61,7 +61,7 @@ const RelationEdge = ({
     console.log(type, color);
     const match = type.match(/#([^']+)/) || type.match(/#([^")]+)/);
     type = match? match[1] : type;
-    
+
     const stroke = color || '#000';
     switch (type) {
       case 'many':
@@ -313,7 +313,7 @@ function Sketchbook() {
     columns: [{ 
       name: 'id', type: 'BIGINT', length: '', precision: '', scale: '', comment: 'PK', 
       isPk: true, isUnique: false, isNullable: false, isAutoInc: true, 
-      defaultValue: '', isDefaultFunc: false 
+      defaultValue: '', defaultValueFunction: false 
     }]
   });
   // [추가] 드래그 앤 드롭 상태 관리
@@ -397,29 +397,86 @@ function Sketchbook() {
   const generateSql = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const schemaData = { nodes, edges,
+      // 1. 테이블(nodes) 정보 변환
+      const tables = nodes.map(node => ({
+        name: node.data.label,       // 프로젝트 내 테이블 명
+        comment: node.data.tableComment || "",
+        columns: node.data.columns.map(col => ({
+          name: col.name,
+          type: col.type,
+          length: col.length,
+          precision: col.precision,
+          scale: col.scale,
+          primaryKey: col.isPk,           // 백엔드 ColumnDto 필드명에 맞춤
+          foreignKey: col.isFk,
+          nullable: col.nullable !== false, // 기본값 true 처리
+          defaultValue: col.defaultValue,
+          defaultValueFunction: col.defaultValueFunction,
+          comment: col.comment,
+          domainConstraint: col.domainConstraint // 추가된 도메인 제약
+        }))
+      }));
+
+      // 2. 관계(edges) 정보 변환 (RelationDto 구조)
+      const relations = edges.map(edge => {
+        // 소스/타겟 노드 찾기
+        const sourceNode = nodes.find(n => n.id === edge.source);
+        const targetNode = nodes.find(n => n.id === edge.target);
+        
+        // 핸들 인덱스 추출 (s-0, t-1 등)
+        const sIdx = parseInt(edge.sourceHandle.split('-')[1]);
+        const tIdx = parseInt(edge.targetHandle.split('-')[1]);
+
+        return {
+          sourceTable: sourceNode.data.label,
+          sourceColumn: sourceNode.data.columns[sIdx].name,
+          targetTable: targetNode.data.label,
+          targetColumn: targetNode.data.columns[tIdx].name,
+          relationType: edge.data?.relationType || "one-to-many"
+        };
+      });
+      const schemaData = {
+        project: {
+          name: "My Awesome Project", // 여기에 실제 프로젝트명 입력
+          description: "프로젝트에 대한 설명입니다."
+        },
+        tables: tables,
+        relations: relations,
         "options": {
           "includeDropQuery": true,          // DROP TABLE 포함 여부
           "useIfExistsInDrop": true,      // DROP 시 IF EXISTS 포함 여부
           "useIfNotExistsInCreate": true,   // CREATE 시 IF NOT EXISTS 포함 여부
-          "includeCommentQuery": true,      // COMMENT ON 쿼리 포함 여부
+          "includeCommentOnTable": true,      // COMMENT ON 쿼리 포함 여부
+          "includeCommentOnColumns": true,      // COMMENT ON 쿼리 포함 여부
           "includeFileHeaderComments": true,    // 파일 상단 메타데이터 주석 여부
           "includeDescriptionComments": true, // 각 쿼리 설명 주석 여부
-          "useQuotedIdentifiers": false, // 따옴표 사용 여부
+          "useQuotedIdentifiers": true, // 따옴표 사용 여부
           
           // 케이스 변환 옵션 (Enum 형태 권장)
           "tableNameCase": "SCREAMING_SNAKE",   // SNAKE, PASCAL, CAMEL 등
           "columnNameCase": "SCREAMING_SNAKE"
         }
-       }; // 현재 상태의 데이터
+      }; // 현재 상태의 데이터
+
+      console.log(schemaData);
       
       const res = await axios.post(
         'http://localhost:8080/api/blueprints/codes/schema-sql', 
         schemaData, // JSON 데이터 전송
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log(res.data);
       
-      setSqlPreview(res.data); // 서버에서 온 String SQL 저장
+      const dataRes = await axios.post(
+        'http://localhost:8080/api/blueprints/codes/data-sql', 
+        schemaData, // JSON 데이터 전송
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log(dataRes.data);
+      
+      setSqlPreview(res.data + "\n\n" + dataRes.data);
+      
+      // setSqlPreview(res.data); // 서버에서 온 String SQL 저장
       setIsSqlModalOpen(true); // 미리보기 모달 열기
     } catch (e) {
       console.error("SQL Generation Error:", e);
@@ -610,7 +667,7 @@ function Sketchbook() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingNodeId(null);
-    setNewTable({ tableName: '', tableComment: '', columns: [{ name: 'id', type: 'BIGINT', length: '', precision: '', scale: '', comment: 'PK', isPk: true, isUnique: false, isNullable: false, isAutoInc: true, defaultValue: '', isDefaultFunc: false }] });
+    setNewTable({ tableName: '', tableComment: '', columns: [{ name: 'id', type: 'BIGINT', length: '', precision: '', scale: '', comment: 'PK', isPk: true, isUnique: false, isNullable: false, isAutoInc: true, defaultValue: '', defaultValueFunction: false }] });
   };
 
   const isValidConnection = useCallback(
@@ -819,7 +876,7 @@ function Sketchbook() {
                         <td style={styles.td}>
                           <div style={{display:'flex', alignItems:'center', gap:'4px'}}>
                             <input style={styles.tableIn} placeholder="Def" value={col.defaultValue} onChange={e => handleColumnChange(idx, 'defaultValue', e.target.value)} />
-                            <label style={{fontSize:'10px', color:'#94a3b8', cursor:'pointer'}}><input type="checkbox" checked={col.isDefaultFunc} onChange={e => handleColumnChange(idx, 'isDefaultFunc', e.target.checked)} />Fx</label>
+                            <label style={{fontSize:'10px', color:'#94a3b8', cursor:'pointer'}}><input type="checkbox" checked={col.defaultValueFunction} onChange={e => handleColumnChange(idx, 'defaultValueFunction', e.target.checked)} />Fx</label>
                           </div>
                         </td>
                         <td style={styles.td}><input style={styles.tableIn} value={col.comment} onChange={e => handleColumnChange(idx, 'comment', e.target.value)} /></td>
@@ -843,7 +900,7 @@ function Sketchbook() {
                   </tbody>
                 </table>
               </div>
-              <button onClick={() => setNewTable({...newTable, columns: [...newTable.columns, { name: '', type: 'VARCHAR', length: '255', precision: '', scale: '', comment: '', isPk: false, isUnique: false, isNullable: true, isAutoInc: false, defaultValue: '', isDefaultFunc: false }]})} style={styles.subBtn}>+ Add New Column</button>
+              <button onClick={() => setNewTable({...newTable, columns: [...newTable.columns, { name: '', type: 'VARCHAR', length: '255', precision: '', scale: '', comment: '', isPk: false, isUnique: false, isNullable: true, isAutoInc: false, defaultValue: '', defaultValueFunction: false }]})} style={styles.subBtn}>+ Add New Column</button>
             </div>
 
             <div style={styles.footer}>
