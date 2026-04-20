@@ -30,7 +30,7 @@ function App() {
       
       <StarBackground />
       {/* 🚀 모든 화면 위로 뜨는 글로벌 AI 채팅창 */}
-      <AiChat />
+      {/* <AiChat /> */}
     </Router>
   );
 }
