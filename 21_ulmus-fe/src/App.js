@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import Sketchbook from './Sketchbook';
+import Sketchbook from './Sketchbook-temp';
 import AiChat from './components/chat/AiChat';
-import LandingPage from './LandingPage';
-import LoginPage from './LoginPage';
-import StarBackground from './StarBackground';
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import StarBackground from './pages/StarBackground';
 import ProjectDetailPage from './ProjectDetailPage';
 
 function App() {
   return (
     <Router>
+      <StarBackground />
+
       <Routes>
         {/* 1. 랜딩 페이지: 누구나 접근 가능 */}
         <Route path="/" element={<LandingPage />} />
@@ -23,12 +25,9 @@ function App() {
         
         {/* 4. 프로젝트 상세: 로그인한 사용자만 접근 */}
         <Route path="/project/:id" element={<ProjectDetailPage />} />
-        {/* <Route path="/project/:id" element={<Sketchbook />} /> */}
 
         {/* <Route path="/login" element={<MainPage />} /> */}
       </Routes>
-      
-      <StarBackground />
       {/* 🚀 모든 화면 위로 뜨는 글로벌 AI 채팅창 */}
       {/* <AiChat /> */}
     </Router>

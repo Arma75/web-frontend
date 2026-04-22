@@ -182,9 +182,9 @@ VALUES (1, 'Ulmus Project');`}</code>
 };
 
 const lpStyles = {
-  container: { backgroundColor: '#050505', color: '#fff', minHeight: '100vh', fontFamily: 'Inter, sans-serif', overflowX: 'hidden', position: 'relative' },
+  container: { color: '#fff', minHeight: '100vh', fontFamily: 'Inter, sans-serif', overflowX: 'hidden', position: 'relative' },
 
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 10, borderBottom: '1px solid #111' },
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 10 },
   logoGroup: { display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' },
   logoContainer: {
     width: '48px',
@@ -234,7 +234,7 @@ const lpStyles = {
   imagePlaceholder: { flex: 1.2, height: '350px', backgroundColor: '#111', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #222' },
   shape: { transition: '0.3s' },
 
-  footer: { padding: '80px 0', textAlign: 'center', color: '#333', borderTop: '1px solid #111' },
+  footer: { padding: '80px 0', textAlign: 'center', color: '#333' },
 };
 
 export default LandingPage;

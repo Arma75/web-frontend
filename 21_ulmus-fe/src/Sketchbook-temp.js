@@ -398,7 +398,7 @@ function Sketchbook() {
     try {
       const token = localStorage.getItem('accessToken');
       // 1. 테이블(nodes) 정보 변환
-      const tables = nodes.map(node => ({
+      const tables = nodes.map((node, i) => ({
         name: node.data.label,       // 프로젝트 내 테이블 명
         comment: node.data.tableComment || "",
         columns: node.data.columns.map(col => ({
@@ -414,7 +414,8 @@ function Sketchbook() {
           defaultValueFunction: col.defaultValueFunction,
           comment: col.comment,
           domainConstraint: col.domainConstraint // 추가된 도메인 제약
-        }))
+        })),
+        sampleDataCount: 5 + i * 5
       }));
 
       // 2. 관계(edges) 정보 변환 (RelationDto 구조)

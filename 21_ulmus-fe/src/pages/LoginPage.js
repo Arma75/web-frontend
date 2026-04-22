@@ -155,7 +155,7 @@ const LoginPage = () => {
 };
 
 const loginStyles = {
-  container: { backgroundColor: '#000', color: '#fff', minHeight: '100vh', fontFamily: 'Inter, sans-serif', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' },
+  container: { color: '#fff', minHeight: '100vh', fontFamily: 'Inter, sans-serif', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' },
   
   // 헤더 레이아웃 수정: 랜딩 페이지와 위치 동기화
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 10 },
