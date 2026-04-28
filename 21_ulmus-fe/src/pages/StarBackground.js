@@ -52,7 +52,7 @@ const StarBackground = () => {
 const starStyles = {
   container: {
     // backgroundColor: `#161019`,
-    background: 'linear-gradient(45deg, rgb(2 28 35), #300623)',
+    background: 'linear-gradient(45deg, rgb(17 31 35), rgb(34 27 32))',
     position: 'absolute',
     top: 0,
     left: 0,

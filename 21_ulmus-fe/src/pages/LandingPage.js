@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CosmicLogo from '../components/svgs/CosmicLogo';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -54,34 +55,7 @@ const LandingPage = () => {
         <div style={lpStyles.logoGroup}>
           <div style={lpStyles.logoContainer}>
             {/* 직접 그리신 로고 SVG (Glow 잘림 수정) */}
-            <svg 
-              style={lpStyles.logoSvg} 
-              xmlns="http://www.w3.org/2000/svg" 
-              viewBox="-20 -20 120 120" // 3. viewBox를 넉넉하게 잡아 광채 확보
-              fill="none"
-            >
-              <g clipPath="url(#clip0_1_3)">
-                <g filter="url(#filter0_d_1_3)">
-                  <path d="M30 50C41.0457 50 50 58.9543 50 70H30C18.9543 70 10 61.0457 10 50V10C21.0457 10 30 18.9543 30 30V50ZM60 10C65.5228 10 70 14.4772 70 20C70 31.0457 61.0457 40 50 40V20C50 14.4772 54.4772 10 60 10Z" fill="#BFFF00"/>
-                </g>
-              </g>
-              <defs>
-                {/* SVG 내부 DropShadow 필터 ( stdDeviation을 유지하되 viewBox로 해결) */}
-                <filter id="filter0_d_1_3" x="-20" y="-20" width="120" height="120" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                  <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                  <feOffset/>
-                  <feGaussianBlur stdDeviation="10"/>
-                  <feComposite in2="hardAlpha" operator="out"/>
-                  <feColorMatrix type="matrix" values="0 0 0 0 0.74902 0 0 0 0 1 0 0 0 0 0 0 0 0 0.25 0"/>
-                  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_3"/>
-                  <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_3" result="shape"/>
-                </filter>
-                <clipPath id="clip0_1_3">
-                <rect width="80" height="80" fill="white"/>
-                </clipPath>
-              </defs>
-            </svg>
+            <CosmicLogo/>
           </div>
           {/* 브랜드명 완전 제거 */}
         </div>

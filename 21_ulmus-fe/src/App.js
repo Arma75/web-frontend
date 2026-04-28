@@ -5,32 +5,40 @@ import Sketchbook from './Sketchbook-temp';
 import AiChat from './components/chat/AiChat';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
 import StarBackground from './pages/StarBackground';
 import ProjectDetailPage from './ProjectDetailPage';
+import DashboardPage from './pages/DashboardPage';
+import { AuthProvider } from './context/AuthContext';
+import { BrowserRouter } from 'react-router-dom';
 
 function App() {
   return (
-    <Router>
-      <StarBackground />
+    <AuthProvider>
+      <BrowserRouter>
+        <StarBackground />
 
-      <Routes>
-        {/* 1. 랜딩 페이지: 누구나 접근 가능 */}
-        <Route path="/" element={<LandingPage />} />
+        <Routes>
+          {/* 1. 랜딩 페이지: 누구나 접근 가능 */}
+          <Route path="/" element={<LandingPage />} />
 
-        {/* 2. 로그인 화면: 별도 경로로 분리 (선택 사항) */}
-        <Route path="/login" element={<LoginPage />} />
-        
-        {/* 3. 대시보드: 로그인한 사용자만 접근 */}
-        <Route path="/dashboard" element={<MainPage />} />
-        
-        {/* 4. 프로젝트 상세: 로그인한 사용자만 접근 */}
-        <Route path="/project/:id" element={<ProjectDetailPage />} />
+          {/* 2. 로그인 화면: 별도 경로로 분리 (선택 사항) */}
+          <Route path="/login" element={<LoginPage />} />
 
-        {/* <Route path="/login" element={<MainPage />} /> */}
-      </Routes>
-      {/* 🚀 모든 화면 위로 뜨는 글로벌 AI 채팅창 */}
-      {/* <AiChat /> */}
-    </Router>
+          <Route path="/signup" element={<SignUpPage />} />
+          
+          {/* 3. 대시보드: 로그인한 사용자만 접근 */}
+          <Route path="/dashboard" element={<DashboardPage />} />
+          
+          {/* 4. 프로젝트 상세: 로그인한 사용자만 접근 */}
+          <Route path="/project/:id" element={<ProjectDetailPage />} />
+
+          {/* <Route path="/login" element={<MainPage />} /> */}
+        </Routes>
+        {/* 🚀 모든 화면 위로 뜨는 글로벌 AI 채팅창 */}
+        {/* <AiChat /> */}
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

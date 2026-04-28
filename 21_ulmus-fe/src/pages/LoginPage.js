@@ -13,7 +13,10 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:8080/users/login', { email, password });
-      const { accessToken } = response.data;
+      const { accessToken, refreshToken } = response.data;
+      if (refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken);
+      }
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
         navigate('/dashboard');
