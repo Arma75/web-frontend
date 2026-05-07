@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom'; 
 import ReactFlow, { 
   ReactFlowProvider, 
   Background, 
@@ -15,6 +16,7 @@ import {
   PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen
 } from 'lucide-react';
 import RelationNode from './components/nodes/RelationNode';
+import ulmusApi from './api/ulmusApi';
 
 const nodeTypes = {
   relation: RelationNode,
@@ -57,6 +59,28 @@ const ProjectDetailContent = () => {
   const [isRightCollapsed, setIsRightCollapsed] = useState(false);
   
   const nodeIdRef = useRef(0);
+
+  const { id } = useParams(); // URL에서 id 추출 (Line 24 에러 해결)
+
+  // ProjectDetailPage.js 상단 로드 로직 수정 예시
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const response = await ulmusApi.get(`/projects/${id}`);
+        const project = response.data;
+        
+        if (project.schemaJson) {
+          const { nodes: savedNodes, edges: savedEdges } = JSON.parse(project.schemaJson);
+          setNodes(savedNodes || []);
+          setEdges(savedEdges || []);
+        }
+      } catch (error) {
+        console.error("프로젝트 로드 실패:", error);
+        // 만약 1번 프로젝트가 없으면 '새 프로젝트 생성' API를 여기서 호출하는 것도 방법입니다.
+      }
+    };
+    fetchProject();
+  }, [id]);
 
   useOnSelectionChange({
     onChange: ({ nodes }) => {

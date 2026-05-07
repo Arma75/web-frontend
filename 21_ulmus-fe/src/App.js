@@ -9,6 +9,7 @@ import SignUpPage from './pages/SignUpPage';
 import StarBackground from './pages/StarBackground';
 import ProjectDetailPage from './ProjectDetailPage';
 import DashboardPage from './pages/DashboardPage';
+import OAuthCallback from './pages/OAuthCallback';
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -25,15 +26,16 @@ function App() {
           {/* 2. 로그인 화면: 별도 경로로 분리 (선택 사항) */}
           <Route path="/login" element={<LoginPage />} />
 
-          <Route path="/signup" element={<SignUpPage />} />
+          {/* <Route path="/signup" element={<SignUpPage />} /> */}
           
           {/* 3. 대시보드: 로그인한 사용자만 접근 */}
-          <Route path="/dashboard" element={<DashboardPage />} />
+          {/* <Route path="/dashboard" element={<DashboardPage />} /> */}
           
           {/* 4. 프로젝트 상세: 로그인한 사용자만 접근 */}
           <Route path="/project/:id" element={<ProjectDetailPage />} />
 
           {/* <Route path="/login" element={<MainPage />} /> */}
+          <Route path="/oauth-callback" element={<OAuthCallback />} />
         </Routes>
         {/* 🚀 모든 화면 위로 뜨는 글로벌 AI 채팅창 */}
         {/* <AiChat /> */}
