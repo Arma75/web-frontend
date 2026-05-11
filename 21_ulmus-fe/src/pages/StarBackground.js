@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 // [핵심] 서비스 전체에서 사용될 최대 예상 높이를 기준으로 px 좌표를 딱 한 번 생성합니다.
 // 이렇게 하면 %와 달리 부모의 높이가 변해도 별의 절대적인 위치(px)는 변하지 않습니다.
 const MAX_SPACE_HEIGHT = 5000; 
-const colors = ['#FFFFFF', '#BFFF00', '#FF00D1', '#00F8FF', '#60A5FA'];
+const colors = ['#666', '#611', '#661', '#761', '#671'];
 
 const GLOBAL_STARS = Array.from({ length: 300 }).map((_, i) => ({
   id: i,
@@ -52,7 +52,7 @@ const StarBackground = () => {
 const starStyles = {
   container: {
     // backgroundColor: `#161019`,
-    background: 'linear-gradient(45deg, rgb(17 31 35), rgb(34 27 32))',
+    background: 'linear-gradient(45deg, rgb(0 13 17), rgb(35 15 5))',
     position: 'absolute',
     top: 0,
     left: 0,

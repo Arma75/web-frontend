@@ -3,22 +3,7 @@ import { Handle, Position } from 'reactflow';
 import { Database, Key, Link2 } from 'lucide-react';
 
 
-const mockErdData1 = {
-  id: 'erd3',
-  label: 'UserProfiles',
-  comment: '사용자 추가 정보 테이블',
-  columns: [
-    { label: 'profile_id', comment: '프로필 고유 ID', type: 'INT', length: 11, isPrimaryKey: true, isUnique: true, isNullable: false, isAutoIncrement: true, defaultValue: null, isDefaultValueFunction: false },
-    { label: 'user_id', comment: '사용자 ID (FK, Unique)', type: 'INT', length: 11, isPrimaryKey: false, isUnique: true, isNullable: false, isAutoIncrement: false, defaultValue: null, isDefaultValueFunction: false },
-    { label: 'bio', comment: '자기소개', type: 'TEXT', length: null, isPrimaryKey: false, isUnique: false, isNullable: true, isAutoIncrement: false, defaultValue: '', isDefaultValueFunction: false },
-    { label: 'avatar_url', comment: '아바타 URL', type: 'VARCHAR', length: 255, isPrimaryKey: false, isUnique: false, isNullable: true, isAutoIncrement: false, defaultValue: null, isDefaultValueFunction: false },
-  ],
-  relations: [
-    { targetNodeId: 'erd1', relationType: '1:1', foreignKeyColumn: 'user_id', referenceColumn: 'users.user_id', comment: 'Profile belongs to one User' }
-  ]
-};
 const RelationNode = ({ data, selected }) => {
-  data = mockErdData1;
   console.log(data);
   return (
     // ERD Node container
@@ -59,8 +44,8 @@ const RelationNode = ({ data, selected }) => {
         }}
       >
         {(data.columns || []).map((col, idx) => {
-          const sourceId = `${data.id}-${col.label}-source`;
-          const targetId = `${data.id}-${col.label}-target`;
+          const sourceId = `${data.id}-${col}-source`;
+          const targetId = `${data.id}-${col}-target`;
 
           return (
             <div
@@ -77,26 +62,8 @@ const RelationNode = ({ data, selected }) => {
                   left: -6,
                 }}
               />
-              <Handle
-                type="source"
-                position={Position.Left}
-                id={targetId}
-                style={{
-                  ...styles.columnHandle,
-                  left: -6,
-                }}
-              />
 
               {/* RIGHT SOURCE */}
-              <Handle
-                type="target"
-                position={Position.Right}
-                id={sourceId}
-                style={{
-                  ...styles.columnHandle,
-                  right: -6,
-                }}
-              />
               <Handle
                 type="source"
                 position={Position.Right}
@@ -108,13 +75,11 @@ const RelationNode = ({ data, selected }) => {
               />
 
               {/* PK mark */}
-              {col.isPrimaryKey && <span style={{marginRight: '6px'}}>🔑</span>}
-              {/* <Key size={8} color="#BFFF00" style={{marginRight: '6px'}} /> */}
+              <Key size={8} color="#BFFF00" style={{marginRight: '6px'}} />
               {/* FK mark */}
-              <span style={{marginRight: '6px'}}>🔗</span>
-              {/* <Link2 size={8} color="#BFFF00" style={{marginRight: '6px'}} /> */}
+              <Link2 size={8} color="#BFFF00" style={{marginRight: '6px'}} />
               {/* COLUMN NAME */}
-              <span>{col.label}</span>
+              <span>{col}</span>
             </div>
           );
         })}
@@ -126,9 +91,10 @@ const RelationNode = ({ data, selected }) => {
 const styles = {
   erdNodeContainer: {
     minWidth: '220px',
-    background: 'transparent',
+    background: 'rgba(15,15,15,0.9)',
     backdropFilter: 'blur(12px)',
     overflow: 'visible',
+    boxShadow: '0 20px 50px rgba(0,0,0,0.45)',
   },
   erdNodeHeaderContainer: {
     borderRadius: '20px 20px 0 0',

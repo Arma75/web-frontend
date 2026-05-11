@@ -3,150 +3,78 @@ import { Handle, Position } from 'reactflow';
 import { Database, Key, Link2 } from 'lucide-react';
 
 
-const mockErdData1 = {
-  id: 'erd3',
-  label: 'UserProfiles',
-  comment: '사용자 추가 정보 테이블',
-  columns: [
-    { label: 'profile_id', comment: '프로필 고유 ID', type: 'INT', length: 11, isPrimaryKey: true, isUnique: true, isNullable: false, isAutoIncrement: true, defaultValue: null, isDefaultValueFunction: false },
-    { label: 'user_id', comment: '사용자 ID (FK, Unique)', type: 'INT', length: 11, isPrimaryKey: false, isUnique: true, isNullable: false, isAutoIncrement: false, defaultValue: null, isDefaultValueFunction: false },
-    { label: 'bio', comment: '자기소개', type: 'TEXT', length: null, isPrimaryKey: false, isUnique: false, isNullable: true, isAutoIncrement: false, defaultValue: '', isDefaultValueFunction: false },
-    { label: 'avatar_url', comment: '아바타 URL', type: 'VARCHAR', length: 255, isPrimaryKey: false, isUnique: false, isNullable: true, isAutoIncrement: false, defaultValue: null, isDefaultValueFunction: false },
-  ],
-  relations: [
-    { targetNodeId: 'erd1', relationType: '1:1', foreignKeyColumn: 'user_id', referenceColumn: 'users.user_id', comment: 'Profile belongs to one User' }
-  ]
-};
 const RelationNode = ({ data, selected }) => {
-  data = mockErdData1;
-  console.log(data);
   return (
-    // ERD Node container
-    <article className={selected? 'erd-node-container selected' : "erd-node-container"} 
+    // ERD 컨테이너
+    <div
       style={{
-        ...styles.erdNodeContainer,
+        ...styles.nodeWrapper,
+        border: selected
+          ? '1px solid rgba(191,255,0,0.5)'
+          : '1px solid rgba(255,255,255,0.08)',
+        boxShadow: selected
+          ? `
+              0 0 0 1px rgba(191,255,0,0.15),
+              0 0 20px rgba(191,255,0,0.18),
+              0 0 40px rgba(191,255,0,0.08),
+              0 20px 50px rgba(0,0,0,0.45)
+            `
+          : '0 20px 50px rgba(0,0,0,0.45)',
       }}
     >
-      {/* Header */}
-      <section className={selected? 'erd-node-header-container selected' : "erd-node-header-container"} 
-        style={{
-          ...styles.erdNodeHeaderContainer,
-          border: selected? '1px solid rgba(191,255,0,0.5)' : '1px solid rgba(255,255,255,0.08)',
-          boxShadow: selected? `0 0 0 1px rgba(191,255,0,0.15)` : '0 20px 50px rgba(0,0,0,0.45)',
-          background: selected? '#BFFF00' : 'rgba(191, 255, 0, 0.15)',
-        }}
-      >
-        <div className={selected? 'erd-node-header selected' : "erd-node-header"} 
-          style={{
-            ...styles.erdNodeHeader,
-            background: selected? '#BFFF00' : 'rgba(191, 255, 0, 0.15)',
-          }}
-        >
+        <div style={{
+          ...styles.nodeHeader,
+          background: selected ? '#BFFF00' : 'rgba(191, 255, 0, 0.15)',
+        }}>
           {/* <Database size={14} color={selected ? "#000" : "#BFFF00"} /> */}
           <span style={{
             ...styles.tableName,
             color: selected ? '#000' : '#BFFF00',
           }}>{data.label}</span>
         </div>
-      </section>
-
-      {/* Body */}
-      <section className={selected? 'erd-node-body-container selected' : "erd-node-body-container"}
-        style={{
-          ...styles.erdNodeBodyContainer,
-          border: selected? '1px solid rgba(191,255,0,0.5)' : '1px solid rgba(255,255,255,0.08)',
-          boxShadow: selected? `0 0 0 1px rgba(191,255,0,0.15)` : '0 20px 50px rgba(0,0,0,0.45)',
-        }}
-      >
-        {(data.columns || []).map((col, idx) => {
-          const sourceId = `${data.id}-${col.label}-source`;
-          const targetId = `${data.id}-${col.label}-target`;
-
-          return (
-            <div
-              key={idx}
-              style={styles.columnRow}
-            >
-              {/* LEFT TARGET */}
-              <Handle
-                type="target"
-                position={Position.Left}
-                id={targetId}
-                style={{
-                  ...styles.columnHandle,
-                  left: -6,
-                }}
-              />
-              <Handle
-                type="source"
-                position={Position.Left}
-                id={targetId}
-                style={{
-                  ...styles.columnHandle,
-                  left: -6,
-                }}
-              />
-
-              {/* RIGHT SOURCE */}
-              <Handle
-                type="target"
-                position={Position.Right}
-                id={sourceId}
-                style={{
-                  ...styles.columnHandle,
-                  right: -6,
-                }}
-              />
-              <Handle
-                type="source"
-                position={Position.Right}
-                id={sourceId}
-                style={{
-                  ...styles.columnHandle,
-                  right: -6,
-                }}
-              />
-
-              {/* PK mark */}
-              {col.isPrimaryKey && <span style={{marginRight: '6px'}}>🔑</span>}
-              {/* <Key size={8} color="#BFFF00" style={{marginRight: '6px'}} /> */}
-              {/* FK mark */}
-              <span style={{marginRight: '6px'}}>🔗</span>
-              {/* <Link2 size={8} color="#BFFF00" style={{marginRight: '6px'}} /> */}
-              {/* COLUMN NAME */}
-              <span>{col.label}</span>
-            </div>
-          );
-        })}
-      </section>
-    </article>
+  
+        <div style={styles.nodeColumns}>
+          {(data.columns || []).map((col, idx) => {
+            const sourceId = `${data.id}-${col}-source`;
+            const targetId = `${data.id}-${col}-target`;
+  
+            return (
+              <div
+                key={idx}
+                style={styles.columnRow}
+              >
+                {/* LEFT TARGET */}
+                <Handle
+                  type="target"
+                  position={Position.Left}
+                  id={targetId}
+                  style={{
+                    ...styles.columnHandle,
+                    left: -6,
+                  }}
+                />
+  
+                {/* RIGHT SOURCE */}
+                <Handle
+                  type="source"
+                  position={Position.Right}
+                  id={sourceId}
+                  style={{
+                    ...styles.columnHandle,
+                    right: -6,
+                  }}
+                />
+  
+                <span>{col}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
   );
 };
 
 const styles = {
-  erdNodeContainer: {
-    minWidth: '220px',
-    background: 'transparent',
-    backdropFilter: 'blur(12px)',
-    overflow: 'visible',
-  },
-  erdNodeHeaderContainer: {
-    borderRadius: '20px 20px 0 0',
-    overflow: 'hidden',
-  },
-  erdNodeHeader: {
-    padding: '14px 16px',
-    borderBottom: '1px solid rgba(255,255,255,0.06)',
-    color: '#BFFF00',
-    fontWeight: 700,
-    fontSize: '13px',
-  },
-  erdNodeBodyContainer: {
-    borderRadius: '0 0 20px 20px',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-
   canvasShell: {
     width: '100vw',
     height: '100vh',

@@ -45,3 +45,10 @@ html, body {
   position: relative; /* StarBackground의 기준점 */
   min-height: 100vh;
 }
+
+/* CanvasPage: React Flow 라인 격자에 라임 글로우 (배경 SVG path만 대상) */
+.canvas-page-flow .react-flow__background pattern path {
+  filter: drop-shadow(0 0 1px rgba(191, 255, 0, 0.65))
+    drop-shadow(0 0 4px rgba(191, 255, 0, 0.35))
+    drop-shadow(0 0 10px rgba(191, 255, 0, 0.12));
+}

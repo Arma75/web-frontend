@@ -10,6 +10,7 @@ import StarBackground from './pages/StarBackground';
 import ProjectDetailPage from './ProjectDetailPage';
 import DashboardPage from './pages/DashboardPage';
 import OAuthCallback from './pages/OAuthCallback';
+import CanvasPage from './pages/CanvasPage';
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -33,6 +34,9 @@ function App() {
           
           {/* 4. 프로젝트 상세: 로그인한 사용자만 접근 */}
           <Route path="/project/:id" element={<ProjectDetailPage />} />
+
+          {/* 5. 캔버스 (신규 MVP 플로우 — React Flow 전체 화면) */}
+          <Route path="/canvas" element={<CanvasPage />} />
 
           {/* <Route path="/login" element={<MainPage />} /> */}
           <Route path="/oauth-callback" element={<OAuthCallback />} />

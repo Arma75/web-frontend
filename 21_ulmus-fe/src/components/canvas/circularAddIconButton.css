@@ -1,0 +1,187 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+.circular-icon-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 999em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.16s ease-in-out;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e8edf5;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.circular-icon-button:focus {
+  outline: none;
+}
+.circular-icon-button:focus-visible {
+  outline: 2px solid rgba(191, 255, 0, 0.75);
+  outline-offset: 3px;
+}
+.circular-icon-button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.circular-icon-button:active:not(:disabled) {
+  background: rgba(0, 0, 0, 0.35);
+  color: #f1f5f9;
+  transform: scale(0.98);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+    0 4px 12px rgba(0, 0, 0, 0.45) inset;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+@media (hover: hover) and (pointer: fine) {
+  .circular-icon-button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-color: rgba(191, 255, 0, 0.38);
+    box-shadow:
+      0 0 20px rgba(191, 255, 0, 0.14),
+      0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.circular-icon-button.primary {
+  border: none;
+  background: #bfff00;
+  color: #0a0a0a;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.12) inset,
+    0 2px 8px rgba(191, 255, 0, 0.28);
+}
+.circular-icon-button.primary:active:not(:disabled) {
+  background: #9fe600;
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.18) inset,
+    0 3px 10px rgba(0, 0, 0, 0.28) inset;
+}
+@media (hover: hover) and (pointer: fine) {
+  .circular-icon-button.primary:hover:not(:disabled) {
+    background: #d4ff52;
+    box-shadow:
+      0 0 0 1px rgba(191, 255, 0, 0.45),
+      0 0 28px rgba(191, 255, 0, 0.42),
+      0 6px 16px rgba(0, 0, 0, 0.22);
+  }
+}
+
+/* --- Secondary: 차분한 그레이/화이트 톤 --- */
+.circular-icon-button.secondary {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+.circular-icon-button.secondary:active:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+}
+@media (hover: hover) and (pointer: fine) {
+  .circular-icon-button.secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* --- Success: 에메랄드/그린 톤 --- */
+.circular-icon-button.success {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+.circular-icon-button.success:active:not(:disabled) {
+  background: rgba(16, 185, 129, 0.35);
+}
+@media (hover: hover) and (pointer: fine) {
+  .circular-icon-button.success:hover:not(:disabled) {
+    background: rgba(16, 185, 129, 0.3);
+    border-color: #10b981;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+  }
+}
+
+/* --- Danger: 로즈/레드 톤 --- */
+.circular-icon-button.danger {
+  background: rgba(244, 63, 94, 0.15);
+  border-color: rgba(244, 63, 94, 0.35);
+  color: #fb7185;
+}
+.circular-icon-button.danger:active:not(:disabled) {
+  background: rgba(244, 63, 94, 0.3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .circular-icon-button.danger:hover:not(:disabled) {
+    background: rgba(244, 63, 94, 0.25);
+    border-color: #f43f5e;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  }
+}
+
+/* --- Warning: 오렌지/앰버 톤 (주의, 데이터 변경 감지 등) --- */
+.circular-icon-button.warning {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+.circular-icon-button.warning:active:not(:disabled) {
+  background: rgba(245, 158, 11, 0.3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .circular-icon-button.warning:hover:not(:disabled) {
+    background: rgba(245, 158, 11, 0.25);
+    border-color: #f59e0b;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+  }
+}
+
+/* --- Info/Ghost: 아주 옅은 블루/투명 톤 (단순 가이드, 덜 강조되는 액션) --- */
+.circular-icon-button.info {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+}
+.circular-icon-button.info:active:not(:disabled) {
+  background: rgba(56, 189, 248, 0.2);
+}
+@media (hover: hover) and (pointer: fine) {
+  .circular-icon-button.info:hover:not(:disabled) {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+  }
+}
+
+/* --- Ghost: 배경이 아예 없고 보더만 있는 타입 (캔버스 위에서 최소한의 간섭) --- */
+.circular-icon-button.ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .circular-icon-button.ghost:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+  }
+}
+
+/* --- Special: Glowing (강조하고 싶은 활성화 상태) --- */
+.circular-icon-button.active-glow {
+  border-color: #bfff00;
+  box-shadow: 0 0 15px rgba(191, 255, 0, 0.4);
+  background: rgba(191, 255, 0, 0.1);
+}

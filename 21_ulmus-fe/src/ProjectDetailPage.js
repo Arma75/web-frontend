@@ -1,261 +1,1198 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; 
-import ReactFlow, { 
-  ReactFlowProvider, 
-  Background, 
-  useNodesState, 
-  useEdgesState, 
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  memo,
+} from 'react';
+
+import { useParams } from 'react-router-dom';
+
+import ReactFlow, {
+  ReactFlowProvider,
+  Background,
+  useNodesState,
+  useEdgesState,
   addEdge,
-  useOnSelectionChange
+  Handle,
+  Position,
+  MarkerType,
+  useOnSelectionChange,
 } from 'reactflow';
+
 import 'reactflow/dist/style.css';
-import StarBackground from './pages/StarBackground';
-import { 
-  ArrowLeft, Settings, Plus, RotateCcw, RotateCw, 
-  Trash2, Download, X, Layers, Database, ChevronRight,
-  PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen
+
+import {
+  Plus,
+  RotateCcw,
+  RotateCw,
+  Trash2,
+  Download,
+  X,
+  Layers,
+  Database,
+  ChevronRight,
 } from 'lucide-react';
-import RelationNode from './components/nodes/RelationNode';
+
 import ulmusApi from './api/ulmusApi';
+import RelationNode from './components/nodes/RelationNode2';
+
+/* =========================================================
+   RELATION NODE
+========================================================= */
+
+
+/* =========================================================
+   NODE TYPES
+========================================================= */
 
 const nodeTypes = {
   relation: RelationNode,
 };
 
-const ColumnDetailModal = ({ isOpen, onClose, onSave }) => {
-  const [colName, setColName] = useState("");
+/* =========================================================
+   MODAL
+========================================================= */
+
+const ColumnDetailModal = ({
+  isOpen,
+  onClose,
+  onSave,
+}) => {
+  const [colName, setColName] =
+    useState('');
+
   if (!isOpen) return null;
+
   return (
-    <div style={styles.modalOverlay} onClick={onClose}>
-      <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
+    <div
+      style={styles.modalOverlay}
+      onClick={onClose}
+    >
+      <div
+        style={styles.modalContent}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div style={styles.modalHeader}>
-          <h3 style={{ margin: 0, color: '#BFFF00' }}>Add Attribute</h3>
-          <button onClick={onClose} style={styles.iconBtn}><X color="#fff" /></button>
+          <h3
+            style={{
+              margin: 0,
+              color: '#BFFF00',
+            }}
+          >
+            Add Column
+          </h3>
+
+          <button
+            onClick={onClose}
+            style={styles.iconBtn}
+          >
+            <X color="#fff" />
+          </button>
         </div>
+
         <div style={styles.modalBody}>
-          <label style={styles.label}>Column Name</label>
-          <input style={styles.modalInput} value={colName} onChange={(e) => setColName(e.target.value)} placeholder="e.g. user_email" />
-          <div style={styles.row}>
-            <div style={{ flex: 1 }}><label style={styles.label}>Type</label><select style={styles.modalSelect}><option>VARCHAR</option><option>BIGINT</option></select></div>
-            <div style={{ flex: 1 }}><label style={styles.label}>Length</label><input style={styles.modalInput} defaultValue="255" /></div>
-          </div>
+          <label style={styles.label}>
+            Column Name
+          </label>
+
+          <input
+            style={styles.modalInput}
+            value={colName}
+            onChange={(e) =>
+              setColName(e.target.value)
+            }
+            placeholder="e.g. user_id"
+          />
         </div>
-        <button style={styles.saveBtn} onClick={() => { onSave(colName); setColName(""); onClose(); }}>Add to Relation</button>
+
+        <button
+          style={styles.saveBtn}
+          onClick={() => {
+            onSave(colName);
+            setColName('');
+            onClose();
+          }}
+        >
+          Add Column
+        </button>
       </div>
     </div>
   );
 };
 
+/* =========================================================
+   MAIN
+========================================================= */
+
 const ProjectDetailContent = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [selectedNode, setSelectedNode] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // 패널 상태
-  const [leftWidth, setLeftWidth] = useState(260);
-  const [rightWidth, setRightWidth] = useState(300);
-  const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
-  const [isRightCollapsed, setIsRightCollapsed] = useState(false);
-  
+  const { id } = useParams();
+
+  const [nodes, setNodes, onNodesChange] =
+    useNodesState([]);
+
+  const [edges, setEdges, onEdgesChange] =
+    useEdgesState([]);
+
+  const [selectedNode, setSelectedNode] =
+    useState(null);
+
+  const [selectedNodes, setSelectedNodes] =
+    useState([]);
+
+  const [projectName, setProjectName] =
+    useState('UntitledProject');
+
+  const [teamName, setTeamName] =
+    useState('UlmusTeam');
+
+  const [isModalOpen, setIsModalOpen] =
+    useState(false);
+
+  const [leftWidth, setLeftWidth] =
+    useState(280);
+
+  const [rightWidth, setRightWidth] =
+    useState(320);
+
+  const [relationType, setRelationType] =
+    useState('1:N');
+
   const nodeIdRef = useRef(0);
 
-  const { id } = useParams(); // URL에서 id 추출 (Line 24 에러 해결)
+  /* =========================================================
+     LOAD
+  ========================================================= */
 
-  // ProjectDetailPage.js 상단 로드 로직 수정 예시
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await ulmusApi.get(`/projects/${id}`);
+        const response = await ulmusApi.get(
+          `/projects/${id}`
+        );
+
         const project = response.data;
-        
+
+        if (project.name) {
+          setProjectName(project.name);
+        }
+
         if (project.schemaJson) {
-          const { nodes: savedNodes, edges: savedEdges } = JSON.parse(project.schemaJson);
+          const {
+            nodes: savedNodes,
+            edges: savedEdges,
+          } = JSON.parse(project.schemaJson);
+
           setNodes(savedNodes || []);
           setEdges(savedEdges || []);
         }
       } catch (error) {
-        console.error("프로젝트 로드 실패:", error);
-        // 만약 1번 프로젝트가 없으면 '새 프로젝트 생성' API를 여기서 호출하는 것도 방법입니다.
+        console.error(error);
       }
     };
+
     fetchProject();
   }, [id]);
 
+  /* =========================================================
+     SELECTION
+  ========================================================= */
+
   useOnSelectionChange({
     onChange: ({ nodes }) => {
-      setSelectedNode(nodes.length > 0 ? nodes[0] : null);
+      setSelectedNodes(nodes);
+      setSelectedNode(nodes[0] || null);
     },
   });
 
+  /* =========================================================
+     CONNECT
+  ========================================================= */
+
+  const getRelationMarker = () => {
+    switch (relationType) {
+      case '1:1':
+        return MarkerType.ArrowClosed;
+
+      case '1:N':
+        return MarkerType.Arrow;
+
+      case 'N:N':
+        return MarkerType.ArrowClosed;
+
+      default:
+        return MarkerType.Arrow;
+    }
+  };
+
+  const onConnect = useCallback(
+    (params) => {
+      const edge = {
+        ...params,
+
+        type: 'smoothstep',
+
+        animated: false,
+
+        style: {
+          stroke: '#BFFF00',
+          strokeWidth: 1.5,
+        },
+
+        markerEnd: {
+          type: getRelationMarker(),
+          color: '#BFFF00',
+        },
+
+        data: {
+          relationType,
+        },
+
+        label: relationType,
+
+        labelStyle: {
+          fill: '#BFFF00',
+          fontSize: 11,
+        },
+      };
+
+      setEdges((eds) => addEdge(edge, eds));
+    },
+
+    [relationType]
+  );
+
+  /* =========================================================
+     ADD TABLE
+  ========================================================= */
+
   const onAddRelation = useCallback(() => {
     const id = `${++nodeIdRef.current}`;
+
     const newNode = {
       id,
-      data: { label: `TABLE_${id}`, columns: [] },
+
       type: 'relation',
-      position: { x: 400, y: 200 },
-    //   style: { background: 'rgba(15, 15, 15, 0.9)', color: '#fff', border: '1px solid rgba(191, 255, 0, 0.5)', borderRadius: '12px', width: 160 },
+
+      position: {
+        x: 400,
+        y: 200,
+      },
+
+      data: {
+        id,
+        label: `TABLE_${id}`,
+        columns: [
+          'id',
+          'created_at',
+        ],
+      },
     };
+
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes]);
 
+  /* =========================================================
+     ADD COLUMN
+  ========================================================= */
+
   const onAddColumn = (colName) => {
     if (!selectedNode || !colName) return;
-    setNodes((nds) => nds.map((node) => {
-      if (node.id === selectedNode.id) {
-        const updatedNode = { ...node, data: { ...node.data, columns: [...(node.data.columns || []), colName] } };
-        setSelectedNode(updatedNode);
-        return updatedNode;
-      }
-      return node;
-    }));
+
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === selectedNode.id) {
+          return {
+            ...node,
+
+            data: {
+              ...node.data,
+
+              columns: [
+                ...(node.data.columns || []),
+                colName,
+              ],
+            },
+          };
+        }
+
+        return node;
+      })
+    );
   };
 
-  const onConnect = useCallback((params) => {
-    setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#BFFF00' } }, eds));
-  }, [setEdges]);
+  /* =========================================================
+     RESIZE
+  ========================================================= */
 
-  // Resizable 드래그 로직
-  const startResizing = (direction) => (e) => {
-    const startX = e.clientX;
-    const startWidth = direction === 'left' ? leftWidth : rightWidth;
+  const startResizing =
+    (direction) => (e) => {
+      const startX = e.clientX;
 
-    const onMouseMove = (moveEvent) => {
-      const delta = direction === 'left' ? moveEvent.clientX - startX : startX - moveEvent.clientX;
-      const newWidth = startWidth + delta;
-      if (newWidth > 150 && newWidth < 600) {
-        direction === 'left' ? setLeftWidth(newWidth) : setRightWidth(newWidth);
-      }
+      const startWidth =
+        direction === 'left'
+          ? leftWidth
+          : rightWidth;
+
+      const onMouseMove = (moveEvent) => {
+        const delta =
+          direction === 'left'
+            ? moveEvent.clientX - startX
+            : startX - moveEvent.clientX;
+
+        const newWidth = startWidth + delta;
+
+        if (newWidth > 260 && newWidth < 600) {
+          direction === 'left'
+            ? setLeftWidth(newWidth)
+            : setRightWidth(newWidth);
+        }
+      };
+
+      const onMouseUp = () => {
+        document.removeEventListener(
+          'mousemove',
+          onMouseMove
+        );
+
+        document.removeEventListener(
+          'mouseup',
+          onMouseUp
+        );
+      };
+
+      document.addEventListener(
+        'mousemove',
+        onMouseMove
+      );
+
+      document.addEventListener(
+        'mouseup',
+        onMouseUp
+      );
     };
-    const onMouseUp = () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+
+  /* =========================================================
+     DELETE
+  ========================================================= */
+
+  const onDeleteSelected = () => {
+    if (!selectedNode) return;
+
+    setNodes((nds) =>
+      nds.filter(
+        (n) => n.id !== selectedNode.id
+      )
+    );
+
+    setEdges((eds) =>
+      eds.filter(
+        (e) =>
+          e.source !== selectedNode.id &&
+          e.target !== selectedNode.id
+      )
+    );
+
+    setSelectedNode(null);
   };
+
+  /* =========================================================
+     RETURN
+  ========================================================= */
 
   return (
-    <div style={styles.wrapper}>
-      <StarBackground />
-      
-      <header style={styles.topNav}>
-        <button style={styles.iconBtn} onClick={() => window.history.back()}><ArrowLeft size={24} color="#BFFF00" /></button>
-        <h2 style={styles.projectTitle}>Project: Ulmus Expansion</h2>
-        <button style={styles.iconBtn}><Settings size={24} color="#BFFF00" /></button>
+    <div style={styles.canvasShell}>
+      {/* GRID GLOW */}
+      <div style={styles.gridGlow} />
+
+      {/* FLOW */}
+      <div style={styles.flowWrapper}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          fitView
+          onPaneClick={() => {
+            setSelectedNode(null);
+            setSelectedNodes([]);
+          }}
+          style={styles.flow}
+        >
+          <Background
+            gap={32}
+            size={1}
+            color="rgba(255,255,255,0.08)"
+          />
+        </ReactFlow>
+      </div>
+
+      {/* HEADER */}
+      <header style={styles.topHeader}>
+        <div style={styles.headerInner}>
+          <input
+            value={projectName}
+            onChange={(e) => {
+              const filtered =
+                e.target.value.replace(
+                  /[^a-zA-Z0-9-_]/g,
+                  ''
+                );
+
+              setProjectName(filtered);
+            }}
+            style={styles.projectTitleInput}
+            placeholder="ProjectName"
+          />
+        </div>
       </header>
 
-      <main style={styles.mainContainer}>
-        {/* LEFT PANEL */}
-        <aside style={{ ...styles.sidePanel, width: isLeftCollapsed ? '40px' : leftWidth }}>
-          {!isLeftCollapsed && (
-            <div style={styles.panelBody}>
-              <div style={styles.panelHeader}><Database size={18} /> <span>Project Options</span></div>
-              <label style={styles.label}>Base Package</label>
-              <input style={styles.panelInput} defaultValue="com.attickok.ulmus" />
-            </div>
-          )}
-          <button style={styles.collapseBtn} onClick={() => setIsLeftCollapsed(!isLeftCollapsed)}>
-            {isLeftCollapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
-          </button>
-          {!isLeftCollapsed && <div style={styles.resizerRight} onMouseDown={startResizing('left')} />}
-        </aside>
-
-        {/* CENTER: Canvas */}
-        <section style={styles.canvasArea}>
-          <ReactFlow nodes={nodes} nodeTypes={nodeTypes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} fitView style={{ background: 'transparent' }}>
-            <Background color="#BFFF00" gap={40} size={1} opacity={0.05} />
-          </ReactFlow>
-          
-          {/* 복구된 통합형 가변 툴바 */}
-          <div style={styles.bottomToolbarContainer}>
-            <div style={{...styles.unifiedToolbar, paddingRight: selectedNode ? '15px' : '8px'}}>
-              <button style={styles.circleBtnPrimary} onClick={onAddRelation}><Plus size={22} /></button>
-              <div style={styles.divider} />
-              <button style={styles.circleBtn}><RotateCcw size={18} /></button>
-              <button style={styles.circleBtn}><RotateCw size={18} /></button>
-              
-              {/* 선택 시 튀어나오는 액션 */}
-              <div style={{ ...styles.innerActionContainer, width: selectedNode ? '100px' : '0px', opacity: selectedNode ? 1 : 0, marginLeft: selectedNode ? '10px' : '0px' }}>
-                <div style={styles.divider} />
-                <button title="Delete" style={styles.circleBtnDelete}><Trash2 size={18} /></button>
-                <button title="Download" style={styles.circleBtnWhite}><Download size={18} /></button>
-              </div>
-            </div>
+      {/* LEFT PANEL */}
+      <aside
+        style={{
+          ...styles.floatingPanel,
+          width: leftWidth,
+          left: 24,
+        }}
+      >
+        <div style={styles.panelBody}>
+          <div style={styles.panelHeader}>
+            <Database size={18} />
+            <span>Project Info</span>
           </div>
-        </section>
 
-        {/* RIGHT PANEL */}
-        <aside style={{ ...styles.sidePanel, width: isRightCollapsed ? '40px' : rightWidth }}>
-          {!isRightCollapsed && <div style={styles.resizerLeft} onMouseDown={startResizing('right')} />}
-          <button style={{...styles.collapseBtn, left: '-40px'}} onClick={() => setIsRightCollapsed(!isRightCollapsed)}>
-            {isRightCollapsed ? <PanelRightOpen size={16} /> : <PanelRightClose size={16} />}
-          </button>
-          {!isRightCollapsed && (
-            <div style={styles.panelBody}>
-              {selectedNode ? (
-                <>
-                  <div style={styles.panelHeader}><Layers size={18} /> <span>{selectedNode.data.label}</span></div>
-                  <label style={styles.label}>Table Name</label>
-                  <input style={styles.panelInput} defaultValue={selectedNode.data.label} />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                    <span style={styles.label}>Attributes</span>
-                    <Plus size={14} style={{ cursor: 'pointer', color: '#BFFF00' }} onClick={() => setIsModalOpen(true)} />
-                  </div>
-                  <div style={styles.attrList}>
-                    {selectedNode.data.columns?.map((col, idx) => (
-                      <div key={idx} style={styles.attrItem}><span>{col}</span><ChevronRight size={14} opacity={0.3} /></div>
-                    ))}
-                  </div>
-                </>
-              ) : <div style={styles.emptyState}>No selection</div>}
+          <label style={styles.label}>
+            Team Name
+          </label>
+
+          <input
+            style={styles.panelInput}
+            value={teamName}
+            onChange={(e) => {
+              const filtered =
+                e.target.value.replace(
+                  /[^a-zA-Z0-9-_]/g,
+                  ''
+                );
+
+              setTeamName(filtered);
+            }}
+          />
+
+          <label style={styles.label}>
+            Project Name
+          </label>
+
+          <input
+            style={styles.panelInput}
+            value={projectName}
+            onChange={(e) => {
+              const filtered =
+                e.target.value.replace(
+                  /[^a-zA-Z0-9-_]/g,
+                  ''
+                );
+
+              setProjectName(filtered);
+            }}
+          />
+        </div>
+
+        <div
+          style={styles.resizerRight}
+          onMouseDown={startResizing('left')}
+        />
+      </aside>
+
+      {/* RIGHT PANEL */}
+      <aside
+        style={{
+          ...styles.floatingPanel,
+          width: rightWidth,
+          right: 24,
+        }}
+      >
+        <div
+          style={styles.resizerLeft}
+          onMouseDown={startResizing('right')}
+        />
+
+        <div style={styles.panelBody}>
+          {selectedNodes.length === 0 && (
+            <div style={styles.emptyState}>
+              Select a table
             </div>
           )}
-        </aside>
-      </main>
 
-      <ColumnDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={onAddColumn} />
+          {selectedNodes.length === 1 &&
+            selectedNode && (
+              <>
+                <div style={styles.panelHeader}>
+                  <Layers size={18} />
+
+                  <span>
+                    {selectedNode.data.label}
+                  </span>
+                </div>
+
+                <label style={styles.label}>
+                  Table Name
+                </label>
+
+                <input
+                  style={styles.panelInput}
+                  value={selectedNode.data.label}
+                  onChange={(e) => {
+                    const value =
+                      e.target.value.replace(
+                        /[^a-zA-Z0-9-_]/g,
+                        ''
+                      );
+
+                    setNodes((nds) =>
+                      nds.map((n) =>
+                        n.id === selectedNode.id
+                          ? {
+                              ...n,
+
+                              data: {
+                                ...n.data,
+                                label: value,
+                              },
+                            }
+                          : n
+                      )
+                    );
+                  }}
+                />
+
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent:
+                      'space-between',
+                    alignItems: 'center',
+                    marginTop: '20px',
+                  }}
+                >
+                  <span style={styles.label}>
+                    Columns
+                  </span>
+
+                  <Plus
+                    size={16}
+                    style={{
+                      cursor: 'pointer',
+                      color: '#BFFF00',
+                    }}
+                    onClick={() =>
+                      setIsModalOpen(true)
+                    }
+                  />
+                </div>
+
+                <div style={styles.attrList}>
+                  {selectedNode.data.columns?.map(
+                    (col, idx) => (
+                      <div
+                        key={idx}
+                        style={styles.attrItem}
+                      >
+                        <span>{col}</span>
+
+                        <ChevronRight
+                          size={14}
+                          opacity={0.3}
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+              </>
+            )}
+
+          {selectedNodes.length > 1 && (
+            <div style={styles.multiSelectBox}>
+              <Download size={20} />
+
+              <button style={styles.sqlBtn}>
+                Download SQL
+              </button>
+            </div>
+          )}
+        </div>
+      </aside>
+
+      {/* TOOLBAR */}
+      <div style={styles.floatingToolbar}>
+        <button
+          style={styles.toolbarPrimaryBtn}
+          onClick={onAddRelation}
+        >
+          <Plus size={20} />
+        </button>
+
+        <button style={styles.toolbarBtn}>
+          <RotateCcw size={18} />
+        </button>
+
+        <button style={styles.toolbarBtn}>
+          <RotateCw size={18} />
+        </button>
+
+        <select
+          style={styles.relationSelect}
+          value={relationType}
+          onChange={(e) =>
+            setRelationType(
+              e.target.value
+            )
+          }
+        >
+          <option>1:1</option>
+          <option>1:N</option>
+          <option>N:N</option>
+        </select>
+
+        {selectedNode && (
+          <button
+            style={styles.toolbarDeleteBtn}
+            onClick={onDeleteSelected}
+          >
+            <Trash2 size={18} />
+          </button>
+        )}
+      </div>
+
+      {/* MODAL */}
+      <ColumnDetailModal
+        isOpen={isModalOpen}
+        onClose={() =>
+          setIsModalOpen(false)
+        }
+        onSave={onAddColumn}
+      />
     </div>
   );
 };
 
-const ProjectDetailPage = () => <ReactFlowProvider><ProjectDetailContent /></ReactFlowProvider>;
+/* =========================================================
+   PAGE
+========================================================= */
+
+const ProjectDetailPage = () => {
+  return (
+    <ReactFlowProvider>
+      <ProjectDetailContent />
+    </ReactFlowProvider>
+  );
+};
+
+/* =========================================================
+   STYLES
+========================================================= */
 
 const styles = {
-  wrapper: { width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#000', color: '#fff' },
-  topNav: { height: '60px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', background: 'rgba(0,0,0,0.5)', zIndex: 10 },
-  projectTitle: { fontSize: '16px', color: '#fff', opacity: 0.8 },
-  mainContainer: { flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' },
-  sidePanel: { background: 'rgba(15, 15, 15, 0.85)', backdropFilter: 'blur(15px)', position: 'relative', transition: 'width 0.1s ease-out', zIndex: 20 },
-  resizerRight: { position: 'absolute', right: 0, top: 0, width: '4px', height: '100%', cursor: 'col-resize', background: 'rgba(191, 255, 0, 0.1)' },
-  resizerLeft: { position: 'absolute', left: 0, top: 0, width: '4px', height: '100%', cursor: 'col-resize', background: 'rgba(191, 255, 0, 0.1)' },
-  collapseBtn: { position: 'absolute', top: '10px', right: '-30px', width: '30px', height: '30px', background: 'rgba(15, 15, 15, 0.8)', border: 'none', color: '#BFFF00', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '0 4px 4px 0' },
-  panelHeader: { padding: '20px 0', display: 'flex', alignItems: 'center', gap: '10px', color: '#BFFF00', fontSize: '14px' },
-  panelBody: { padding: '0 20px', width: '100%', overflow: 'hidden' },
-  canvasArea: { flex: 1, position: 'relative', zIndex: 1 },
-  label: { fontSize: '10px', color: '#666', marginBottom: '8px', display: 'block', letterSpacing: '1px' },
-  panelInput: { width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', padding: '8px', color: '#fff', marginBottom: '15px', outline: 'none' },
-  attrList: { display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '10px' },
-  attrItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', fontSize: '13px' },
-  bottomToolbarContainer: { position: 'absolute', bottom: '30px', left: '50%', transform: 'translateX(-50%)' },
-  unifiedToolbar: { display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 15px', background: 'rgba(30, 30, 30, 0.9)', borderRadius: '40px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' },
-  circleBtnPrimary: { width: '40px', height: '40px', borderRadius: '50%', background: '#BFFF00', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' },
-  circleBtn: { width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' },
-  circleBtnDelete: { width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 75, 75, 0.15)', color: '#ff4b4b', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' },
-  circleBtnWhite: { width: '36px', height: '36px', borderRadius: '50%', background: '#fff', color: '#000', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' },
-  divider: { width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' },
-  innerActionContainer: { display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' },
-  emptyState: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#333', fontSize: '12px' },
-  modalOverlay: { position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center' },
-  modalContent: { background: '#111', width: '360px', padding: '25px', borderRadius: '15px', border: '1px solid rgba(191, 255, 0, 0.3)' },
-  modalHeader: { display: 'flex', justifyContent: 'space-between', marginBottom: '20px' },
-  modalBody: { display: 'flex', flexDirection: 'column', gap: '15px' },
-  modalInput: { background: '#1a1a1a', border: '1px solid #333', padding: '12px', borderRadius: '8px', color: '#fff', outline: 'none' },
-  modalSelect: { background: '#1a1a1a', border: '1px solid #333', padding: '12px', borderRadius: '8px', color: '#fff' },
-  row: { display: 'flex', gap: '10px' },
-  saveBtn: { width: '100%', background: '#BFFF00', border: 'none', padding: '15px', borderRadius: '8px', marginTop: '20px', fontWeight: 'bold', cursor: 'pointer' },
-  iconBtn: { background: 'none', border: 'none', cursor: 'pointer' }
+  canvasShell: {
+    width: '100vw',
+    height: '100vh',
+    position: 'relative',
+    overflow: 'hidden',
+    background: 
+    'radial-gradient(circle at top, #111827 0%, #050816 45%, #020308 100%)',
+  },
+
+  flowWrapper: {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+  },
+
+  gridGlow: {
+    position: 'absolute',
+    inset: 0,
+
+    zIndex: 1,
+
+    pointerEvents: 'none',
+
+    background: `
+      linear-gradient(
+        rgba(191,255,0,0.08) 1px,
+        transparent 1px
+      ),
+
+      linear-gradient(
+        90deg,
+        rgba(191,255,0,0.08) 1px,
+        transparent 1px
+      )
+    `,
+
+    backgroundSize: '32px 32px',
+
+    filter: 'blur(2px)',
+
+    opacity: 0.35,
+
+    mixBlendMode: 'screen',
+  },
+
+  flow: {
+    width: '100%',
+    height: '100%',
+
+    position: 'relative',
+    zIndex: 2,
+
+    background:
+      'radial-gradient(circle at top, #111827 0%, #050816 45%, #020308 100%)',
+  },
+
+  topHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+
+    width: '100%',
+    height: '72px',
+
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    pointerEvents: 'none',
+
+    zIndex: 50,
+  },
+
+  headerInner: {
+    pointerEvents: 'auto',
+  },
+
+  projectTitleInput: {
+    background: 'transparent',
+    border: 'none',
+    outline: 'none',
+
+    color: '#fff',
+
+    fontSize: '20px',
+    fontWeight: 600,
+
+    textAlign: 'center',
+
+    minWidth: '320px',
+  },
+
+  floatingPanel: {
+    position: 'absolute',
+
+    top: '96px',
+    bottom: '24px',
+
+    background: 'rgba(15,15,15,0.72)',
+
+    backdropFilter: 'blur(12px)',
+
+    border:
+      '1px solid rgba(255,255,255,0.08)',
+
+    borderRadius: '24px',
+
+    overflow: 'hidden',
+
+    zIndex: 30,
+  },
+
+  panelBody: {
+    padding: '24px',
+    height: '100%',
+    overflowY: 'auto',
+  },
+
+  panelHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+
+    color: '#BFFF00',
+
+    marginBottom: '24px',
+
+    fontSize: '14px',
+    fontWeight: 600,
+  },
+
+  label: {
+    fontSize: '11px',
+    color: 'rgba(255,255,255,0.4)',
+
+    marginBottom: '8px',
+
+    display: 'block',
+
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+  },
+
+  panelInput: {
+    width: '100%',
+
+    background: 'rgba(255,255,255,0.05)',
+
+    border:
+      '1px solid rgba(255,255,255,0.08)',
+
+    borderRadius: '12px',
+
+    padding: '12px',
+
+    color: '#fff',
+
+    outline: 'none',
+
+    marginBottom: '18px',
+  },
+
+  floatingToolbar: {
+    position: 'absolute',
+
+    bottom: '32px',
+    left: '50%',
+
+    transform: 'translateX(-50%)',
+
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+
+    padding: '10px',
+
+    borderRadius: '999em',
+
+    background: 'rgba(20,20,20,0.82)',
+
+    backdropFilter: 'blur(20px)',
+
+    border:
+      '1px solid rgba(255,255,255,0.08)',
+
+    boxShadow:
+      '0 12px 40px rgba(0,0,0,0.45)',
+
+    zIndex: 60,
+  },
+
+  toolbarBtn: {
+    width: '48px',
+    height: '48px',
+
+    borderRadius: '50%',
+
+    border: 'none',
+
+    background: 'rgba(255,255,255,0.05)',
+
+    color: '#fff',
+
+    cursor: 'pointer',
+
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  toolbarPrimaryBtn: {
+    width: '48px',
+    height: '48px',
+
+    borderRadius: '50%',
+
+    border: 'none',
+
+    background: '#BFFF00',
+
+    color: '#000',
+
+    cursor: 'pointer',
+
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  toolbarDeleteBtn: {
+    width: '48px',
+    height: '48px',
+
+    borderRadius: '50%',
+
+    border: 'none',
+
+    background: 'rgba(255,70,70,0.18)',
+
+    color: '#ff6b6b',
+
+    cursor: 'pointer',
+
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  relationSelect: {
+    background:
+      'rgba(255,255,255,0.05)',
+
+    border:
+      '1px solid rgba(255,255,255,0.08)',
+
+    color: '#fff',
+
+    height: '48px',
+
+    borderRadius: '999em',
+
+    padding: '0 16px',
+
+    outline: 'none',
+  },
+
+  nodeWrapper: {
+    minWidth: '220px',
+
+    background: 'rgba(15,15,15,0.9)',
+
+    backdropFilter: 'blur(12px)',
+
+    borderRadius: '18px',
+
+    overflow: 'visible',
+
+    boxShadow:
+      '0 20px 50px rgba(0,0,0,0.45)',
+  },
+
+  nodeHeader: {
+    padding: '14px 16px',
+
+    borderBottom:
+      '1px solid rgba(255,255,255,0.06)',
+
+    color: '#BFFF00',
+
+    fontWeight: 700,
+
+    fontSize: '13px',
+  },
+
+  nodeColumns: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+  columnRow: {
+    position: 'relative',
+
+    padding: '12px 16px',
+
+    borderBottom:
+      '1px solid rgba(255,255,255,0.04)',
+
+    color: '#fff',
+
+    fontSize: '13px',
+  },
+
+  handle: {
+    width: 8,
+    height: 8,
+
+    background: '#BFFF00',
+
+    border: 'none',
+  },
+
+  columnHandle: {
+    width: 8,
+    height: 8,
+
+    background: '#BFFF00',
+
+    border: 'none',
+  },
+
+  resizerRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+
+    width: '6px',
+    height: '100%',
+
+    cursor: 'col-resize',
+  },
+
+  resizerLeft: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+
+    width: '6px',
+    height: '100%',
+
+    cursor: 'col-resize',
+  },
+
+  attrList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+
+    marginTop: '12px',
+  },
+
+  attrItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    padding: '12px',
+
+    background: 'rgba(255,255,255,0.03)',
+
+    borderRadius: '12px',
+
+    color: '#fff',
+    fontSize: '13px',
+  },
+
+  emptyState: {
+    width: '100%',
+    height: '100%',
+
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    color: 'rgba(255,255,255,0.3)',
+
+    fontSize: '14px',
+  },
+
+  multiSelectBox: {
+    height: '100%',
+
+    display: 'flex',
+    flexDirection: 'column',
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    gap: '16px',
+
+    color: '#fff',
+  },
+
+  sqlBtn: {
+    background: '#BFFF00',
+
+    border: 'none',
+
+    padding: '14px 18px',
+
+    borderRadius: '14px',
+
+    fontWeight: 700,
+
+    cursor: 'pointer',
+  },
+
+  modalOverlay: {
+    position: 'fixed',
+    inset: 0,
+
+    background: 'rgba(0,0,0,0.7)',
+
+    backdropFilter: 'blur(10px)',
+
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    zIndex: 999,
+  },
+
+  modalContent: {
+    width: '360px',
+
+    background: '#111',
+
+    border:
+      '1px solid rgba(191,255,0,0.2)',
+
+    borderRadius: '24px',
+
+    padding: '24px',
+  },
+
+  modalHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    marginBottom: '24px',
+  },
+
+  modalBody: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+  },
+
+  modalInput: {
+    width: '100%',
+
+    background: 'rgba(255,255,255,0.05)',
+
+    border:
+      '1px solid rgba(255,255,255,0.08)',
+
+    borderRadius: '12px',
+
+    padding: '12px',
+
+    color: '#fff',
+
+    outline: 'none',
+  },
+
+  saveBtn: {
+    width: '100%',
+
+    marginTop: '24px',
+
+    border: 'none',
+
+    borderRadius: '14px',
+
+    background: '#BFFF00',
+
+    padding: '14px',
+
+    fontWeight: 700,
+
+    cursor: 'pointer',
+  },
+
+  iconBtn: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+  },
 };
 
 export default ProjectDetailPage;
