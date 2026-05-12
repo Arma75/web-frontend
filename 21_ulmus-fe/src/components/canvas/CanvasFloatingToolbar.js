@@ -3,6 +3,7 @@ import CircularAddIconButton from './CircularAddIconButton';
 import CircularDeleteIconButton from './CircularDeleteIconButton';
 import CircularUndoIconButton from './CircularUndoIconButton';
 import CircularRedoIconButton from './CircularRedoIconButton';
+import CircularDownloadIconButton from './CircularDownloadIconButton';
 
 const barStyle = {
   position: 'absolute',
@@ -33,6 +34,7 @@ function CanvasFloatingToolbar({
   return (
     <div style={barStyle} role="toolbar" aria-label="Canvas tools">
       <CircularAddIconButton onAddClick={onAddClick} disabled={onAddClick == null} />
+      <CircularDownloadIconButton onDeleteClick={onDeleteClick} disabled={onDeleteClick == null} />
       <CircularDeleteIconButton onDeleteClick={onDeleteClick} disabled={onDeleteClick == null} />
       <CircularUndoIconButton onUndoClick={onUndoClick} disabled={onUndoClick == null} />
       <CircularRedoIconButton onRedoClick={onRedoClick} disabled={onRedoClick == null} />

@@ -14,7 +14,8 @@ import CanvasPage from './pages/CanvasPage';
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter } from 'react-router-dom';
 
-function App() {
+
+function App() {  
   return (
     <AuthProvider>
       <BrowserRouter>
