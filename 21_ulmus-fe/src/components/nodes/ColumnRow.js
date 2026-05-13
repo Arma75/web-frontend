@@ -1,72 +1,158 @@
 import { useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 
-const ColumnRow = ({ column, showType }) => {
-    console.log(column);
-    console.log(showType);
+const ColumnRow = ({ nodeLabel, column, showType }) => {
   const isValidConnection = useCallback((connection) => {
     return connection.source !== connection.target;
   }, []);
 
   return (
-    <div
+    <tr
       key={column.label}
       style={styles.erdColumnRow}
     >
-      {/* LEFT HANDLE */}
-      <Handle
-        type="target"
-        position={Position.Left}
-        id={`${column.label}-left`}
-        isValidConnection={isValidConnection}
-        style={{ ...styles.erdHandle, left: '-4px' }}
-      />
+      {showType == 0 && (
+        <>
+          <td className='erd-node-column-cell' style={{ ...styles.erdNodeColumnCell }}>
+            {/* LEFT HANDLE */}
+            <Handle
+              type="target"
+              position={Position.Left}
+              id={`${nodeLabel}-${column.label}-left`}
+              isValidConnection={isValidConnection}
+              style={{ ...styles.erdHandle, left: '-4px' }}
+            />
 
-      {/* RIGHT HANDLE */}
-      <Handle
-        type="source"
-        position={Position.Right}
-        id={`${column.label}-right`}
-        isValidConnection={isValidConnection}
-        style={{ ...styles.erdHandle, right: '-4px' }}
-      />
-      <div style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flexStart",
-        alignItems: "center",
-      }}>
-        {(showType == 0 || showType == 2) && (
-          <div style={{width: '200px'}}>
             {/* PK mark */}
             {column.isPrimaryKey && <span style={{marginRight: '6px'}}>🔑</span>}
             {/* FK mark */}
             {column.isForeignKey && <span style={{marginRight: '6px'}}>🔗</span>}
-            {column.isReferenceKey && <span style={{marginRight: '6px'}}>📌</span>}
+            {/* {column.isReferenceKey && <span style={{marginRight: '6px'}}>📌</span>} */}
+
             {/* COLUMN NAME */}
             <span>{column.label}</span>
-          </div>
-        )}
-        {(showType == 1 || showType == 2) && (
-          <div style={{width: '200px'}}>
+          </td>
+
+          <td className='erd-node-column-cell' style={{ ...styles.erdNodeColumnCell, display: 'flex', justifyContent: 'flex-end', }}>
+            <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',}}>
+              <span>{column.type}</span>
+              {column.length && (
+                <span>({column.length})</span>
+              )}
+
+              {/* RIGHT HANDLE */}
+              <Handle
+                type="source"
+                position={Position.Right}
+                id={`${nodeLabel}-${column.label}-right`}
+                isValidConnection={isValidConnection}
+                style={{ ...styles.erdHandle, right: '-4px' }}
+              />
+            </div>
+          </td>
+        </>
+      )}
+
+      {showType == 1 && (
+        <>
+          <td className='erd-node-column-cell' style={{ ...styles.erdNodeColumnCell }}>
+            {/* LEFT HANDLE */}
+            <Handle
+              type="target"
+              position={Position.Left}
+              id={`${nodeLabel}-${column.label}-left`}
+              isValidConnection={isValidConnection}
+              style={{ ...styles.erdHandle, left: '-4px' }}
+            />
+
+            {/* PK mark */}
+            {column.isPrimaryKey && <span style={{marginRight: '6px'}}>🔑</span>}
+            {/* FK mark */}
+            {column.isForeignKey && <span style={{marginRight: '6px'}}>🔗</span>}
+            {/* {column.isReferenceKey && <span style={{marginRight: '6px'}}>📌</span>} */}
+
+            {/* COLUMN NAME */}
+            <span>{column.comment || column.label}</span>
+          </td>
+
+          <td className='erd-node-column-cell' style={{ ...styles.erdNodeColumnCell, display: 'flex', justifyContent: 'flex-end', }}>
+            <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',}}>
+              <span>{column.type}</span>
+              {column.length && (
+                <span>({column.length})</span>
+              )}
+
+              {/* RIGHT HANDLE */}
+              <Handle
+                type="source"
+                position={Position.Right}
+                id={`${nodeLabel}-${column.label}-right`}
+                isValidConnection={isValidConnection}
+                style={{ ...styles.erdHandle, right: '-4px' }}
+              />
+            </div>
+          </td>
+        </>
+      )}
+
+      {showType == 2 && (
+        <>
+          <td className='erd-node-column-cell' style={{ ...styles.erdNodeColumnCell }}>
+            {/* LEFT HANDLE */}
+            <Handle
+              type="target"
+              position={Position.Left}
+              id={`${nodeLabel}-${column.label}-left`}
+              isValidConnection={isValidConnection}
+              style={{ ...styles.erdHandle, left: '-4px' }}
+            />
+
+            {/* PK mark */}
+            {column.isPrimaryKey && <span style={{marginRight: '6px'}}>🔑</span>}
+            {/* FK mark */}
+            {column.isForeignKey && <span style={{marginRight: '6px'}}>🔗</span>}
+            {/* {column.isReferenceKey && <span style={{marginRight: '6px'}}>📌</span>} */}
+
+            {/* COLUMN NAME */}
+            <span>{column.label}</span>
+          </td>
+
+          <td className='erd-node-column-cell' style={{ ...styles.erdNodeColumnCell }}>
+            {/* COLUMN NAME */}
             <span>{column.comment}</span>
-          </div>
-        )}
-        {/* <div style={{width: '200px'}}>
-          <span>{column.defaultValue}</span>
-        </div> */}
-        <div style={{width: '200px', display: 'flex', justifyContent: 'flex-end'}}>
-          <span>{column.type}</span>
-          {column.length && (
-            <span>({column.length})</span>
-          )}
-        </div>
-      </div>
-    </div>
+          </td>
+
+          <td className='erd-node-column-cell' style={{ ...styles.erdNodeColumnCell, display: 'flex', justifyContent: 'flex-end', }}>
+            <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',}}>
+              <span>{column.type}</span>
+              {column.length && (
+                <span>({column.length})</span>
+              )}
+
+              {/* RIGHT HANDLE */}
+              <Handle
+                type="source"
+                position={Position.Right}
+                id={`${nodeLabel}-${column.label}-right`}
+                isValidConnection={isValidConnection}
+                style={{ ...styles.erdHandle, right: '-4px' }}
+              />
+            </div>
+          </td>
+        </>
+      )}
+    </tr>
   );
 };
 
 const styles = {
+  erdNodeColumnCell: {
+    padding: '16px',
+    verticalAlign: 'middle',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
   erdNodeContainer: {
     minWidth: '220px',
     background: 'transparent',

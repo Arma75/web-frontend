@@ -68,7 +68,7 @@ const RelationNode = ({ data, selected }) => {
       >
         {(data.columns || []).map((col) => {
           return (
-            <ColumnRow key={col.label} column={col} showType={data.showType} />
+            <ColumnRow nodeLabel={data.label} key={col.label} column={col} showType={data.showType} />
           );
         })}
       </section>
@@ -81,6 +81,7 @@ const styles = {
     minWidth: '220px',
     background: 'transparent',
     overflow: 'visible',
+    width: '220px',
   },
   erdNodeHeaderContainer: {
     borderRadius: '20px 20px 0 0',
@@ -104,6 +105,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     backdropFilter: 'blur(4px)',
+    display: 'table',
+    tableLayout: 'fixed',
+    width: '100%',
   },
 
   erdColumnRow: {

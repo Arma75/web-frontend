@@ -110,6 +110,24 @@ function CanvasFlowBody() {
     bumpHist();
   }, [bumpHist]);
 
+  // CanvasFlowBody 컴포넌트 내부
+  const onConnect = useCallback((params) => {
+    // 새로운 선을 긋기 전에 이전 상태를 히스토리에 저장 (선택 사항)
+    pushPastFromRefs();
+
+    setEdges((eds) => {
+      // 엣지에 고유 ID와 스타일을 부여하여 추가
+      const newEdge = {
+        ...params,
+        id: `e-${params.source}-${params.target}-${Date.now()}`, // 고유 ID 생성
+        type: 'smoothstep', // 원하는 선 모양
+        animated: false,
+        style: { stroke: '#BFFF00', strokeWidth: 1.5 }, // 울머스 테마 색상
+      };
+      return [...eds, newEdge];
+    });
+  }, [setEdges, pushPastFromRefs]);
+
   const handleAddEntity = useCallback(() => {
     pushPastFromRefs();
     idRef.current += 1;
@@ -126,8 +144,8 @@ function CanvasFlowBody() {
             y: 80 + Math.floor(i / 5) * 140,
           },
           data: {
-            label: 'UserProfiles',
-            comment: '사용자 추가 정보 테이블',
+            label: 'UserProfiles' + i,
+            comment: '사용자 추가 정보' + i + ' 테이블',
             columns: [
               { label: 'profile_id', comment: '프로필 고유 ID', type: 'INT', length: 11, isPrimaryKey: true, isForeignKey: true, isUnique: true, isNullable: false, isAutoIncrement: true, defaultValue: null, isDefaultValueFunction: false },
               { label: 'user_id', comment: '사용자 ID (FK, Unique)', type: 'INT', length: 11, isPrimaryKey: false, isForeignKey: false, isUnique: true, isNullable: false, isAutoIncrement: false, defaultValue: null, isDefaultValueFunction: false },
@@ -216,8 +234,10 @@ function CanvasFlowBody() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onConnect={onConnect} // !!! 이 부분을 반드시 추가해야 합니다 !!!
         nodeTypes={nodeTypes}
         onMove={handleMove}
+        connectionMode="loose"
         fitView
         minZoom={0.15}
         maxZoom={2}
